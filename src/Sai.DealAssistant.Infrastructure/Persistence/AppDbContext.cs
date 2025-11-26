@@ -1,11 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Domain.Entities;
+using System.Reflection;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Product> Products { get; set; } = null!;
+        public virtual DbSet<Product> Products => Set<Product>();
+        public virtual DbSet<SampleCustomer> SampleCustomers => Set<SampleCustomer>();
+        public virtual DbSet<SampleEmployee> SampleEmployees => Set<SampleEmployee>();
+
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
@@ -16,17 +20,8 @@ namespace Sai.DealAssistant.Infrastructure.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
-            var product = modelBuilder.Entity<Product>();
-            product.ToTable("products");
-            product.HasKey(p => p.Id);
-
-            product.Property(p => p.Name)
-                   .IsRequired()
-                   .HasMaxLength(200);
-
-            product.Property(p => p.Price)
-                   .IsRequired()
-                   .HasPrecision(18, 2);
+            // Applies all IEntityTypeConfiguration<T> in the current assembly
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }

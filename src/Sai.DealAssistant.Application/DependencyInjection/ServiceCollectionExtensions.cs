@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Sai.DealAssistant.Application.Commands;
 using Sai.DealAssistant.Application.Handlers;
+using Sai.DealAssistant.Application.System.Seeding;
 using Services.Application.Queries;
 
 namespace Sai.DealAssistant.Application.DependencyInjection
@@ -19,6 +20,8 @@ namespace Sai.DealAssistant.Application.DependencyInjection
 
             // Register FluentValidation validators located in this assembly (if any)
              services.AddValidatorsFromAssembly(typeof(CreateProductHandler).Assembly);
+
+            services.AddScoped<DatabaseSeeder>();
 
             return services;
         }

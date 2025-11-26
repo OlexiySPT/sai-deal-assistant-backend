@@ -1,7 +1,10 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Sai.DealAssistant.Application.DependencyInjection;
+using Sai.DealAssistant.Application.System.Commands;
 using Sai.DealAssistant.Infrastructure.DependencyInjection;
 using Sai.DealAssistant.Infrastructure.Persistence;
-using Sai.DealAssistant.Application.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +26,11 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var db = services.GetRequiredService<AppDbContext>();
+        var configuration = services.GetRequiredService<IConfiguration>();
+        db.Database.SetConnectionString(configuration.GetConnectionString("MigrationConnection"));
         db.Database.Migrate();
+        IMediator mediator = services.GetRequiredService<IMediator>();
+        mediator.Send(new SeedDatabaseCommand(app.Environment.IsDevelopment()), CancellationToken.None).Wait();
     }
     catch (Exception ex)
     {
