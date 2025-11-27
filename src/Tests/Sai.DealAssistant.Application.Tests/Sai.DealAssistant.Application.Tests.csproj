@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\Sai.DealAssistant.Application\Sai.DealAssistant.Application.csproj" />
     <ProjectReference Include="..\..\Sai.DealAssistant.Domain\Sai.DealAssistant.Domain.csproj" />
     <ProjectReference Include="..\..\Sai.DealAssistant.Infrastructure\Sai.DealAssistant.Infrastructure.csproj" />
+    <ProjectReference Include="..\SAI.DealAssistant.TestUtils\SAI.DealAssistant.TestUtils.csproj" />
   </ItemGroup>
 
 </Project>

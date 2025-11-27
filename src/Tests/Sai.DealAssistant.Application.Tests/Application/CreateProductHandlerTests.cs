@@ -1,20 +1,21 @@
 using FluentAssertions;
-using Sai.DealAssistant.Infrastructure.Repositories;
+using Sai.DealAssistant.Application.Commands;
 using Sai.DealAssistant.Application.Handlers;
+using Sai.DealAssistant.Infrastructure.Repositories;
+using SAI.DealAssistant.TestUtils.Unit;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using Sai.DealAssistant.Application.Commands;
-using Sai.DealAssistant.Application.Tests.TestInfrastructure;
 
 namespace Sai.DealAssistant.Application.Tests.Application
 {
-    public class CreateProductHandlerTests : SqliteAppDbContextTestBase
+    public class CreateProductHandlerTests : DealAsistantUnitTestBase
     {
         private readonly ProductRepository _repository;
         private readonly CreateProductHandler _handler;
 
         public CreateProductHandlerTests()
+            :base(true)
         {
             _repository = new ProductRepository(DbContext);
             _handler = new CreateProductHandler(_repository);
