@@ -5,67 +5,66 @@ using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Repositories;
 using Sai.DealAssistant.Infrastructure.Persistence;
 
-namespace Sai.DealAssistant.Infrastructure.Repositories
+namespace Sai.DealAssistant.Infrastructure.Repositories;
+
+public class SeedRepository : ISeedRepository
 {
-	public class SeedRepository : ISeedRepository
+	private readonly ILogger<SeedRepository> _logger;
+	private readonly AppDbContext _appDbContext;
+
+	public SeedRepository(
+		ILogger<SeedRepository> logger,
+		AppDbContext appDbContext)
 	{
-		private readonly ILogger<SeedRepository> _logger;
-		private readonly AppDbContext _appDbContext;
+		_logger = logger is not null ? logger : throw new ArgumentNullException(nameof(logger));
+		_appDbContext = appDbContext is not null? appDbContext: throw new ArgumentNullException(nameof(appDbContext));
+	}
 
-		public SeedRepository(
-			ILogger<SeedRepository> logger,
-			AppDbContext appDbContext)
+	// ATTENTION This seed is just an example.
+	// Use seed only for the entities, which are already predefined (Like countries, User types, etc)
+	public async Task SeedCustomersAsync(Func<IEnumerable<SampleCustomer>> getCustomers)
+	{
+		List<SampleCustomer> customers = await _appDbContext.SampleCustomers.ToListAsync();
+
+		foreach (SampleCustomer customer in getCustomers())
 		{
-			_logger = logger is not null ? logger : throw new ArgumentNullException(nameof(logger));
-			_appDbContext = appDbContext is not null? appDbContext: throw new ArgumentNullException(nameof(appDbContext));
+			if (!customers.Exists(c => c.Code == customer.Code))
+			{
+				_appDbContext.SampleCustomers.Add(customer);
+			}
 		}
 
-		// ATTENTION This seed is just an example.
-		// Use seed only for the entities, which are already predefined (Like countries, User types, etc)
-		public async Task SeedCustomersAsync(Func<IEnumerable<SampleCustomer>> getCustomers)
-		{
-			List<SampleCustomer> customers = await _appDbContext.SampleCustomers.ToListAsync();
+		await _appDbContext.SaveChangesAsync();
 
-			foreach (SampleCustomer customer in getCustomers())
+		_logger.LogInformation("Non-existing Customers created.");
+	}
+
+	public async Task SeedEmployeesAsync(Func<IEnumerable<SampleEmployee>> getEmployees)
+	{
+		var customerIds = _appDbContext.SampleCustomers.OrderBy(p => p.Id).Select(emp => emp.Id).ToList();
+		List<SampleEmployee> employees = await _appDbContext.SampleEmployees.ToListAsync();
+		var newEmployees = getEmployees();
+		int i = 0;
+		foreach (var it in newEmployees)
+		{
+			if (i >= customerIds.Count)
 			{
-				if (!customers.Exists(c => c.Code == customer.Code))
-				{
-					_appDbContext.SampleCustomers.Add(customer);
-				}
+				i = 0;
 			}
 
-			await _appDbContext.SaveChangesAsync();
-
-			_logger.LogInformation("Non-existing Customers created.");
+			it.CustomerId = customerIds[i++];
 		}
 
-		public async Task SeedEmployeesAsync(Func<IEnumerable<SampleEmployee>> getEmployees)
+		foreach (SampleEmployee employee in newEmployees)
 		{
-			var customerIds = _appDbContext.SampleCustomers.OrderBy(p => p.Id).Select(emp => emp.Id).ToList();
-			List<SampleEmployee> employees = await _appDbContext.SampleEmployees.ToListAsync();
-			var newEmployees = getEmployees();
-			int i = 0;
-			foreach (var it in newEmployees)
+			if (!employees.Exists(c => c.Email == employee.Email))
 			{
-				if (i >= customerIds.Count)
-				{
-					i = 0;
-				}
-
-				it.CustomerId = customerIds[i++];
+				EntityEntry<SampleEmployee> temp = _appDbContext.SampleEmployees.Add(employee);
 			}
-
-			foreach (SampleEmployee employee in newEmployees)
-			{
-				if (!employees.Exists(c => c.Email == employee.Email))
-				{
-					EntityEntry<SampleEmployee> temp = _appDbContext.SampleEmployees.Add(employee);
-				}
-			}
-
-			await _appDbContext.SaveChangesAsync();
-
-			_logger.LogInformation("Non-existing Employees created.");
 		}
+
+		await _appDbContext.SaveChangesAsync();
+
+		_logger.LogInformation("Non-existing Employees created.");
 	}
 }

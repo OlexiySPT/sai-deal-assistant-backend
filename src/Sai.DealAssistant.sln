@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAI.DealAssistant.TestUtils
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sai.DealAssistant.Infrastructure.Tests", "Tests\Sai.DealAssistant.Infrastructure.Tests\Sai.DealAssistant.Infrastructure.Tests.csproj", "{B6AA7A42-437A-4815-9D25-DE3B4D7939BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sai.DealAssistant.Common", "Sai.DealAssistant.Common\Sai.DealAssistant.Common.csproj", "{3A1A84EF-30DF-4D88-AABF-802EEEB72F4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,18 @@ Global
 		{B6AA7A42-437A-4815-9D25-DE3B4D7939BD}.Release|x64.Build.0 = Release|Any CPU
 		{B6AA7A42-437A-4815-9D25-DE3B4D7939BD}.Release|x86.ActiveCfg = Release|Any CPU
 		{B6AA7A42-437A-4815-9D25-DE3B4D7939BD}.Release|x86.Build.0 = Release|Any CPU
+		{3A1A84EF-30DF-4D88-AABF-802EEEB72F4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A1A84EF-30DF-4D88-AABF-802EEEB72F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A1A84EF-30DF-4D88-AABF-802EEEB72F4E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3A1A84EF-30DF-4D88-AABF-802EEEB72F4E}.Debug|x64.Build.0 = Debug|Any CPU
+		{3A1A84EF-30DF-4D88-AABF-802EEEB72F4E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3A1A84EF-30DF-4D88-AABF-802EEEB72F4E}.Debug|x86.Build.0 = Debug|Any CPU
+		{3A1A84EF-30DF-4D88-AABF-802EEEB72F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A1A84EF-30DF-4D88-AABF-802EEEB72F4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A1A84EF-30DF-4D88-AABF-802EEEB72F4E}.Release|x64.ActiveCfg = Release|Any CPU
+		{3A1A84EF-30DF-4D88-AABF-802EEEB72F4E}.Release|x64.Build.0 = Release|Any CPU
+		{3A1A84EF-30DF-4D88-AABF-802EEEB72F4E}.Release|x86.ActiveCfg = Release|Any CPU
+		{3A1A84EF-30DF-4D88-AABF-802EEEB72F4E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

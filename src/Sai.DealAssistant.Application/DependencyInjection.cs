@@ -5,16 +5,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using Sai.DealAssistant.Application.Commands;
 using Sai.DealAssistant.Application.Common.Behaviors;
 using Sai.DealAssistant.Application.Common.Caching;
-using Sai.DealAssistant.Application.Handlers;
+using Sai.DealAssistant.Application.Entities.Products.Commands;
+using Sai.DealAssistant.Application.Entities.Products.Handlers;
+using Sai.DealAssistant.Application.Entities.Products.Queries;
 using Sai.DealAssistant.Application.System.Seeding;
-using Services.Application.Queries;
 
-namespace Sai.DealAssistant.Application.DependencyInjection;
+namespace Sai.DealAssistant.Application;
 
-public static class ServiceCollectionExtensions
+public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {

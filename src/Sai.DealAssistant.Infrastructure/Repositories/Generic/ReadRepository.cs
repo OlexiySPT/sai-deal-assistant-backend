@@ -5,104 +5,103 @@ using Sai.DealAssistant.Domain.Repositories.Generic;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using System.Linq.Expressions;
 
-namespace Sai.DealAssistant.Infrastructure.Repositories.Generic
+namespace Sai.DealAssistant.Infrastructure.Repositories.Generic;
+
+public class ReadRepository<TEntity> : IReadRepository<TEntity>
+	where TEntity : BaseEntity, new()
 {
-	public class ReadRepository<TEntity> : IReadRepository<TEntity>
-		where TEntity : BaseEntity, new()
+	public ReadRepository(AppDbContext dbContext)
 	{
-		public ReadRepository(AppDbContext dbContext)
+		DbContext = dbContext;
+		Table = DbContext.Set<TEntity>();
+	}
+
+	#region Protected Props
+	protected AppDbContext DbContext { get; private set; }
+
+	protected DbSet<TEntity> Table { get; private set; }
+	#endregion
+
+	public IQueryable<TEntity> GetAll()
+	{
+		return Table.AsNoTracking().AsQueryable();
+	}
+
+	public IQueryable<TEntity> ApplySorting(
+		IQueryable<TEntity> query,
+		string? column,
+		bool descending,
+		Dictionary<string, Expression<Func<TEntity, object>>>? columnsMap)
+	{
+		if (column is null) throw new ArgumentNullException(nameof(column));
+		if (columnsMap is null) throw new ArgumentNullException(nameof(columnsMap));
+
+		if (!columnsMap!.ContainsKey(column!))
 		{
-			DbContext = dbContext;
-			Table = DbContext.Set<TEntity>();
+			throw new InvalidSortColumnException(column!, columnsMap.Keys);
 		}
 
-		#region Protected Props
-		protected AppDbContext DbContext { get; private set; }
-
-		protected DbSet<TEntity> Table { get; private set; }
-		#endregion
-
-		public IQueryable<TEntity> GetAll()
+		if (descending)
 		{
-			return Table.AsNoTracking().AsQueryable();
+			return query.OrderByDescending(columnsMap[column!]);
 		}
 
-		public IQueryable<TEntity> ApplySorting(
-			IQueryable<TEntity> query,
-			string? column,
-			bool descending,
-			Dictionary<string, Expression<Func<TEntity, object>>>? columnsMap)
-		{
-			if (column is null) throw new ArgumentNullException(nameof(column));
-			if (columnsMap is null) throw new ArgumentNullException(nameof(columnsMap));
+		return query.OrderBy(columnsMap[column!]);
+	}
 
-			if (!columnsMap!.ContainsKey(column!))
+	public async Task<int> CountAsync(IQueryable<TEntity> query)
+	{
+		return await query.CountAsync();
+	}
+
+	public async Task<IReadOnlyCollection<TResult>> SelectAsync<TResult>(IQueryable<TEntity> query, Expression<Func<TEntity, TResult>> columns)
+	{
+		return await query.Select(columns).ToListAsync();
+	}
+
+	public async Task<IReadOnlyCollection<TResult>> SelectPageAsync<TResult>(
+		IQueryable<TEntity> query,
+		Expression<Func<TEntity, TResult>> columns,
+		int page,
+		int pageSize,
+		string? orderByColumn,
+		bool orderByDescending,
+		Dictionary<string, Expression<Func<TEntity, object>>>? orderByColumnsMap)
+	{
+		if (orderByColumn == null || string.IsNullOrWhiteSpace(orderByColumn))
+		{
+			if (orderByDescending)
 			{
-				throw new InvalidSortColumnException(column!, columnsMap.Keys);
-			}
-
-			if (descending)
-			{
-				return query.OrderByDescending(columnsMap[column!]);
-			}
-
-			return query.OrderBy(columnsMap[column!]);
-		}
-
-		public async Task<int> CountAsync(IQueryable<TEntity> query)
-		{
-			return await query.CountAsync();
-		}
-
-		public async Task<IReadOnlyCollection<TResult>> SelectAsync<TResult>(IQueryable<TEntity> query, Expression<Func<TEntity, TResult>> columns)
-		{
-			return await query.Select(columns).ToListAsync();
-		}
-
-		public async Task<IReadOnlyCollection<TResult>> SelectPageAsync<TResult>(
-			IQueryable<TEntity> query,
-			Expression<Func<TEntity, TResult>> columns,
-			int page,
-			int pageSize,
-			string? orderByColumn,
-			bool orderByDescending,
-			Dictionary<string, Expression<Func<TEntity, object>>>? orderByColumnsMap)
-		{
-			if (orderByColumn == null || string.IsNullOrWhiteSpace(orderByColumn))
-			{
-				if (orderByDescending)
-				{
-					query = query.OrderByDescending(p => p.Id);
-				}
-				else
-				{
-					query = query.OrderBy(p => p.Id);
-				}
+				query = query.OrderByDescending(p => p.Id);
 			}
 			else
 			{
-				query = ApplySorting(query, orderByColumn!.ToLower(), orderByDescending, orderByColumnsMap);
+				query = query.OrderBy(p => p.Id);
 			}
-
-			return await query
-				.Select(columns)
-				.ApplyPaging(page, pageSize)
-				.ToListAsync();
 		}
-
-		public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
+		else
 		{
-			return await Table.AnyAsync(predicate);
+			query = ApplySorting(query, orderByColumn!.ToLower(), orderByDescending, orderByColumnsMap);
 		}
 
-		public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
-		{
-			return await Table.FirstOrDefaultAsync(predicate);
-		}
+		return await query
+			.Select(columns)
+			.ApplyPaging(page, pageSize)
+			.ToListAsync();
+	}
 
-		public async Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
-		{
-			return await Table.SingleOrDefaultAsync(predicate);
-		}
+	public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
+	{
+		return await Table.AnyAsync(predicate);
+	}
+
+	public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+	{
+		return await Table.FirstOrDefaultAsync(predicate);
+	}
+
+	public async Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+	{
+		return await Table.SingleOrDefaultAsync(predicate);
 	}
 }

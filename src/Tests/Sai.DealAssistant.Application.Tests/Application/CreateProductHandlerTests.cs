@@ -1,6 +1,6 @@
 using FluentAssertions;
-using Sai.DealAssistant.Application.Commands;
-using Sai.DealAssistant.Application.Handlers;
+using Sai.DealAssistant.Application.Entities.Products.Commands;
+using Sai.DealAssistant.Application.Entities.Products.Handlers;
 using Sai.DealAssistant.Infrastructure.Repositories;
 using SAI.DealAssistant.TestUtils.Unit;
 using System.Threading;

@@ -1,28 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
+using Sai.DealAssistant.Common.Configuration;
 using Sai.DealAssistant.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Sai.DealAssistant.Infrastructure.DesignTime
+namespace Sai.DealAssistant.Infrastructure.DesignTime;
+
+public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
-    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+    private IMyConfiguration _configuration;
+    public DesignTimeDbContextFactory(IMyConfiguration configuration)
     {
-        public AppDbContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
+        _configuration = configuration;
+    }
+    public AppDbContext CreateDbContext(string[] args)
+    {
+        var builder = new DbContextOptionsBuilder<AppDbContext>();
+        builder.UseNpgsql(_configuration.AppConnectionString);
 
-            var builder = new DbContextOptionsBuilder<AppDbContext>();
-            builder.UseNpgsql(configuration.GetConnectionString("MigrationConnection"));
-
-            return new AppDbContext(builder.Options);
-        }
+        return new AppDbContext(builder.Options);
     }
 }

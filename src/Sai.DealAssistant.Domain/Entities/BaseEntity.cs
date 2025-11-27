@@ -1,7 +1,6 @@
-﻿namespace Sai.DealAssistant.Domain.Entities
+﻿namespace Sai.DealAssistant.Domain.Entities;
+
+public class BaseEntity
 {
-	public class BaseEntity
-	{
-		public int Id { get; set; }
-	}
+	public int Id { get; set; }
 }
