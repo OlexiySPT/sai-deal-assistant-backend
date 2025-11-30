@@ -11,16 +11,16 @@ namespace SAI.DealAssistant.TestUtils.Unit
 	/// Base class for UnitTests.
 	/// Contains mapper and seeds data using SeedRepository.
 	/// </summary>
-	public class DealAsistantUnitTestBase : IDisposable
+	public class UnitTestBase : IDisposable
 	{
 		private bool _disposedValue;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DealAsistantUnitTestBase"/> class.
+		/// Initializes a new instance of the <see cref="UnitTestBase"/> class.
 		/// Initializes DbContext, Fixture, Mapper and LoggerFactory.
 		/// </summary>
 		/// <param name="seedTestData">Flag if test data should be seeded.</param>
-		public DealAsistantUnitTestBase(bool seedTestData)
+		public UnitTestBase(bool seedTestData)
 		{
 			SqliteDbConnection = AppDbContextUtil_SQLiteDb.CreateSqliteConnection();
 			LoggerFactory = new LoggerFactory();

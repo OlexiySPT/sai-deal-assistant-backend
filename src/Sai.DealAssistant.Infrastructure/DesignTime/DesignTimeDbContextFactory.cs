@@ -8,15 +8,21 @@ namespace Sai.DealAssistant.Infrastructure.DesignTime;
 
 public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
-    private IMyConfiguration _configuration;
-    public DesignTimeDbContextFactory(IMyConfiguration configuration)
+    private IAppConfiguration _configuration;
+
+    //To make it possible run for add-migration
+    public DesignTimeDbContextFactory()
+    {
+        _configuration = new AppConfiguration();
+    }
+    public DesignTimeDbContextFactory(IAppConfiguration configuration)
     {
         _configuration = configuration;
     }
     public AppDbContext CreateDbContext(string[] args)
     {
         var builder = new DbContextOptionsBuilder<AppDbContext>();
-        builder.UseNpgsql(_configuration.AppConnectionString);
+        builder.UseNpgsql(_configuration.MigrationConnectionString);
 
         return new AppDbContext(builder.Options);
     }

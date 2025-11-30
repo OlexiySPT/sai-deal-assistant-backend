@@ -10,14 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add configuration, logging and services
 builder.Services.AddCommon();
-var myConfig = builder.Services.BuildServiceProvider().GetRequiredService<IMyConfiguration>();
+var myConfig = builder.Services.BuildServiceProvider().GetRequiredService<IAppConfiguration>();
 builder.Services.AddInfrastructure(myConfig);
 builder.Services.AddApplication();
 builder.Services.AddAutoMapper(cfg => { },
     typeof(ApplicationMappingProfile).Assembly,
     typeof(InfrastructureMappingProfile).Assembly
 );
-
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -52,8 +52,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
 
-// Map minimal API endpoints from the application layer
-app.MapApplicationEndpoints();
+app.MapControllers();
 
 app.Run();

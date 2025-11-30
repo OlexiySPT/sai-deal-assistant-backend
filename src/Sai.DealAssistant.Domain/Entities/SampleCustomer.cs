@@ -17,14 +17,20 @@ public class SampleCustomer : BaseEntity
 	public string? Phone { get; set; }
 
 	public string? Email { get; set; }
-	#endregion
+    #endregion
 
-	#endregion
+    #region TaxInfo
+    public string? TaxNumber { get; set; }
 
-	#region Navigational Props
+    public DateTime? DateRegistered { get; set; }
 
-	// This is a lookup collection, to define a FK, you must create
-	public ICollection<SampleEmployee> Employees { get; set; } = new Collection<SampleEmployee>();
+    #endregion
+    #endregion
+
+    #region Navigational Props
+
+    // This is a lookup collection, to define a FK, you must create
+    public ICollection<SampleEmployee> Employees { get; set; } = new Collection<SampleEmployee>();
 	#endregion
 
 }

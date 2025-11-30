@@ -13,7 +13,7 @@ namespace Sai.DealAssistant.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IMyConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IAppConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration.AppConnectionString));
 
@@ -27,7 +27,6 @@ public static class DependencyInjection
     {
         // Donot forget to add new specific repos here
         services.AddScoped<ISeedRepository, SeedRepository>();
-        services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ISampleCustomerRepository, SampleCustomerRepository>();
         return services;
     }

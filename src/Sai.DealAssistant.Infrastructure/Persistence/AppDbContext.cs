@@ -6,7 +6,6 @@ namespace Sai.DealAssistant.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext
 {
-    public virtual DbSet<Product> Products => Set<Product>();
     public virtual DbSet<SampleCustomer> SampleCustomers => Set<SampleCustomer>();
     public virtual DbSet<SampleEmployee> SampleEmployees => Set<SampleEmployee>();
 

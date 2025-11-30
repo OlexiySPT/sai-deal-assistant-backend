@@ -1,6 +1,6 @@
 ﻿namespace Sai.DealAssistant.Common.Configuration
 {
-    public interface IMyConfiguration
+    public interface IAppConfiguration
     {
         string AppConnectionString { get; }
         string MigrationConnectionString { get; }

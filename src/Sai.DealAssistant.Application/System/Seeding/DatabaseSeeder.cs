@@ -21,15 +21,15 @@ public class DatabaseSeeder
 		List<SampleCustomer> result = new List<SampleCustomer>
 		{
 			// Please DO NOT CHANGE this data to not break existing tests, only add new or provide undefined fields
-			new SampleCustomer() { Code = "CocaCola", Name = "Coca-Cola", Country = "US"},
-			new SampleCustomer() { Code = "Pepsi", Name = "Pepsico International", Country = "US" },
-			new SampleCustomer() {Code = "IBM", Name = "International Business Machine", Country = "US"},
-			new SampleCustomer() {Code = "Tesla", Name = "Tesla innovations", Country = "US"},
-			new SampleCustomer() {Code = "Supermarine", Name = "Supermarine aircraft", Country = "GB"},
-			new SampleCustomer() {Code = "BP", Name = "British Petroleum", Country = "GB"},
-			new SampleCustomer() {Code = "RollsRoyce", Name = "Rolls royce motors", Country = "GB"},
-			new SampleCustomer() {Code = "PZL", Name = "Polskie Zaklady Lotnicze", Country = "Poland"}
-		};
+			new SampleCustomer() { Code = "CocaCola", Name = "Coca-Cola", Country = "US", TaxNumber = "CC165299", DateRegistered = new DateTime(1923, 01, 03)},
+			new SampleCustomer() { Code = "Pepsi", Name = "Pepsico International", Country = "US", TaxNumber = "P223322", DateRegistered = new DateTime(1947, 03, 03)},
+			new SampleCustomer() {Code = "IBM", Name = "International Business Machine", Country = "US", TaxNumber = "IBM165299", DateRegistered = new DateTime(1984, 09, 11)},
+			new SampleCustomer() {Code = "Tesla", Name = "Tesla innovations", Country = "US", TaxNumber = "TSL678901", DateRegistered = new DateTime(2012, 07, 14) },
+			new SampleCustomer() {Code = "Supermarine", Name = "Supermarine aircraft", Country = "GB", TaxNumber = "SM8989899", DateRegistered = new DateTime(1926, 11, 19) },
+			new SampleCustomer() {Code = "BP", Name = "British Petroleum", Country = "GB", TaxNumber = "BP098776", DateRegistered = new DateTime(1919, 09, 01) },
+			new SampleCustomer() {Code = "RollsRoyce", Name = "Rolls royce motors", Country = "GB", TaxNumber = "RR123456789", DateRegistered = new DateTime(1933, 12, 02) },
+			new SampleCustomer() {Code = "PZL", Name = "Polskie Zaklady Lotnicze", Country = "Poland", TaxNumber = "PZL5678920", DateRegistered = new DateTime(1928, 07, 30) }
+        };
 		return result;
 	}
 

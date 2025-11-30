@@ -22,26 +22,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Product", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("products", (string)null);
-                });
-
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.SampleCustomer", b =>
                 {
                     b.Property<int>("Id")
@@ -58,6 +38,9 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("DateRegistered")
+                        .HasColumnType("date");
+
                     b.Property<string>("Email")
                         .HasMaxLength(200)
                         .HasColumnType("varchar");
@@ -68,6 +51,10 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<string>("Phone")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar");
+
+                    b.Property<string>("TaxNumber")
                         .HasMaxLength(50)
                         .HasColumnType("varchar");
 

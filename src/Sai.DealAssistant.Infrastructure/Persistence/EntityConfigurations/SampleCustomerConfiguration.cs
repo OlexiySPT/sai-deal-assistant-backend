@@ -28,5 +28,12 @@ public class SampleCustomerConfiguration : IEntityTypeConfiguration<SampleCustom
 		builder.Property(c => c.Email)
 			.HasColumnType("varchar")
 			.HasMaxLength(200);
-	}
+
+
+        builder.Property(c => c.TaxNumber)
+            .HasColumnType("varchar")
+            .HasMaxLength(50);
+        builder.Property(c => c.DateRegistered)
+            .HasColumnType("date");
+    }
 }

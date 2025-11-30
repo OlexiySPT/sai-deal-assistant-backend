@@ -2,18 +2,18 @@
 
 namespace Sai.DealAssistant.Common.Configuration;
 
-public class MyConfiguration : IMyConfiguration
+public class AppConfiguration : IAppConfiguration
 {
     private readonly IConfigurationRoot _configuration;
-    public MyConfiguration()
+    public AppConfiguration()
     {
         _configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json") // This requires the Microsoft.Extensions.Configuration.Json package and using directive
             .Build();
     }
 
-    string IMyConfiguration.AppConnectionString => _configuration.GetConnectionString("AppConnection")!;
+    string IAppConfiguration.AppConnectionString => _configuration.GetConnectionString("AppConnection")!;
 
-    string IMyConfiguration.MigrationConnectionString => _configuration.GetConnectionString("MigrationConnection")!;
+    string IAppConfiguration.MigrationConnectionString => _configuration.GetConnectionString("MigrationConnection")!;
 
 }

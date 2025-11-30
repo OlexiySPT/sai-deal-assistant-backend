@@ -14,9 +14,7 @@ public class SampleCustomerForAccountingDto
 	#region TaxInfo
 	public string? TaxNumber { get; set; }
 
-	public string? TaxPayerScheme { get; set; }
-
-	public DateTime RegistrationDate { get; set; }
+	public DateTime? DateRegistered { get; set; }
 	#endregion
 
 	public class MappingProfile : Profile

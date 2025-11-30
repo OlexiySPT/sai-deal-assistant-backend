@@ -14,7 +14,7 @@ namespace Sai.DealAssistant.Application
 			SortBy = sortBy;
 			SortDirection = sortDirections ?? SortDirections.Asc;
 			Page = page ?? 1;
-			PageSize = pageSize ?? 250;
+			PageSize = pageSize ?? 20;
 		}
 
 		public string? SortBy { get; set; }

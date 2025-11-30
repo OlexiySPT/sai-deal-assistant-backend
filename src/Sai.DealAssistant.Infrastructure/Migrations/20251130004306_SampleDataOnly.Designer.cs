@@ -12,8 +12,8 @@ using Sai.DealAssistant.Infrastructure.Persistence;
 namespace Sai.DealAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251126213759_SampleCustomerAndEmployee")]
-    partial class SampleCustomerAndEmployee
+    [Migration("20251130004306_SampleDataOnly")]
+    partial class SampleDataOnly
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,26 +24,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Product", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("products", (string)null);
-                });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.SampleCustomer", b =>
                 {
@@ -61,6 +41,9 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("DateRegistered")
+                        .HasColumnType("date");
+
                     b.Property<string>("Email")
                         .HasMaxLength(200)
                         .HasColumnType("varchar");
@@ -71,6 +54,10 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<string>("Phone")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar");
+
+                    b.Property<string>("TaxNumber")
                         .HasMaxLength(50)
                         .HasColumnType("varchar");
 

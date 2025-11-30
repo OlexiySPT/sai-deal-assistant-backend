@@ -8,7 +8,7 @@ using SAI.DealAssistant.TestUtils.Unit;
 
 namespace Sai.DealAssistant.Infrastructure.Tests.Repositories
 {
-	public class CustomerRepositoryTests : DealAsistantUnitTestBase
+	public class CustomerRepositoryTests : UnitTestBase
     {
 		private readonly Mock<IMemoryCacheService> _cacheMock;
 		private ISampleCustomerRepository _repository;
