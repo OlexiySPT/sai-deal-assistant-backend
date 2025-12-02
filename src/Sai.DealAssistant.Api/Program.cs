@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Sai.DealAssistant.Api.Authorizations;
 using Sai.DealAssistant.Application;
 using Sai.DealAssistant.Application.System.Commands;
 using Sai.DealAssistant.Common.Configuration;
@@ -8,6 +9,7 @@ using Sai.DealAssistant.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#region Configure Services
 // Add configuration, logging and services
 builder.Services.AddCommon();
 var myConfig = builder.Services.BuildServiceProvider().GetRequiredService<IAppConfiguration>();
@@ -21,13 +23,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    // TODO: Add real Policies here
+    options.AddPolicy(CorsPolicies.AllowFrontend, CorsPolicies.AllowFrontendCorsPolicy(myConfig.AllowedCorsOrigins));
+}); 
+#endregion
+
 var app = builder.Build();
 
+#region Migrate and Seed database
 // Ensure database is migrated on startup
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var logger = services.GetRequiredService<ILogger<Program>>(); 
+    var logger = services.GetRequiredService<ILogger<Program>>();
 
     try
     {
@@ -43,7 +53,9 @@ using (var scope = app.Services.CreateScope())
         throw;
     }
 }
+#endregion
 
+#region ConfigureApp
 // Configure middleware
 if (app.Environment.IsDevelopment())
 {
@@ -54,6 +66,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseCors(CorsPolicies.AllowFrontend);
+
 app.MapControllers();
+#endregion
 
 app.Run();

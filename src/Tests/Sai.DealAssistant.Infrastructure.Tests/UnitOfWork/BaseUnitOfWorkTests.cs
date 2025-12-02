@@ -1,6 +1,6 @@
-﻿using Hrx.Benefits.Persistence.UnitOfWork;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Infrastructure.UnitOfWork;
 using SAI.DealAssistant.TestUtils.Unit;
 
 namespace Sai.DealAssistant.Infrastructure.Tests.UnitOfWork

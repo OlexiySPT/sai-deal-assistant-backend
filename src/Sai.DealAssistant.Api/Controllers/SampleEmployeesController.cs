@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Sai.DealAssistant.Api.Authorizations;
 using Sai.DealAssistant.Application;
 using Sai.DealAssistant.Application.Entities.SampleEmployees.Commands;
 using Sai.DealAssistant.Application.Entities.SampleEmployees.Dtos;
@@ -9,7 +10,7 @@ using System.Net.Mime;
 
 namespace Sai.DealAssistant.Api.Controllers
 {
-	public class SampleEmployeesController : BaseController
+    public class SampleEmployeesController : BaseController
 	{
 		public SampleEmployeesController(IMediator mediator, IMapper mapper)
 			: base(mediator, mapper)

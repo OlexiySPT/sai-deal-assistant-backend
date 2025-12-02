@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Domain.DataAccess;
 
-namespace Hrx.Benefits.Persistence.UnitOfWork;
+namespace Sai.DealAssistant.Infrastructure.UnitOfWork;
 
 public abstract class BaseUnitOfWork : IUnitOfWork
 {

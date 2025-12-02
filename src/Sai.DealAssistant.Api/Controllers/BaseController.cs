@@ -2,12 +2,15 @@
 using MediatR;
 #pragma warning disable CS8019
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+
 #pragma warning restore CS8019
 using Microsoft.AspNetCore.Mvc;
 
 namespace Sai.DealAssistant.Api.Controllers
 {
-	[ApiController]
+    [ApiController]
+    [EnableCors("AllowFrontend")]
 	[Route("api/[controller]")]
 #if DEBUG
 #else

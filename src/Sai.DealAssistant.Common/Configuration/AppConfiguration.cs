@@ -16,4 +16,5 @@ public class AppConfiguration : IAppConfiguration
 
     string IAppConfiguration.MigrationConnectionString => _configuration.GetConnectionString("MigrationConnection")!;
 
+    string IAppConfiguration.AllowedCorsOrigins => _configuration["AllowedCorsOrigins"] ?? string.Empty;    
 }
