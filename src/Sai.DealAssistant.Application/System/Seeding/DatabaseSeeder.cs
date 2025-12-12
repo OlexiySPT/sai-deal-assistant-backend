@@ -1,4 +1,4 @@
-﻿using Sai.DealAssistant.Domain.Entities;
+﻿using Sai.DealAssistant.Domain.Entities.Samples;
 using Sai.DealAssistant.Domain.Repositories;
 
 namespace Sai.DealAssistant.Application.System.Seeding;

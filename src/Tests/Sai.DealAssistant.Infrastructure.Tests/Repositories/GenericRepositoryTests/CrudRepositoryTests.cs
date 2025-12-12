@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using Microsoft.EntityFrameworkCore;
-using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.Samples;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Common;

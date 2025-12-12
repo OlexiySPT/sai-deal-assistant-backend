@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.Samples;
 using Sai.DealAssistant.Infrastructure.UnitOfWork;
 using SAI.DealAssistant.TestUtils.Unit;
 

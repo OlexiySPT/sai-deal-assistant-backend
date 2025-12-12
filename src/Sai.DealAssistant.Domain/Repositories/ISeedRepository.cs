@@ -1,4 +1,4 @@
-﻿using Sai.DealAssistant.Domain.Entities;
+﻿using Sai.DealAssistant.Domain.Entities.Samples;
 
 namespace Sai.DealAssistant.Domain.Repositories;
 

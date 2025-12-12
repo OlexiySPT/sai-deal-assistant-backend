@@ -3,7 +3,7 @@ using FluentValidation;
 using MediatR;
 using Sai.DealAssistant.Application.Common.Exceptions;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
-using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.Samples;
 using Sai.DealAssistant.Domain.Repositories;
 
 namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Commands

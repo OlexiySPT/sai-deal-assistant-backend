@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.Samples;
 
-namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations;
+namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations.Samples;
 
 public class SampleCustomerConfiguration : IEntityTypeConfiguration<SampleCustomer>
 {
@@ -33,6 +33,7 @@ public class SampleCustomerConfiguration : IEntityTypeConfiguration<SampleCustom
         builder.Property(c => c.TaxNumber)
             .HasColumnType("varchar")
             .HasMaxLength(50);
+
         builder.Property(c => c.DateRegistered)
             .HasColumnType("date");
     }

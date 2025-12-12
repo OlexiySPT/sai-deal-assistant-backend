@@ -1,4 +1,4 @@
-﻿using Sai.DealAssistant.Domain.Entities;
+﻿using Sai.DealAssistant.Domain.Entities.Samples;
 using Xunit;
 
 namespace SAI.DealAssistant.TestUtils.Common

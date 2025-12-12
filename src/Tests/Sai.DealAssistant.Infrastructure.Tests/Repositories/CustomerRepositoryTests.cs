@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moq;
 using Sai.DealAssistant.Application.Common.Caching;
-using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.Samples;
 using Sai.DealAssistant.Domain.Repositories;
 using Sai.DealAssistant.Infrastructure.Repositories;
 using SAI.DealAssistant.TestUtils.Unit;

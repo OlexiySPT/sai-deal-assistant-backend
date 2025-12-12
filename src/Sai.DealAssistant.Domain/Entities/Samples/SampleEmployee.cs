@@ -1,4 +1,4 @@
-﻿namespace Sai.DealAssistant.Domain.Entities;
+﻿namespace Sai.DealAssistant.Domain.Entities.Samples;
 
 public class SampleEmployee : BaseEntity
 {

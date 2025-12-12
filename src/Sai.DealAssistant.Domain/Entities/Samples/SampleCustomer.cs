@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace Sai.DealAssistant.Domain.Entities;
+namespace Sai.DealAssistant.Domain.Entities.Samples;
 
 public class SampleCustomer : BaseEntity
 {

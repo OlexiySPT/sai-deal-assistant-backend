@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
-using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.Samples;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 
 namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Queries

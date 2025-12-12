@@ -1,14 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.Samples;
 
-namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations;
+namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations.Samples;
 
 public class SampleEmployeeConfiguration : IEntityTypeConfiguration<SampleEmployee>
 {
 	public void Configure(EntityTypeBuilder<SampleEmployee> builder)
 	{
-		builder.HasKey(c => c.Id);
+		// it ias always applied in the base repository
+		//builder.HasQueryFilter(c => !c.IsDeleted);
+		//Shadow property example
+		//builder.Property<DateTime>("CreatedAt");
+
+        builder.HasKey(c => c.Id);
 		builder.Property(c => c.Id)
 			.ValueGeneratedOnAdd();
 

@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
-using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.Samples;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Unit;
 using System.Collections.Generic;

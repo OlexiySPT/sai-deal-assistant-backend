@@ -2,7 +2,7 @@
 using MediatR;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 using Sai.DealAssistant.Common.Enums;
-using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.Samples;
 using Sai.DealAssistant.Domain.Repositories;
 
 namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Queries

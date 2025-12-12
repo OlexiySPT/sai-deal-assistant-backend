@@ -2,7 +2,7 @@
 using MediatR;
 using Sai.DealAssistant.Application.Entities.SampleEmployees.Dtos;
 using Sai.DealAssistant.Common.Enums;
-using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.Samples;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 using System.Linq.Expressions;
 

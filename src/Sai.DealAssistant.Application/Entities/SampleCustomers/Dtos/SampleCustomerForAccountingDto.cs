@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.Samples;
 
 namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 
