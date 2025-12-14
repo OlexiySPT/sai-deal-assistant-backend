@@ -1,5 +1,7 @@
 ﻿using Sai.DealAssistant.Domain.Entities.Samples;
 using Sai.DealAssistant.Domain.Repositories;
+using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.ReadOnly;
 
 namespace Sai.DealAssistant.Application.System.Seeding;
 
@@ -16,6 +18,7 @@ public class DatabaseSeeder
 		_seedRepository = systemConfigRepository;
 	}
 
+	#region Test Data
 	public static IEnumerable<SampleCustomer> GetCustomers()
 	{
 		List<SampleCustomer> result = new List<SampleCustomer>
@@ -29,7 +32,7 @@ public class DatabaseSeeder
 			new SampleCustomer() {Code = "BP", Name = "British Petroleum", Country = "GB", TaxNumber = "BP098776", DateRegistered = new DateTime(1919, 09, 01) },
 			new SampleCustomer() {Code = "RollsRoyce", Name = "Rolls royce motors", Country = "GB", TaxNumber = "RR123456789", DateRegistered = new DateTime(1933, 12, 02) },
 			new SampleCustomer() {Code = "PZL", Name = "Polskie Zaklady Lotnicze", Country = "Poland", TaxNumber = "PZL5678920", DateRegistered = new DateTime(1928, 07, 30) }
-        };
+		};
 		return result;
 	}
 
@@ -61,10 +64,79 @@ public class DatabaseSeeder
 
 		return result;
 	}
+	#endregion
+
+	#region System Data
+
+	#region Enum Tables
+	public static IEnumerable<EventType> GetEventTypes()
+	{
+		return new List<EventType>
+		{
+			new EventType { Id = 1, Name = "Video call" },
+			new EventType { Id = 2, Name = "Phone Call" },
+			new EventType { Id = 3, Name = "Messenger chat" },
+			new EventType { Id = 4, Name = "Email" },
+			new EventType { Id = 5, Name = "Message" },
+			new EventType { Id = 6, Name = "Offline meeting" }
+		};
+	}
+
+	public static IEnumerable<EventState> GetEventStates()
+	{
+		return new List<EventState>
+		{
+			new EventState { Id = 1, State = "Planned" },
+			new EventState { Id = 2, State = "In Progress" },
+			new EventState { Id = 3, State = "Completed" },
+			new EventState { Id = 4, State = "Cancelled" },
+			new EventState { Id = 5, State = "Deferred" }
+		};
+	}
+
+	public static IEnumerable<DealState> GetDealStates()
+	{
+		return new List<DealState>
+		{
+			new DealState { Id = 1, State = "New" },
+			new DealState { Id = 2, State = "Contacted" },
+			new DealState { Id = 3, State = "Qualified" },
+			new DealState { Id = 4, State = "Proposal" },
+			new DealState { Id = 5, State = "Won" },
+			new DealState { Id = 6, State = "Lost" }
+		};
+	}
+
+	public static IEnumerable<DealType> GetDealTypes()
+	{
+		return new List<DealType>
+		{
+			new DealType { Id = 1, Name = "One-time Service" },
+			new DealType { Id = 2, Name = "Series" },
+			new DealType { Id = 3, Name = "Long-time Collaboration" }
+		};
+	}
+	#endregion
+
+	public static IEnumerable<User> GetUsers()
+	{
+		// NOTE: placeholder password hashes - replace with secure hashes when needed
+		return new List<User>
+		{
+			new User { Id = 1, Username = "admin", PasswordHash = "AQAAAAEAACcQAAAAE-admin-hash", Role = "Administrator" },
+			new User { Id = 2, Username = "standard.user", PasswordHash = "AQAAAAEAACcQAAAAE-user-hash", Role = "User" }
+		};
+	}
+
+	#endregion
 
 	public async Task SeedAsync()
 	{
-		await Task.FromResult(0);
+		await _seedRepository.SeedEventTypesAsync(GetEventTypes);
+		await _seedRepository.SeedEventStatusesAsync(GetEventStates);
+		await _seedRepository.SeedDealStatesAsync(GetDealStates);
+		await _seedRepository.SeedDealTypesAsync(GetDealTypes);
+		await _seedRepository.SeedUsersAsync(GetUsers);
 	}
 
 	public async Task SeedTestDataAsync()

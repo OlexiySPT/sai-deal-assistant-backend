@@ -4,9 +4,9 @@ using Sai.DealAssistant.Domain.Entities;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations;
 
-public class ContragentContactRepConfiguration : BaseEntityConfiguration<ContragentContactRep>
+public class DealContactRepConfiguration : BaseEntityConfiguration<DealContactRep>
 {
-    public override void Configure(EntityTypeBuilder<ContragentContactRep> builder)
+    public override void Configure(EntityTypeBuilder<DealContactRep> builder)
     {
         base.Configure(builder);
 
@@ -29,8 +29,8 @@ public class ContragentContactRepConfiguration : BaseEntityConfiguration<Contrag
         builder.Property(c => c.Description)
             .HasColumnType("text");
 
-        builder.HasOne(c => c.Contragent)
+        builder.HasOne(c => c.Deal)
             .WithMany(co => co.ContactReps)
-            .HasForeignKey(c => c.ContragentId);
+            .HasForeignKey(c => c.DealId);
     }
 }

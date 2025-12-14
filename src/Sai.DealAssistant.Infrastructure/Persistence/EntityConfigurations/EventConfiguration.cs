@@ -11,12 +11,7 @@ public class EventConfiguration : BaseEntityConfiguration<Event>
         base.Configure(builder);
 
         builder.Property(e => e.Date)
-            .HasColumnType("timestamp");
-
-        builder.Property(e => e.Status)
-            .IsRequired()
-            .HasColumnType("varchar")
-            .HasMaxLength(50);
+            .HasColumnType("timestamptz");
 
         builder.Property(e => e.Agenda)
             .HasColumnType("text");
@@ -24,9 +19,9 @@ public class EventConfiguration : BaseEntityConfiguration<Event>
         builder.Property(e => e.Result)
             .HasColumnType("text");
 
-        builder.HasOne(e => e.Contragent)
+        builder.HasOne(e => e.Deal)
             .WithMany(c => c.Events)
-            .HasForeignKey(e => e.ContragentId);
+            .HasForeignKey(e => e.DealId);
 
     }
 }

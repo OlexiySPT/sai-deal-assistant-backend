@@ -1,8 +1,6 @@
-﻿using System;
+﻿namespace Sai.DealAssistant.Domain.Entities;
 
-namespace Sai.DealAssistant.Domain.Entities;
-
-public class ContragentContactRep : BaseEntity
+public class DealContactRep : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
     public string? Position { get; set; } = string.Empty;
@@ -10,6 +8,6 @@ public class ContragentContactRep : BaseEntity
     public string? Email { get; set; } = string.Empty;
     public string? Description { get; set; } = string.Empty;
 
-    public int ContragentId { get; set; }
-    public Contragent Contragent { get; set; } = default!;
+    public int DealId { get; set; }
+    public Deal Deal { get; set; } = default!;
 }

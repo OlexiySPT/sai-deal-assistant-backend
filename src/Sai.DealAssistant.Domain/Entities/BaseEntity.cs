@@ -1,12 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Sai.DealAssistant.Domain.Entities.ReadOnly;
 
 namespace Sai.DealAssistant.Domain.Entities;
 
-public class BaseEntity
+public abstract class BaseEntity: BaseReadOnlyEntity
 {
-	public int Id { get; set; }
-	public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+	public DateTimeOffset CreatedAt { get; set; } = DateTime.UtcNow;
     public int CreatedBy { get; set; }
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTime.UtcNow;
     public int UpdatedBy { get; set; }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
+using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly;
 using Sai.DealAssistant.Domain.Entities.Samples;
 using Sai.DealAssistant.Domain.Repositories;
@@ -70,19 +71,89 @@ public class SeedRepository : ISeedRepository
 		_logger.LogInformation("Non-existing Employees created.");
 	} 
 	#endregion
-	public async Task SeedEventTypeAsync()
-    {
-        var eventTypes = await _appDbContext.EventTypes.ToListAsync();
 
-        _appDbContext.EventTypes.Add(new EventType { Id = 1, Name = "Video call", Description = "Video call via Teams or Google meet,etc" });
-        _appDbContext.EventTypes.Add(new EventType { Id = 2, Name = "Phone Call", Description="Call by telephone, not by messenger"});
-        _appDbContext.EventTypes.Add(new EventType { Id = 3, Name = "Messenger chat", Description = "Chat in messenger or social network" });
-        _appDbContext.EventTypes.Add(new EventType { Id = 4, Name = "Email", Description = "Chat in messenger or social network" });
-        _appDbContext.EventTypes.Add(new EventType { Id = 5, Name = "Message", Description = "Message by messenger or SMS" });
-        _appDbContext.EventTypes.Add(new EventType { Id = 6, Name = "Offline meeting", Description = "Meeting with client" });
+	public async Task SeedEventTypesAsync(Func<IEnumerable<EventType>> getEventTypes)
+	{
+		var existing = await _appDbContext.EventTypes.ToListAsync();
 
-        await _appDbContext.SaveChangesAsync();
+		foreach (var et in getEventTypes())
+		{
+			if (!existing.Exists(e => string.Equals(e.Name, et.Name, StringComparison.OrdinalIgnoreCase)))
+			{
+				_appDbContext.EventTypes.Add(et);
+			}
+		}
 
-        _logger.LogInformation("Non-existing Customers created.");
-    }
+		await _appDbContext.SaveChangesAsync();
+
+		_logger.LogInformation("Event Types Enum table filled.");
+	}
+
+	public async Task SeedEventStatusesAsync(Func<IEnumerable<EventState>> getEventStates)
+	{
+		var existing = await _appDbContext.EventStates.ToListAsync();
+
+		foreach (var st in getEventStates())
+		{
+			if (!existing.Exists(e => string.Equals(e.State, st.State, StringComparison.OrdinalIgnoreCase)))
+			{
+				_appDbContext.EventStates.Add(st);
+			}
+		}
+
+		await _appDbContext.SaveChangesAsync();
+
+		_logger.LogInformation("Event Statuses Enum table filled.");
+	}
+
+	public async Task SeedDealStatesAsync(Func<IEnumerable<DealState>> getDealStates)
+	{
+		var existing = await _appDbContext.DealStates.ToListAsync();
+
+		foreach (var st in getDealStates())
+		{
+			if (!existing.Exists(e => string.Equals(e.State, st.State, StringComparison.OrdinalIgnoreCase)))
+			{
+				_appDbContext.DealStates.Add(st);
+			}
+		}
+
+		await _appDbContext.SaveChangesAsync();
+
+		_logger.LogInformation("Deal States Enum table filled.");
+	}
+
+	public async Task SeedDealTypesAsync(Func<IEnumerable<DealType>> getDealTypes)
+	{
+		var existing = await _appDbContext.DealTypes.ToListAsync();
+
+		foreach (var t in getDealTypes())
+		{
+			if (!existing.Exists(e => string.Equals(e.Name, t.Name, StringComparison.OrdinalIgnoreCase)))
+			{
+				_appDbContext.DealTypes.Add(t);
+			}
+		}
+
+		await _appDbContext.SaveChangesAsync();
+
+		_logger.LogInformation("Deal Types Enum table filled.");
+	}
+
+	public async Task SeedUsersAsync(Func<IEnumerable<User>> getUsers)
+	{
+		var existing = await _appDbContext.Users.ToListAsync();
+
+		foreach (var u in getUsers())
+		{
+			if (!existing.Exists(e => string.Equals(e.Username, u.Username, StringComparison.OrdinalIgnoreCase)))
+			{
+				_appDbContext.Users.Add(u);
+			}
+		}
+
+		await _appDbContext.SaveChangesAsync();
+
+		_logger.LogInformation("Users table filled.");
+	}
 }

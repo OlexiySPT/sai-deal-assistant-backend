@@ -4,15 +4,13 @@ using Sai.DealAssistant.Domain.Entities.Samples;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations.Samples;
 
-public class SampleCustomerConfiguration : IEntityTypeConfiguration<SampleCustomer>
+public class SampleCustomerConfiguration : BaseEntityConfiguration<SampleCustomer>
 {
-	public void Configure(EntityTypeBuilder<SampleCustomer> builder)
+	public override void Configure(EntityTypeBuilder<SampleCustomer> builder)
 	{
-		builder.HasKey(c => c.Id);
-		builder.Property(c => c.Id)
-			.ValueGeneratedOnAdd();
+		base.Configure(builder);
 
-		builder.Property(c => c.Code)
+        builder.Property(c => c.Code)
 			.IsRequired()
 			.HasColumnType("varchar")
 			.HasMaxLength(50);

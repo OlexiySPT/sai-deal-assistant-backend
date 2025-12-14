@@ -6,7 +6,7 @@ namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations;
 
 public class UserConfiguration : BaseEntityConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public override void Configure(EntityTypeBuilder<User> builder)
     {
        base.Configure(builder);
 
@@ -23,8 +23,5 @@ public class UserConfiguration : BaseEntityConfiguration<User>
             .IsRequired()
             .HasColumnType("varchar")
             .HasMaxLength(50);
-
-        builder.Property(x => x.CreatedAt)
-            .HasColumnType("timestamp");
     }
 }

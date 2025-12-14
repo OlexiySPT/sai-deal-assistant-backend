@@ -4,9 +4,9 @@ using Sai.DealAssistant.Domain.Entities;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations;
 
-public class ContragentConfiguration : BaseEntityConfiguration<Contragent>
+public class DealConfiguration : BaseEntityConfiguration<Deal>
 {
-    public override void Configure(EntityTypeBuilder<Contragent> builder)
+    public override void Configure(EntityTypeBuilder<Deal> builder)
     {
         base.Configure(builder);
 
@@ -19,7 +19,7 @@ public class ContragentConfiguration : BaseEntityConfiguration<Contragent>
             .HasColumnType("varchar")
             .HasMaxLength(4095);
 
-        builder.Property(c => c.Notes)
+        builder.Property(c => c.Description)
             .HasColumnType("text");
 
         builder.Property(c => c.AiSearchInfo)
@@ -32,9 +32,6 @@ public class ContragentConfiguration : BaseEntityConfiguration<Contragent>
         builder.Property(c => c.Industry)
             .HasColumnType("varchar")
             .HasMaxLength(100);
-
-        builder.Property(c => c.Address)
-            .HasMaxLength(500);
 
         builder.Property(c => c.Status)
             .HasColumnType("varchar")

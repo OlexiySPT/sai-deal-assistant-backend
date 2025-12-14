@@ -1,27 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sai.DealAssistant.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+using Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations.ReadOnly;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations;
 
-public class BaseEntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
+public abstract class BaseEntityConfiguration<TEntity> : BaseReadOnlyEntityConfiguration<TEntity>
     where TEntity : BaseEntity
 {
 
-    virtual public void Configure(EntityTypeBuilder<TEntity> builder)
+    public override void Configure(EntityTypeBuilder<TEntity> builder)
     {
-        // Id configuration
-        builder.HasKey(c => c.Id);
-        builder.Property(c => c.Id).ValueGeneratedOnAdd();
+        base.Configure(builder);
 
         //Shadow prop for optimistic concurrency implementation
         builder.Property<uint>("xmin").IsRowVersion();
+
+        // Uncomment this to use soft delete via shadow property
+        // and do not forget to update universal and specific repos and migrations
+        //builder.Property<DateTime>("IsDeleted");
+        //builder.HasQueryFilter(c => !EF.Property<bool>(c, "IsDeleted"));
     }
 }

@@ -4,18 +4,11 @@ using Sai.DealAssistant.Domain.Entities.Samples;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations.Samples;
 
-public class SampleEmployeeConfiguration : IEntityTypeConfiguration<SampleEmployee>
+public class SampleEmployeeConfiguration : BaseEntityConfiguration<SampleEmployee>
 {
-	public void Configure(EntityTypeBuilder<SampleEmployee> builder)
+	public override void Configure(EntityTypeBuilder<SampleEmployee> builder)
 	{
-		// it ias always applied in the base repository
-		//builder.HasQueryFilter(c => !c.IsDeleted);
-		//Shadow property example
-		//builder.Property<DateTime>("CreatedAt");
-
-        builder.HasKey(c => c.Id);
-		builder.Property(c => c.Id)
-			.ValueGeneratedOnAdd();
+		base.Configure(builder);
 
 		builder.Property(c => c.CustomerId)
 			.IsRequired();

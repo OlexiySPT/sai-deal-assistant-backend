@@ -25,7 +25,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    // TODO: Add real Policies here
     options.AddPolicy(CorsPolicies.AllowFrontend, CorsPolicies.AllowFrontendCorsPolicy(myConfig.AllowedCorsOrigins));
 }); 
 #endregion
