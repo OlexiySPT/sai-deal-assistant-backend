@@ -1,4 +1,4 @@
-﻿using Sai.DealAssistant.Domain.Entities.ReadOnly;
+﻿using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using System;
 using System.Collections.ObjectModel;
 using System.Reflection;

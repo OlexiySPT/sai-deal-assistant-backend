@@ -1,4 +1,4 @@
-﻿using Sai.DealAssistant.Domain.Entities;
+﻿using Sai.DealAssistant.Domain.Entities.ReadOnly;
 using System.Linq.Expressions;
 
 namespace Sai.DealAssistant.Domain.Repositories.Generic;
@@ -14,7 +14,7 @@ namespace Sai.DealAssistant.Domain.Repositories.Generic;
 /// </summary>
 /// <typeparam name="TEntity">Entity type, mapped to table in the DB.</typeparam>
 public interface IReadRepository<TEntity>
-	where TEntity : BaseEntity, new()
+	where TEntity : BaseReadOnlyEntity, new()
 {
 	/// <summary>
 	/// Use GetAll() to start every query.

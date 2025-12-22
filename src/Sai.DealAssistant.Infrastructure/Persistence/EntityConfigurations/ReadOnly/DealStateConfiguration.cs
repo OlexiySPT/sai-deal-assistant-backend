@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Sai.DealAssistant.Domain.Entities.ReadOnly;
+using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations.ReadOnly;
 

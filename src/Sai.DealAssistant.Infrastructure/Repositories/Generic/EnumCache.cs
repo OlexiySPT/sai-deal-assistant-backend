@@ -1,0 +1,43 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Sai.DealAssistant.Domain.Entities.ReadOnly;
+using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
+using Sai.DealAssistant.Domain.Repositories.Generic;
+
+namespace Sai.DealAssistant.Infrastructure.Repositories.Generic;
+
+public class EnumCache<TEntity> : IEnumCache<TEntity>
+    where TEntity : BaseReadOnlyEntity, IEnum, new()
+{
+    private static readonly MemoryCache s_cache = new(new MemoryCacheOptions());
+    private readonly string _cacheKey = typeof(TEntity).FullName ?? typeof(TEntity).Name;
+    private readonly IReadRepository<TEntity> _repository;
+
+    // Use repository.GetAll() to load values
+    public EnumCache(IReadRepository<TEntity> repository)
+    {
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+    }
+
+    public async Task<IReadOnlyCollection<TEntity>> GetAllAsync()
+    {
+        if (s_cache.TryGetValue(_cacheKey, out IReadOnlyCollection<TEntity>? cached) && cached is not null)
+            return cached;
+
+        // materialize asynchronously from IQueryable via EF Core
+        var array = await _repository.GetAll().OrderBy(p => p.Id).ToArrayAsync();
+        var items = Array.AsReadOnly(array);
+
+        var options = new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+        };
+
+        s_cache.Set(_cacheKey, items, options);
+        return items;
+    }
+
+
+    // Optional helper to invalidate cache
+    public void Invalidate() => s_cache.Remove(_cacheKey);
+}

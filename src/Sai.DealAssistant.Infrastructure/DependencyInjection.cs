@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sai.DealAssistant.Common.Configuration;
 using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.ReadOnly;
+using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Domain.Repositories;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 using Sai.DealAssistant.Infrastructure.Persistence;
@@ -34,33 +36,35 @@ public static class DependencyInjection
 
     private static IServiceCollection AddSpecificRepositories(this IServiceCollection services)
     {
-        // Donot forget to add new specific repos here
+        // Do not forget to add new specific repos here
         services.AddScoped<ISeedRepository, SeedRepository>();
-        services.AddScoped<ISampleCustomerRepository, SampleCustomerRepository>();
         return services;
     }
 
     private static IServiceCollection AddGenericRepositories(this IServiceCollection services)
     {
+        Type baseReadOnlyEntityType = typeof(BaseReadOnlyEntity);
         Type baseEntityType = typeof(BaseEntity);
+        Type iEnumType = typeof(IEnum);
         IEnumerable<Type> entityTypes =
-            baseEntityType.Assembly.GetTypes()
-            .Where(t => t != baseEntityType && baseEntityType.IsAssignableFrom(t))
+            baseReadOnlyEntityType.Assembly.GetTypes()
+            .Where(t => !t.IsAbstract && !t.IsInterface && baseReadOnlyEntityType.IsAssignableFrom(t))
             .ToArray();
         foreach (Type it in entityTypes)
         {
-            services.AddScoped(
-                typeof(IReadRepository<>).MakeGenericType(it),
-                typeof(ReadRepository<>).MakeGenericType(it));
-            services.AddScoped(
-                typeof(IEnumCache<>).MakeGenericType(it),
-                typeof(EnumCache<>).MakeGenericType(it));
-            services.AddScoped(
-                typeof(ICrudRepository<>).MakeGenericType(it),
-                typeof(CrudRepository<>).MakeGenericType(it));
+            services.AddScoped(typeof(IReadRepository<>).MakeGenericType(it), typeof(ReadRepository<>).MakeGenericType(it));
+
+            //if (iEnumType.IsAssignableFrom(it))
+            //{
+                services.AddScoped(typeof(IEnumCache<>).MakeGenericType(it), typeof(EnumCache<>).MakeGenericType(it));
+            //}
+
+            if (baseEntityType.IsAssignableFrom(it))
+            {
+                services.AddScoped(typeof(ICrudRepository<>).MakeGenericType(it), typeof(CrudRepository<>).MakeGenericType(it));
+            }
         }
 
         return services;
     }
-
 }

@@ -5,7 +5,7 @@ using SAI.DealAssistant.TestUtils.Unit;
 
 namespace Sai.DealAssistant.Infrastructure.Tests.UnitOfWork
 {
-	public class BaseUnitOfWorkTests : UnitTestBase
+	public class BaseUnitOfWorkTests : GenericRepoTestUnitTestBase
 	{
 		public BaseUnitOfWorkTests()
 			: base(true)

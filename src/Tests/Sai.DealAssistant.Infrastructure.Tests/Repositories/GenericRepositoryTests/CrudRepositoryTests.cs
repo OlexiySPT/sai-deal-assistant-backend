@@ -8,8 +8,8 @@ using SAI.DealAssistant.TestUtils.Unit;
 
 namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryTests
 {
-	public class CrudRepositoryTests : UnitTestBase
-	{
+	public class CrudRepositoryTests : GenericRepoTestUnitTestBase
+    {
 		private const int NonExistingId = -1;
 		private readonly ICrudRepository<SampleEmployee> _repo;
 		private SampleCustomer _customer;

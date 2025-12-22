@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Domain.Entities;
-using Sai.DealAssistant.Domain.Entities.ReadOnly;
-using Sai.DealAssistant.Domain.Entities.Samples;
+using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext
 {
     public virtual DbSet<User> Users => Set<User>();
+
     public virtual DbSet<Deal> Deals => Set<Deal>();
     public virtual DbSet<DealContactRep> DealContactReps => Set<DealContactRep>();
     public virtual DbSet<Event> Events => Set<Event>();
@@ -21,11 +21,6 @@ public class AppDbContext : DbContext
     public virtual DbSet<DealType> DealTypes => Set<DealType>();
     #endregion
 
-    #region Samples
-    public virtual DbSet<SampleCustomer> SampleCustomers => Set<SampleCustomer>();
-    public virtual DbSet<SampleEmployee> SampleEmployees => Set<SampleEmployee>();
-    #endregion
-
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
@@ -34,10 +29,6 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        foreach (var entity in modelBuilder.Model.GetEntityTypes())
-        {
-            Console.WriteLine(entity.ClrType.FullName);
-        }
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(AppDbContext).Assembly
         );

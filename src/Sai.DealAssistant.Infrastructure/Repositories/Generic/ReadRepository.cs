@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.ReadOnly;
 using Sai.DealAssistant.Domain.Exceptions;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 using Sai.DealAssistant.Infrastructure.Persistence;
@@ -8,16 +9,16 @@ using System.Linq.Expressions;
 namespace Sai.DealAssistant.Infrastructure.Repositories.Generic;
 
 public class ReadRepository<TEntity> : IReadRepository<TEntity>
-	where TEntity : BaseEntity, new()
+	where TEntity : BaseReadOnlyEntity, new()
 {
-	public ReadRepository(AppDbContext dbContext)
+	public ReadRepository(DbContext dbContext)
 	{
-		DbContext = dbContext;
-		Table = DbContext.Set<TEntity>();
+		MyDbContext = dbContext;
+		Table = MyDbContext.Set<TEntity>();
 	}
 
 	#region Protected Props
-	protected AppDbContext DbContext { get; private set; }
+	protected DbContext MyDbContext { get; private set; }
 
 	protected DbSet<TEntity> Table { get; private set; }
 	#endregion
@@ -81,7 +82,7 @@ public class ReadRepository<TEntity> : IReadRepository<TEntity>
 		}
 		else
 		{
-			query = ApplySorting(query, orderByColumn!.ToLower(), orderByDescending, orderByColumnsMap);
+			query = ApplySorting(query, orderByColumn, orderByDescending, orderByColumnsMap);
 		}
 
 		return await query

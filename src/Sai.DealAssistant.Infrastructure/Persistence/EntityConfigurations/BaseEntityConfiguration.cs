@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations.ReadOnly;
 
@@ -13,7 +14,7 @@ public abstract class BaseEntityConfiguration<TEntity> : BaseReadOnlyEntityConfi
         base.Configure(builder);
 
         //Shadow prop for optimistic concurrency implementation
-        builder.Property<uint>("xmin").IsRowVersion();
+        builder.Property<uint>("xmin").IsRowVersion().HasDefaultValue(0);
 
         // Uncomment this to use soft delete via shadow property
         // and do not forget to update universal and specific repos and migrations

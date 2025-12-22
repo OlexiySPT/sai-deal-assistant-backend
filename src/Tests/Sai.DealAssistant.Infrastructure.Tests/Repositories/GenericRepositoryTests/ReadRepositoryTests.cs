@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryTests
 {
-	public class ReadRepositoryTests : UnitTestBase
+	public class ReadRepositoryTests : GenericRepoTestUnitTestBase
     {
 		private readonly IReadRepository<SampleEmployee> _repo;
 		private int _pageSize = 5;

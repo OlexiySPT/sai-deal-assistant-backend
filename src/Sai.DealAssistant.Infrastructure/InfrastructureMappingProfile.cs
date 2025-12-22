@@ -6,6 +6,7 @@ namespace Sai.DealAssistant.Infrastructure
 	{
 		public InfrastructureMappingProfile()
 		{
+
 		}
 	}
 }

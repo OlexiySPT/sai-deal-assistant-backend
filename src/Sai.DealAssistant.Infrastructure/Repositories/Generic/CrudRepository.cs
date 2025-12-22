@@ -8,7 +8,7 @@ namespace Sai.DealAssistant.Infrastructure.Repositories.Generic;
 public class CrudRepository<TEntity> : ReadRepository<TEntity>, ICrudRepository<TEntity>
 	where TEntity : BaseEntity, new()
 {
-	public CrudRepository(AppDbContext dbContext)
+	public CrudRepository(DbContext dbContext)
 		: base(dbContext)
 	{
 	}
@@ -16,7 +16,7 @@ public class CrudRepository<TEntity> : ReadRepository<TEntity>, ICrudRepository<
 	public async Task<TEntity> CreateAsync(TEntity entity)
 	{
 		Table.Add(entity);
-		await DbContext.SaveChangesAsync();
+		await MyDbContext.SaveChangesAsync();
 
 		TEntity result = await Table.SingleAsync(p => p.Id == entity.Id);
 		return result;
@@ -31,7 +31,7 @@ public class CrudRepository<TEntity> : ReadRepository<TEntity>, ICrudRepository<
 
 		Table.Update(entity);
 
-		await DbContext.SaveChangesAsync();
+		await MyDbContext.SaveChangesAsync();
 
 		return await Table.FirstOrDefaultAsync(c => c.Id == entity.Id);
 	}
@@ -50,7 +50,7 @@ public class CrudRepository<TEntity> : ReadRepository<TEntity>, ICrudRepository<
 		}
 
 		Table.Remove(entity);
-		await DbContext.SaveChangesAsync();
+		await MyDbContext.SaveChangesAsync();
 		return entity;
 	}
 }
