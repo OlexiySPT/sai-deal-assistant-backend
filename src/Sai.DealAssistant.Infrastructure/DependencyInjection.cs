@@ -53,6 +53,9 @@ public static class DependencyInjection
                 typeof(IReadRepository<>).MakeGenericType(it),
                 typeof(ReadRepository<>).MakeGenericType(it));
             services.AddScoped(
+                typeof(IEnumCache<>).MakeGenericType(it),
+                typeof(EnumCache<>).MakeGenericType(it));
+            services.AddScoped(
                 typeof(ICrudRepository<>).MakeGenericType(it),
                 typeof(CrudRepository<>).MakeGenericType(it));
         }
