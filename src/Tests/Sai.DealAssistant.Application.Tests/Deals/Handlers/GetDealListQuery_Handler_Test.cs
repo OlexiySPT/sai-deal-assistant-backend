@@ -6,6 +6,8 @@ using Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
 using Sai.DealAssistant.Common.Enums;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
+using Sai.DealAssistant.Domain.Repositories.Generic;
+using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Unit;
 using System.Linq;
@@ -16,13 +18,13 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 {
 	public class GetDealListQuery_Handler_Test : UnitTestBase
 	{
-		private readonly ReadRepository<Deal> _dealRepository;
+		private readonly ReadRepository<AppDbContext, Deal> _dealRepository;
 		private readonly IMapper _mapper;
 
 		public GetDealListQuery_Handler_Test()
 			: base(seedTestData: false)
 		{
-			_dealRepository = new ReadRepository<Deal>(DbContext);
+			_dealRepository = new ReadRepository<AppDbContext, Deal>(DbContext);
 
 			// Seed test data
 			using (var db = CreateNewDbContext())

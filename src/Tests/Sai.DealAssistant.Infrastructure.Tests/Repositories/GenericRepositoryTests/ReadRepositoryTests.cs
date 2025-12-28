@@ -5,6 +5,7 @@ using Sai.DealAssistant.Domain.Repositories.Generic;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Common;
 using SAI.DealAssistant.TestUtils.Unit;
+using SAI.DealAssistant.TestUtils.Unit.GenericRepositoryTests.Persistance;
 using System.Linq.Expressions;
 
 namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryTests
@@ -17,7 +18,7 @@ namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryT
 		public ReadRepositoryTests()
 			: base(seedTestData: true)
 		{
-			_repo = new ReadRepository<SampleEmployee>(DbContext);
+			_repo = new ReadRepository<GenericRepoTestDbContext, SampleEmployee>(DbContext);
 		}
 
 		#region SelectAllWithFilters

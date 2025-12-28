@@ -8,17 +8,18 @@ using System.Linq.Expressions;
 
 namespace Sai.DealAssistant.Infrastructure.Repositories.Generic;
 
-public class ReadRepository<TEntity> : IReadRepository<TEntity>
+public class ReadRepository<TDbContext, TEntity> : IReadRepository<TEntity>
 	where TEntity : BaseReadOnlyEntity, new()
+	where TDbContext : DbContext
 {
-	public ReadRepository(AppDbContext dbContext)
+	public ReadRepository(TDbContext dbContext)
 	{
 		MyDbContext = dbContext;
 		Table = MyDbContext.Set<TEntity>();
 	}
 
 	#region Protected Props
-	protected AppDbContext MyDbContext { get; private set; }
+	protected TDbContext MyDbContext { get; private set; }
 
 	protected DbSet<TEntity> Table { get; private set; }
 	#endregion

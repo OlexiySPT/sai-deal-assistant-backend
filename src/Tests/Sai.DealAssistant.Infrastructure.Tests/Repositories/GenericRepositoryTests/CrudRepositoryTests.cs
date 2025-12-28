@@ -5,6 +5,7 @@ using Sai.DealAssistant.Domain.Repositories.Generic;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Common;
 using SAI.DealAssistant.TestUtils.Unit;
+using SAI.DealAssistant.TestUtils.Unit.GenericRepositoryTests.Persistance;
 
 namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryTests
 {
@@ -17,7 +18,7 @@ namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryT
 		public CrudRepositoryTests()
 			: base(seedTestData: true)
 		{
-			_repo = new CrudRepository<SampleEmployee>(DbContext);
+			_repo = new CrudRepository<GenericRepoTestDbContext, SampleEmployee>(DbContext);
 			_customer = DbContext.SampleCustomers.First();
 			if (_customer == null)
 			{

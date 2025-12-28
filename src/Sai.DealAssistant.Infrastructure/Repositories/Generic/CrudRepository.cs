@@ -5,10 +5,11 @@ using Sai.DealAssistant.Infrastructure.Persistence;
 
 namespace Sai.DealAssistant.Infrastructure.Repositories.Generic;
 
-public class CrudRepository<TEntity> : ReadRepository<TEntity>, ICrudRepository<TEntity>
+public class CrudRepository<TDbContext, TEntity> : ReadRepository<TDbContext, TEntity>, ICrudRepository<TEntity>
 	where TEntity : BaseEntity, new()
+	where TDbContext : DbContext
 {
-	public CrudRepository(AppDbContext dbContext)
+	public CrudRepository(TDbContext dbContext)
 		: base(dbContext)
 	{
 	}

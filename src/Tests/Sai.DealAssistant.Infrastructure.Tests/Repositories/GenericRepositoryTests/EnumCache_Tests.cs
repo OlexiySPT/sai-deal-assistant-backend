@@ -1,17 +1,19 @@
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
+using Sai.DealAssistant.Domain.Repositories.Generic;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Unit;
+using SAI.DealAssistant.TestUtils.Unit.GenericRepositoryTests.Persistance;
 
 namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryTests;
 
 public class EnumCache_Tests : GenericRepoTestUnitTestBase
 {
-	private readonly ReadRepository<SampleEnum> _readRepository;
+	private readonly ReadRepository<GenericRepoTestDbContext, SampleEnum> _readRepository;
 
 	public EnumCache_Tests()
 		: base(seedTestData: false)
 	{
-		_readRepository = new ReadRepository<SampleEnum>(DbContext);
+		_readRepository = new ReadRepository<GenericRepoTestDbContext, SampleEnum>(DbContext);
 	}
 
 	[Fact]
@@ -30,7 +32,7 @@ public class EnumCache_Tests : GenericRepoTestUnitTestBase
 			db.SaveChanges();
 		}
 
-		var cache = new EnumCache<SampleEnum>(_readRepository);
+		var cache = new EnumCache<SampleEnum>(_readRepository, 10);
 		// ensure clean start if previous tests populated static cache
 		cache.Invalidate();
 
@@ -59,7 +61,7 @@ public class EnumCache_Tests : GenericRepoTestUnitTestBase
 			db.SaveChanges();
 		}
 
-		var cache = new EnumCache<SampleEnum>(_readRepository);
+		var cache = new EnumCache<SampleEnum>(_readRepository, 10);
 		cache.Invalidate();
 
 		// First call loads from DB

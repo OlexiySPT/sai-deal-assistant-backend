@@ -42,6 +42,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddGenericRepositories(this IServiceCollection services, IAppConfiguration configuration)
     {
+        Type appDbContextType = typeof(AppDbContext);
         Type baseReadOnlyEntityType = typeof(BaseReadOnlyEntity);
         Type baseEntityType = typeof(BaseEntity);
         Type iEnumType = typeof(IEnum);
@@ -52,17 +53,17 @@ public static class DependencyInjection
         int enumExpirationMinutes = configuration.EnumTablesCacheExpitrationMins;
         foreach (Type it in entityTypes)
         {
-            services.AddScoped(typeof(IReadRepository<>).MakeGenericType(it), typeof(ReadRepository<>).MakeGenericType(it));
+            services.AddScoped(typeof(IReadRepository<>).MakeGenericType(it), typeof(ReadRepository<,>).MakeGenericType(appDbContextType, it));
 
             if (baseEntityType.IsAssignableFrom(it))
             {
-                services.AddScoped(typeof(ICrudRepository<>).MakeGenericType(it), typeof(CrudRepository<>).MakeGenericType(it));
+                services.AddScoped(typeof(ICrudRepository<>).MakeGenericType(it), typeof(CrudRepository<,>).MakeGenericType(appDbContextType, it));
             }
             if (iEnumType.IsAssignableFrom(it))
             {
                 services.AddScoped(
                     typeof(IEnumCache<>).MakeGenericType(it), 
-                    sp => ActivatorUtilities.CreateInstance(sp, typeof(EnumCache<>).MakeGenericType(it), enumExpirationMinutes)
+                    sp => ActivatorUtilities.CreateInstance(sp, typeof(EnumCache<>).MakeGenericType(appDbContextType, it), enumExpirationMinutes)
                 );
             }
         }
