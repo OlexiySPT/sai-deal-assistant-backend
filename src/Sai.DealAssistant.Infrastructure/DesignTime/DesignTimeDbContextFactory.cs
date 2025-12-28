@@ -13,7 +13,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbConte
     //To make it possible run for add-migration
     public DesignTimeDbContextFactory()
     {
-        _configuration = new AppConfiguration();
+        _configuration = new AppConfigurationFromConfigJson();
     }
     public DesignTimeDbContextFactory(IAppConfiguration configuration)
     {

@@ -43,7 +43,7 @@ namespace SAI.DealAssistant.TestUtils.Unit
 
 		protected SqliteConnection SqliteDbConnection { get; }
 
-		protected GenericRepoTestDbContextDbContext DbContext { get; }
+		protected GenericRepoTestDbContext DbContext { get; }
 
 		protected Fixture Fixture { get; }
 
@@ -58,7 +58,7 @@ namespace SAI.DealAssistant.TestUtils.Unit
 			GC.SuppressFinalize(this);
 		}
 
-		protected GenericRepoTestDbContextDbContext CreateNewDbContext()
+		protected GenericRepoTestDbContext CreateNewDbContext()
 		{
 			return GenericRepoTestDbContextUtil_SQLiteDb.CreateDbContext(SqliteDbConnection);
 		}

@@ -13,16 +13,16 @@ namespace SAI.DealAssistant.TestUtils.Unit
 			return result;
 		}
 
-		public static GenericRepoTestDbContextDbContext CreateDbContext(SqliteConnection connection)
+		public static GenericRepoTestDbContext CreateDbContext(SqliteConnection connection)
 		{
-			DbContextOptions<GenericRepoTestDbContextDbContext> options = new DbContextOptionsBuilder<GenericRepoTestDbContextDbContext>()
+			DbContextOptions<GenericRepoTestDbContext> options = new DbContextOptionsBuilder<GenericRepoTestDbContext>()
 				.UseSqlite(connection)
 #if DEBUG
 				.EnableSensitiveDataLogging()
 #endif
 				.Options;
 
-            var result = new GenericRepoTestDbContextDbContext(options);
+            var result = new GenericRepoTestDbContext(options);
 			result.Database.EnsureCreated();
 			return result;
 		}

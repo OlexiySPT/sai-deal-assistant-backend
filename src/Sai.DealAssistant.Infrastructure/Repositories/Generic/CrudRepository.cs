@@ -8,7 +8,7 @@ namespace Sai.DealAssistant.Infrastructure.Repositories.Generic;
 public class CrudRepository<TEntity> : ReadRepository<TEntity>, ICrudRepository<TEntity>
 	where TEntity : BaseEntity, new()
 {
-	public CrudRepository(DbContext dbContext)
+	public CrudRepository(AppDbContext dbContext)
 		: base(dbContext)
 	{
 	}

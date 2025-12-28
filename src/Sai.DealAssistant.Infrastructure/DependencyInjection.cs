@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sai.DealAssistant.Common.Configuration;
@@ -28,40 +27,43 @@ public static class DependencyInjection
 #endif
             );
 
-        services.AddGenericRepositories();
-        services.AddSpecificRepositories();
+        services.AddGenericRepositories(configuration);
+        services.AddSpecificRepositories(configuration);
 
         return services;
     }
 
-    private static IServiceCollection AddSpecificRepositories(this IServiceCollection services)
+    private static IServiceCollection AddSpecificRepositories(this IServiceCollection services, IAppConfiguration configuration)
     {
         // Do not forget to add new specific repos here
         services.AddScoped<ISeedRepository, SeedRepository>();
         return services;
     }
 
-    private static IServiceCollection AddGenericRepositories(this IServiceCollection services)
+    private static IServiceCollection AddGenericRepositories(this IServiceCollection services, IAppConfiguration configuration)
     {
         Type baseReadOnlyEntityType = typeof(BaseReadOnlyEntity);
         Type baseEntityType = typeof(BaseEntity);
         Type iEnumType = typeof(IEnum);
         IEnumerable<Type> entityTypes =
             baseReadOnlyEntityType.Assembly.GetTypes()
-            .Where(t => !t.IsAbstract && !t.IsInterface && baseReadOnlyEntityType.IsAssignableFrom(t))
+            .Where(t => !t.IsAbstract && t.IsClass && baseReadOnlyEntityType.IsAssignableFrom(t))
             .ToArray();
+        int enumExpirationMinutes = configuration.EnumTablesCacheExpitrationMins;
         foreach (Type it in entityTypes)
         {
             services.AddScoped(typeof(IReadRepository<>).MakeGenericType(it), typeof(ReadRepository<>).MakeGenericType(it));
 
-            //if (iEnumType.IsAssignableFrom(it))
-            //{
-                services.AddScoped(typeof(IEnumCache<>).MakeGenericType(it), typeof(EnumCache<>).MakeGenericType(it));
-            //}
-
             if (baseEntityType.IsAssignableFrom(it))
             {
                 services.AddScoped(typeof(ICrudRepository<>).MakeGenericType(it), typeof(CrudRepository<>).MakeGenericType(it));
+            }
+            if (iEnumType.IsAssignableFrom(it))
+            {
+                services.AddScoped(
+                    typeof(IEnumCache<>).MakeGenericType(it), 
+                    sp => ActivatorUtilities.CreateInstance(sp, typeof(EnumCache<>).MakeGenericType(it), enumExpirationMinutes)
+                );
             }
         }
 

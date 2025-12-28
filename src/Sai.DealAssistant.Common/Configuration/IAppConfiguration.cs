@@ -5,5 +5,6 @@
         string AppConnectionString { get; }
         string MigrationConnectionString { get; }
         string AllowedCorsOrigins { get; }
+        int EnumTablesCacheExpitrationMins { get; }
     }
 }

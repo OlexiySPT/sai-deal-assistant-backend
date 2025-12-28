@@ -12,9 +12,10 @@ public class EnumCache<TEntity> : IEnumCache<TEntity>
     private static readonly MemoryCache s_cache = new(new MemoryCacheOptions());
     private readonly string _cacheKey = typeof(TEntity).FullName ?? typeof(TEntity).Name;
     private readonly IReadRepository<TEntity> _repository;
+    private readonly int _expirationMinutes = 10;
 
     // Use repository.GetAll() to load values
-    public EnumCache(IReadRepository<TEntity> repository)
+    public EnumCache(IReadRepository<TEntity> repository, int expirationMinutes)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
@@ -30,7 +31,7 @@ public class EnumCache<TEntity> : IEnumCache<TEntity>
 
         var options = new MemoryCacheEntryOptions
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_expirationMinutes)
         };
 
         s_cache.Set(_cacheKey, items, options);

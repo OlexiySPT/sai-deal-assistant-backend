@@ -11,14 +11,14 @@ namespace Sai.DealAssistant.Infrastructure.Repositories.Generic;
 public class ReadRepository<TEntity> : IReadRepository<TEntity>
 	where TEntity : BaseReadOnlyEntity, new()
 {
-	public ReadRepository(DbContext dbContext)
+	public ReadRepository(AppDbContext dbContext)
 	{
 		MyDbContext = dbContext;
 		Table = MyDbContext.Set<TEntity>();
 	}
 
 	#region Protected Props
-	protected DbContext MyDbContext { get; private set; }
+	protected AppDbContext MyDbContext { get; private set; }
 
 	protected DbSet<TEntity> Table { get; private set; }
 	#endregion

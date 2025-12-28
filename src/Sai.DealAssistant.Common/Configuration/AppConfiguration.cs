@@ -2,14 +2,27 @@
 
 namespace Sai.DealAssistant.Common.Configuration;
 
-public class AppConfiguration : IAppConfiguration
+public class AppConfigurationFromConfigJson : IAppConfiguration
 {
     private readonly IConfigurationRoot _configuration;
-    public AppConfiguration()
+    public AppConfigurationFromConfigJson()
     {
         _configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json") // This requires the Microsoft.Extensions.Configuration.Json package and using directive
             .Build();
+    }
+
+    public int EnumTablesCacheExpitrationMins
+    {
+        get
+        {
+            string str = _configuration["EnumTablesCacheExpirationMins"] ?? "";
+            if (int.TryParse(str, out int result))
+            {
+                return result;
+            }
+            return 10;
+        }
     }
 
     string IAppConfiguration.AppConnectionString => _configuration.GetConnectionString("AppConnection")!;

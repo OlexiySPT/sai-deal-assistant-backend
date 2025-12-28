@@ -7,7 +7,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddCommon(this IServiceCollection services)
     {
-        services.AddSingleton<IAppConfiguration, AppConfiguration>();
+        services.AddSingleton<IAppConfiguration, AppConfigurationFromConfigJson>();
         return services;
     }
 
