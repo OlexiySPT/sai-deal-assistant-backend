@@ -121,4 +121,48 @@ public class SeedRepository : ISeedRepository
 
 		_logger.LogInformation("Users table filled.");
 	}
+
+	// New: seed events (keeps notes and tags attached). Inserts only events that don't already exist.
+	public async Task SeedEventsAsync(Func<Deal, IEnumerable<Event>> getEvents)
+	{
+		// Iterate all deals, generate deterministic events for each and upsert them.
+		var deals = await _appDbContext.Deals.AsNoTracking().ToListAsync();
+
+		foreach (var deal in deals)
+		{
+			// Generate events for this deal using application-level generator
+			var generatedEvents = getEvents(deal).ToArray();
+
+			// Load existing events for the deal into memory so we can compare and update
+			var existingEvents = await _appDbContext.Events
+				.Where(e => e.DealId == deal.Id)
+				.Include(e => e.Notes)
+				.Include(e => e.Tags)
+				.ToListAsync();
+
+			foreach (var gen in generatedEvents)
+			{
+				// Match by Pos
+				var match = existingEvents.FirstOrDefault(e => e.Pos == gen.Pos);
+				if (match is null)
+				{
+					// New event — ensure EF will treat this as an insert
+					_appDbContext.Events.Add(gen);
+				}
+				else
+				{
+					match.Pos = gen.Pos;
+					match.Date = gen.Date;
+					match.Agenda = gen.Agenda;
+					match.Result = gen.Result;
+					match.TypeId = gen.TypeId;
+					match.StateId = gen.StateId;					
+				}
+			}
+		}
+
+		await _appDbContext.SaveChangesAsync();
+
+		_logger.LogInformation("Events upsert completed.");
+	}
 }

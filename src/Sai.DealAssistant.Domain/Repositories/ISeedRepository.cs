@@ -16,4 +16,6 @@ public interface ISeedRepository
 	Task SeedUsersAsync(Func<IEnumerable<User>> getUsers);
 
 	Task SeedDealsAsync(Func<IEnumerable<Deal>> getDeals);
+
+	Task SeedEventsAsync(Func<Deal, IEnumerable<Event>> getEventsForDeal);
 }
