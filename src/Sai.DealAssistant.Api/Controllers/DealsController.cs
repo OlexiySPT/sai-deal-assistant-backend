@@ -24,7 +24,7 @@ namespace Sai.DealAssistant.Api.Controllers
 		[HttpGet]
 		[Produces(MediaTypeNames.Application.Json)]
 		[ProducesResponseType(typeof(QueryResult<DealListItemDto>), 200)]
-		public async Task<IActionResult> GetDeals([FromQuery] GetDealQuery query)
+		public async Task<IActionResult> GetDeals([FromQuery] GetDealListQuery query)
 		{
 			return Ok(await Mediator.Send(query));
 		}
@@ -57,9 +57,9 @@ namespace Sai.DealAssistant.Api.Controllers
 		[ProducesResponseType(typeof(IDictionary<string, string>), 400)]
 		public async Task<IActionResult> CreateDeal([FromBody] CreateDealCommand command)
 		{
-			DealDto Deal = await Mediator.Send(command);
+			DealDto result = await Mediator.Send(command);
 
-			return CreatedAtAction("GetDeal", new { id = $"{Deal.Id}" }, Deal);
+			return CreatedAtAction("GetDeal", new { id = $"{result.Id}" }, result);
 		}
 
 		/// <summary>
@@ -79,8 +79,8 @@ namespace Sai.DealAssistant.Api.Controllers
 		public async Task<IActionResult> UpdateDeal(int id, [FromBody] UpdateDealCommand command)
 		{
 			command.Id = id;
-			DealDto Deal = await Mediator.Send(command);
-			return Ok(Deal);
+			DealDto result = await Mediator.Send(command);
+			return Ok(result);
 		}
 
 		/// <summary>
@@ -96,8 +96,8 @@ namespace Sai.DealAssistant.Api.Controllers
 		[ProducesResponseType(404)]
 		public async Task<IActionResult> DeleteDeal(int id)
 		{
-			await Mediator.Send(new DeleteDealCommand(id));
-			return NoContent();
+			DealDto result = await Mediator.Send(new DeleteDealCommand(id));
+			return Ok(result);
 		}
 	}
 }

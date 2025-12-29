@@ -63,7 +63,7 @@ public static class DependencyInjection
             {
                 services.AddScoped(
                     typeof(IEnumCache<>).MakeGenericType(it), 
-                    sp => ActivatorUtilities.CreateInstance(sp, typeof(EnumCache<>).MakeGenericType(appDbContextType, it), enumExpirationMinutes)
+                    sp => ActivatorUtilities.CreateInstance(sp, typeof(EnumCache<>).MakeGenericType(it), enumExpirationMinutes)
                 );
             }
         }

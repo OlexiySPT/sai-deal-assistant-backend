@@ -4,7 +4,7 @@ using Sai.DealAssistant.Domain.Repositories;
 
 namespace Sai.DealAssistant.Application.System.Seeding;
 
-public class DatabaseSeeder
+public partial class DatabaseSeeder
 {
 	//private readonly ILogger<DatabaseSeeder> _logger;
 	private readonly ISeedRepository _seedRepository;
@@ -81,90 +81,6 @@ public class DatabaseSeeder
 
     #endregion
 
-
-    #region Test Data
-    public static IEnumerable<Deal> GetDeals()
-    {
-        // A small set of test deals. Keep values stable to avoid breaking tests.
-        List<Deal> result = new List<Deal>
-        {
-            new Deal
-            {
-                Name = "Acme Website Revamp",
-                Description = "One-time website redesign and optimization",
-                Url = "https://acme.example.com",
-                AiSearchInfo = "website, redesign, SEO",
-                AiBriefDescription = "Redesign front-end, improve conversion",
-                Industry = "Marketing",
-                Status = "Open",
-                TypeId = 1, // One-time Service
-				StateId = 1 // New
-			},
-            new Deal
-            {
-                Name = "Contoso Monthly Support",
-                Description = "Ongoing monthly support subscription",
-                Url = "https://contoso.example.com/support",
-                AiSearchInfo = "support, subscription, SLA",
-                AiBriefDescription = "Monthly support and maintenance",
-                Industry = "IT Services",
-                Status = "Active",
-                TypeId = 2, // Series
-				StateId = 2 // Contacted
-			},
-            new Deal
-            {
-                Name = "Globex Research Collaboration",
-                Description = "Long-term R&D partnership",
-                Url = "https://globex.example.com",
-                AiSearchInfo = "research, collaboration, R&D",
-                AiBriefDescription = "Multi-year collaboration on new products",
-                Industry = "Manufacturing",
-                Status = "Negotiation",
-                TypeId = 3, // Long-time Collaboration
-				StateId = 4 // Proposal
-			},
-            new Deal
-            {
-                Name = "Initech Prototype",
-                Description = "Prototype development engagement",
-                Url = "https://initech.example.com",
-                AiSearchInfo = "prototype, MVP",
-                AiBriefDescription = "Build MVP for product validation",
-                Industry = "Software",
-                Status = "Closed - Won",
-                TypeId = 1,
-                StateId = 5
-            },
-            new Deal
-            {
-                Name = "Umbrella Maintenance",
-                Description = "Periodic maintenance for legacy systems",
-                Url = "https://umbrella.example.com",
-                AiSearchInfo = "maintenance, legacy",
-                AiBriefDescription = "Scheduled maintenance and updates",
-                Industry = "Healthcare",
-                Status = "Closed - Lost",
-                TypeId = 2,
-                StateId = 6
-            },
-            new Deal
-            {
-                Name = "Stark Labs Integration",
-                Description = "Integration of 3rd party APIs",
-                Url = "https://stark.example.com",
-                AiSearchInfo = "integration, APIs",
-                AiBriefDescription = "Integrate external services",
-                Industry = "Engineering",
-                Status = "In Progress",
-                TypeId = 2,
-                StateId = 3
-            }
-        };
-
-        return result;
-    }
-    #endregion
     public async Task SeedAsync()
 	{
 		await _seedRepository.SeedEventTypesAsync(GetEventTypes);
@@ -176,6 +92,6 @@ public class DatabaseSeeder
 
 	public async Task SeedTestDataAsync()
 	{
-		await _seedRepository.SeedDealsAsync(GetDeals);
+		await _seedRepository.SeedDealsAsync(Deals);
 	}
 }

@@ -25,9 +25,13 @@ public class AppDbContext : DbContext
         : base(options)
     {
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        // Ensure citext extension is present so columns can use citext
+        modelBuilder.HasPostgresExtension("citext");
 
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(AppDbContext).Assembly
@@ -35,7 +39,7 @@ public class AppDbContext : DbContext
     }
 
     #region Optimistic Concurrency Handling
-    
+
     private const int MaxRetryCount = 3;
 
     public override int SaveChanges()
