@@ -63,6 +63,6 @@ public class CreateDealCommandHandlerTests
         var handler = new CreateDealCommand.Handler(repositoryMock.Object, mapperMock.Object);
 
         // Act / Assert
-        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundExceptionOverride>(() => handler.Handle(command, CancellationToken.None));
     }
 }

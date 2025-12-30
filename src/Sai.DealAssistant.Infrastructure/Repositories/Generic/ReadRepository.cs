@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly;
 using Sai.DealAssistant.Domain.Exceptions;
 using Sai.DealAssistant.Domain.Repositories.Generic;
-using Sai.DealAssistant.Infrastructure.Persistence;
 using System.Linq.Expressions;
 
 namespace Sai.DealAssistant.Infrastructure.Repositories.Generic;

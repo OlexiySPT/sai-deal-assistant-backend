@@ -15,12 +15,11 @@ public class Deal : BaseEntity
     public string? Status { get; set; } = string.Empty;
 
     public int TypeId { get; set; } = 1;
-    public DealType Type { get; set; } = default!;
-
     public int StateId { get; set; } = 1;
-    public DealState State { get; set; } = default!;
 
     #region Navigation
+    public DealType Type { get; set; } = default!;
+    public DealState State { get; set; } = default!;
     public ICollection<DealContactRep> ContactReps { get; set; }
         = new Collection<DealContactRep>();
 

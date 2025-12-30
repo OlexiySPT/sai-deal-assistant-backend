@@ -1,8 +1,8 @@
 ﻿namespace Sai.DealAssistant.Application.Common.Exceptions;
 
-public class AuthorizationException : Exception
+public class AuthorizationExceptionOverride : Exception
 {
-	public AuthorizationException(string? message)
+	public AuthorizationExceptionOverride(string? message)
 		: base(message)
 	{
 	}

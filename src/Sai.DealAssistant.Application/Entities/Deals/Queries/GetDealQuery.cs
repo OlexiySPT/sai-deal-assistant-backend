@@ -34,7 +34,7 @@ public class GetDealQuery : IRequest<DealDto>
             var entity = await _repository.FirstOrDefaultAsync(p => p.Id == request.Id);
             if (entity == null)
             {
-                throw new NotFoundException(nameof(entity), request.Id);
+                throw new NotFoundExceptionOverride(nameof(Deal), request.Id);
             }
 
             return _mapper.Map<DealDto>(entity);

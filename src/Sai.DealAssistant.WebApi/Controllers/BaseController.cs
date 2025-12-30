@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Cors;
 #pragma warning restore CS8019
 using Microsoft.AspNetCore.Mvc;
 
-namespace Sai.DealAssistant.Api.Controllers
+namespace Sai.DealAssistant.WebApi.Controllers
 {
     [ApiController]
     [EnableCors("AllowFrontend")]

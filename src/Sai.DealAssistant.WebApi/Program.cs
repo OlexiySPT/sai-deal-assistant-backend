@@ -1,11 +1,12 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Sai.DealAssistant.Api.Authorizations;
+using Sai.DealAssistant.WebApi.Authorizations;
 using Sai.DealAssistant.Application;
 using Sai.DealAssistant.Application.System.Commands;
 using Sai.DealAssistant.Common.Configuration;
 using Sai.DealAssistant.Infrastructure;
 using Sai.DealAssistant.Infrastructure.Persistence;
+using Sai.DealAssistant.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,8 @@ builder.Services.AddCors(options =>
 #endregion
 
 var app = builder.Build();
+
+app.UseGlobalExceptionHandler();
 
 #region Migrate and Seed database
 // Ensure database is migrated on startup

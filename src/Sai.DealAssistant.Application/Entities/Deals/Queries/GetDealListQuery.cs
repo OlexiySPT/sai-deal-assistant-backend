@@ -80,7 +80,7 @@ public class GetDealListQuery : PaginatedQueryRequest<QueryResult<DealListItemDt
 				request.SortDirection == SortDirections.Desc,
 				_sortMapping
 			);
-			return new QueryResult<DealListItemDto>(result, totalItems);
+			return new PagedQueryResult<DealListItemDto>(result, totalItems, request.PageSize, request.Page);
 		}
 	}
 }

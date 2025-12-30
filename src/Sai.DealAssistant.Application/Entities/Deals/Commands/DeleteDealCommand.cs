@@ -35,7 +35,7 @@ namespace Sai.DealAssistant.Application.Entities.Deals.Commands
 
 				if (deletedEmployee == null)
 				{
-					throw new NotFoundException(nameof(Deal), request.Id);
+					throw new NotFoundExceptionOverride(nameof(Deal), request.Id);
 				}
 
 				return _mapper.Map<DealDto>(deletedEmployee);

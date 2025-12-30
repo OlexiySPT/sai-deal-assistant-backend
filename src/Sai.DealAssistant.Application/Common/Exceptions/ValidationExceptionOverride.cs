@@ -2,15 +2,15 @@
 
 namespace Sai.DealAssistant.Application.Common.Exceptions;
 
-public class ValidationException : Exception
+public class ValidationExceptionOverride : Exception
 {
-	public ValidationException()
+	public ValidationExceptionOverride()
 		: base("One or more validation failures have occurred.")
 	{
 		Failures = new Dictionary<string, string[]>();
 	}
 
-	public ValidationException(List<ValidationFailure> failures)
+	public ValidationExceptionOverride(List<ValidationFailure> failures)
 		: this()
 	{
 		IEnumerable<string> propertyNames = failures

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors.Infrastructure;
 
-namespace Sai.DealAssistant.Api.Authorizations
+namespace Sai.DealAssistant.WebApi.Authorizations
 {
 	public static class CorsPolicies
 	{

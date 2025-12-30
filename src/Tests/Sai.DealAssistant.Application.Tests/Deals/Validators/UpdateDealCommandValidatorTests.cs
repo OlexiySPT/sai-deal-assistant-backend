@@ -25,7 +25,7 @@ public class UpdateDealCommandValidatorTests
 
         // Update validator in source inherits AbstractValidator<CreateDealCommand>,
         // so validate a CreateDealCommand instance here to match source behavior.
-        var command = new CreateDealCommand { Name = "OK", TypeId = 1, StateId = 1, Url = "https://ex.com" };
+        var command = new UpdateDealCommand { Name = "OK", TypeId = 1, StateId = 1, Url = "https://ex.com" };
 
         var result = await validator.TestValidateAsync(command);
 
@@ -45,7 +45,7 @@ public class UpdateDealCommandValidatorTests
         dealTypeCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<DealType>()); // no states
 
         var validator = new UpdateDealCommand.Validator(dealStateCacheMock.Object, dealTypeCacheMock.Object);
-        var command = new CreateDealCommand { Name = "OK", TypeId = 1, StateId = 99 };
+        var command = new UpdateDealCommand { Name = "OK", TypeId = 1, StateId = 99 };
 
         var result = await validator.TestValidateAsync(command);
 

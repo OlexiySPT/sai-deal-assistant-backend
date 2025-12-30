@@ -49,6 +49,6 @@ public class DeleteDealCommandHandlerTests
         var handler = new DeleteDealCommand.Handler(repositoryMock.Object, mapperMock.Object);
 
         // Act / Assert
-        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(new DeleteDealCommand(13), CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundExceptionOverride>(() => handler.Handle(new DeleteDealCommand(13), CancellationToken.None));
     }
 }

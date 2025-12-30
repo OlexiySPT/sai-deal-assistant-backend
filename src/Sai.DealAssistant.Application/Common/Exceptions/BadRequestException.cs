@@ -1,8 +1,8 @@
 ﻿namespace Sai.DealAssistant.Application.Common.Exceptions;
 
-public class BadRequestException : Exception
+public class BadRequestExceptionOverride : Exception
 {
-	public BadRequestException(string message)
+	public BadRequestExceptionOverride(string message)
 		: base(message)
 	{
 	}

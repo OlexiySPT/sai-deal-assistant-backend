@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+using Sai.DealAssistant.Application.Common.Exceptions;
 
 namespace Sai.DealAssistant.Application.Common.Behaviors;
 
@@ -33,7 +34,7 @@ public class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
 
 		if (failures.Count != 0)
 		{
-			throw new ValidationException(failures);
+			throw new ValidationExceptionOverride(failures);
 		}
 
 		return await next();

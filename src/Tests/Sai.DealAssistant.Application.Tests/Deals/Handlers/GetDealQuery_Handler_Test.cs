@@ -79,7 +79,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 			var query = new GetDealQuery(nonExistingId);
 
 			// Act / Assert
-			await Assert.ThrowsAsync<NotFoundException>(async () =>
+			await Assert.ThrowsAsync<NotFoundExceptionOverride>(async () =>
 			{
 				await handler.Handle(query, CancellationToken.None);
 			});

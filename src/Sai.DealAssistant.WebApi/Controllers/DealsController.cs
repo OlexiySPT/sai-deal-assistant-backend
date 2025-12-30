@@ -7,7 +7,7 @@ using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
 using System.Net.Mime;
 
-namespace Sai.DealAssistant.Api.Controllers
+namespace Sai.DealAssistant.WebApi.Controllers
 {
     public class DealsController : BaseController
 	{

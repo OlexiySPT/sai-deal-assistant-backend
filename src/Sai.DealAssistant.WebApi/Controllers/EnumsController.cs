@@ -6,7 +6,7 @@ using System.Collections;
 using System.Reflection;
 using System.Linq;
 
-namespace Sai.DealAssistant.Api.Controllers;
+namespace Sai.DealAssistant.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

@@ -14,20 +14,26 @@ public class AppConfigurationFromConfigJson : IAppConfiguration
 
     public int EnumTablesCacheExpitrationMins
     {
-        get
-        {
-            string str = _configuration["EnumTablesCacheExpirationMins"] ?? "";
-            if (int.TryParse(str, out int result))
-            {
-                return result;
-            }
-            return 10;
-        }
+        get => GetIntConfigValue("EnumTablesCacheExpirationMins", 10);
+    }
+    public int DefaultResultPageSize
+    {
+        get => GetIntConfigValue("DefaultResultPageSize", 10);
     }
 
     string IAppConfiguration.AppConnectionString => _configuration.GetConnectionString("AppConnection")!;
 
     string IAppConfiguration.MigrationConnectionString => _configuration.GetConnectionString("MigrationConnection")!;
 
-    string IAppConfiguration.AllowedCorsOrigins => _configuration["AllowedCorsOrigins"] ?? string.Empty;    
+    string IAppConfiguration.AllowedCorsOrigins => _configuration["AllowedCorsOrigins"] ?? string.Empty;
+
+    private int GetIntConfigValue(string name, int defaultValue)
+    {
+        string str = _configuration[name] ?? "";
+        if (int.TryParse(str, out int result))
+        {
+            return result;
+        }
+        return defaultValue;
+    }
 }
