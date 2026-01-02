@@ -16,4 +16,11 @@
     <ProjectReference Include="..\Sai.DealAssistant.Common\Sai.DealAssistant.Common.csproj" />
     <ProjectReference Include="..\Sai.DealAssistant.Domain\Sai.DealAssistant.Domain.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\DealContactReps\Commands\" />
+    <Folder Include="Entities\DealContactReps\Queries\" />
+    <Folder Include="Entities\Events\Dtos\" />
+    <Folder Include="Entities\Events\Commands\" />
+  </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sai.DealAssistant.Domain.Entities;
 
@@ -32,5 +33,11 @@ public class DealContactRepConfiguration : BaseEntityConfiguration<DealContactRe
         builder.HasOne(c => c.Deal)
             .WithMany(co => co.ContactReps)
             .HasForeignKey(c => c.DealId);
+
+        // Prevent reassigning Event to another Deal after insert.
+        // This will cause EF Core to ignore if code attempts to change DealId and call SaveChanges.
+        var dealIdProp = builder.Property(e => e.DealId);
+        dealIdProp.ValueGeneratedNever(); // explicit: not DB-generated
+        dealIdProp.Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
     }
 }

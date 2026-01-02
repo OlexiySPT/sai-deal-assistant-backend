@@ -93,7 +93,11 @@ public partial class DatabaseSeeder
 	public async Task SeedTestDataAsync()
 	{
 		await _seedRepository.SeedDealsAsync(GetTestDeals);
-		// New: seed events after deals so DealId foreign keys are valid
+
+		// Seed contact reps for each deal so foreign keys are valid
+		await _seedRepository.SeedDealContactRepsAsync(GetTestContactRepsForDeal);
+
+		// Seed events after deals/contact reps so foreign keys are valid
 		await _seedRepository.SeedEventsAsync(GetTestEventsForDeal);
 
     }

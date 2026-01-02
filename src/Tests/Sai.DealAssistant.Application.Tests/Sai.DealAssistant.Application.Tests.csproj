@@ -25,4 +25,10 @@
     <ProjectReference Include="..\SAI.DealAssistant.TestUtils\SAI.DealAssistant.TestUtils.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DealContactReps\Handlers\" />
+    <Folder Include="DealContactReps\Validators\" />
+    <Folder Include="Events\Handlers\" />
+  </ItemGroup>
+
 </Project>

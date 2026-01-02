@@ -1,7 +1,5 @@
 ﻿using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
-using System;
 using System.Collections.ObjectModel;
-using System.Reflection;
 
 namespace Sai.DealAssistant.Domain.Entities;
 
@@ -15,6 +13,10 @@ public class Event : BaseEntity
     public int TypeId { get; set; }
     public EventType Type { get; set; } = default!;
 
+    /// <summary>
+    /// Event mustn't be reassigned to another Deal
+    /// so, update must be prohibited on the EF level
+    /// </summary>
     public int DealId { get; set; }
     public Deal Deal { get; set; } = default!;
 

@@ -165,4 +165,39 @@ public class SeedRepository : ISeedRepository
 
 		_logger.LogInformation("Events upsert completed.");
 	}
+
+	public async Task SeedDealContactRepsAsync(Func<Deal, IEnumerable<DealContactRep>> getRepsForDeal)
+	{
+		var deals = await _appDbContext.Deals.AsNoTracking().ToListAsync();
+
+		foreach (var deal in deals)
+		{
+			var generatedReps = getRepsForDeal(deal).ToArray();
+
+			var existingReps = await _appDbContext.DealContactReps
+				.Where(r => r.DealId == deal.Id)
+				.ToListAsync();
+
+			foreach (var gen in generatedReps)
+			{
+				// Match by Name (case-insensitive)
+				var match = existingReps.FirstOrDefault(r => string.Equals(r.Name, gen.Name, StringComparison.OrdinalIgnoreCase));
+				if (match is null)
+				{
+					_appDbContext.DealContactReps.Add(gen);
+				}
+				else
+				{
+					match.Position = gen.Position;
+					match.Phone = gen.Phone;
+					match.Email = gen.Email;
+					match.Description = gen.Description;
+				}
+			}
+		}
+
+		await _appDbContext.SaveChangesAsync();
+
+		_logger.LogInformation("Deal contact reps upsert completed.");
+	}
 }

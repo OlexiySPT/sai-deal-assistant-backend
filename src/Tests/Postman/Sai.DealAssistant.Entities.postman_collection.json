@@ -208,6 +208,166 @@
 			]
 		},
 		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "GetDealEvents",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/events?dealid=2",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"events"
+							],
+							"query": [
+								{
+									"key": "dealid",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "GetDealEvent",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/events/1367",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"1367"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateDealEvent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"DealId\": 2,\r\n    \"date\": \"2026-01-03\",\r\n    \"agenda\": \"Kabanah call 2\",\r\n    \"result\": \"Very good too\",\r\n    \"typeId\": 2,\r\n    \"stateId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/events",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"events"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEvent",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"date\": \"2026-01-05\",\r\n    \"agenda\": \"Kabanah call 2 updated\",\r\n    \"result\": \"Very good too updated\",\r\n    \"typeId\": 2,\r\n    \"stateId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/events/2052",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"2052"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'PUT' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteEvent",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/events/2052",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"2052"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'DELETE' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Enums",
 			"item": [
 				{
