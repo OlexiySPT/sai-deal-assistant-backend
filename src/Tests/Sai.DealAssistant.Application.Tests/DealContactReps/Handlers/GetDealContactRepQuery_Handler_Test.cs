@@ -9,6 +9,8 @@ using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Unit;
 using Xunit;
 using Sai.DealAssistant.Application.Common.Exceptions;
+using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
+using Sai.DealAssistant.Application.Entities.DealContactReps.Queries;
 
 namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
 {
@@ -32,11 +34,14 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
             // Seed single rep
             using (var db = CreateNewDbContext())
             {
-                var deal = new Deal { Name = "Test Deal" };
-                db.Deals.Add(deal);
+                var state = db.DealStates.Add(new DealState { State = "Open" });
+                var type = db.DealTypes.Add(new DealType { Type = "Standard" });
+                db.SaveChanges();
+                var deal = new Deal { Name = "Test Deal223322", StateId = state.Entity.Id, TypeId = type.Entity.Id };
+                var added = db.Deals.Add(deal);
                 db.SaveChanges();
 
-                db.DealContactReps.Add(new DealContactRep { Name = "John Doe", Email = "john@example.com", DealId = deal.Id });
+                db.DealContactReps.Add(new DealContactRep { Name = "John Doe", Email = "john@example.com", DealId = added.Entity.Id });
                 db.SaveChanges();
             }
         }
@@ -45,9 +50,9 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         public async Task Handler_ReturnsDto_ForExistingId()
         {
             var existing = await DbContext.DealContactReps.FirstAsync();
-            var handler = new Sai.DealAssistant.Application.Entities.DealContactReps.Queries.GetDealContactRepQuery.Handler(_repo, _mapper);
+            var handler = new GetDealContactRepQuery.Handler(_repo, _mapper);
 
-            var result = await handler.Handle(new Sai.DealAssistant.Application.Entities.DealContactReps.Queries.GetDealContactRepQuery(existing.Id), CancellationToken.None);
+            var result = await handler.Handle(new GetDealContactRepQuery(existing.Id), CancellationToken.None);
 
             Assert.Equal(existing.Id, result.Id);
             Assert.Equal(existing.Name, result.Name);
@@ -57,9 +62,9 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         [Fact]
         public async Task Handler_ThrowsNotFound_ForMissingId()
         {
-            var handler = new Sai.DealAssistant.Application.Entities.DealContactReps.Queries.GetDealContactRepQuery.Handler(_repo, _mapper);
+            var handler = new GetDealContactRepQuery.Handler(_repo, _mapper);
 
-            await Assert.ThrowsAsync<NotFoundExceptionOverride>(() => handler.Handle(new Sai.DealAssistant.Application.Entities.DealContactReps.Queries.GetDealContactRepQuery(9999), CancellationToken.None));
+            await Assert.ThrowsAsync<NotFoundExceptionOverride>(() => handler.Handle(new GetDealContactRepQuery(9999), CancellationToken.None));
         }
     }
 }

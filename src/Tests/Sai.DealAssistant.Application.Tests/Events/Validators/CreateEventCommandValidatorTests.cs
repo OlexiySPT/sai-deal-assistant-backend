@@ -26,7 +26,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             dealRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Deal, bool>>>()))
                 .ReturnsAsync(new Deal { Id = 10 });
 
-            var validator = new CreateEventCommand.Validator((IEnumCache<EventState>)typeCacheMock.Object, (IEnumCache<EventType>)stateCacheMock.Object, dealRepoMock.Object);
+            var validator = new CreateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object, dealRepoMock.Object);
 
             var cmd = new CreateEventCommand
             {
@@ -56,7 +56,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             dealRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Deal, bool>>>()))
                 .ReturnsAsync(new Deal { Id = 10 });
 
-            var validator = new CreateEventCommand.Validator((IEnumCache<EventState>)typeCacheMock.Object, (IEnumCache<EventType>)stateCacheMock.Object, dealRepoMock.Object);
+            var validator = new CreateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object, dealRepoMock.Object);
 
             var cmd = new CreateEventCommand
             {
@@ -83,7 +83,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             dealRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Deal, bool>>>()))
                 .ReturnsAsync(new Deal { Id = 10 });
 
-            var validator = new CreateEventCommand.Validator((IEnumCache<EventState>)typeCacheMock.Object, (IEnumCache<EventType>)stateCacheMock.Object, dealRepoMock.Object);
+            var validator = new CreateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object, dealRepoMock.Object);
 
             var cmd = new CreateEventCommand
             {
@@ -110,7 +110,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             dealRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Deal, bool>>>()))
                 .ReturnsAsync((Deal?)null); // deal not found
 
-            var validator = new CreateEventCommand.Validator((IEnumCache<EventState>)typeCacheMock.Object, (IEnumCache<EventType>)stateCacheMock.Object, dealRepoMock.Object);
+            var validator = new CreateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object, dealRepoMock.Object);
 
             var cmd = new CreateEventCommand
             {
@@ -137,7 +137,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             dealRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Deal, bool>>>()))
                 .ReturnsAsync(new Deal { Id = 10 });
 
-            var validator = new CreateEventCommand.Validator((IEnumCache<EventState>)typeCacheMock.Object, (IEnumCache<EventType>)stateCacheMock.Object, dealRepoMock.Object);
+            var validator = new CreateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object, dealRepoMock.Object);
 
             var cmd = new CreateEventCommand
             {

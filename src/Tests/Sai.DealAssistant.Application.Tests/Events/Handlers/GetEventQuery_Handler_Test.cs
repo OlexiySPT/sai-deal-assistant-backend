@@ -10,6 +10,8 @@ using SAI.DealAssistant.TestUtils.Unit;
 using Xunit;
 using Sai.DealAssistant.Application.Common.Exceptions;
 using System;
+using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
+using Sai.DealAssistant.Application.Entities.Events.Queries;
 
 namespace Sai.DealAssistant.Application.Tests.Events.Handlers
 {
@@ -32,12 +34,15 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
 			// seed event and required type/state
 			using (var db = CreateNewDbContext())
 			{
-				var deal = new Deal { Name = "Test Deal" };
+				var dt = db.DealTypes.Add(new DealType { Type = "Standard" });
+				var ds = db.DealStates.Add(new DealState { State = "Open" });
+				db.SaveChanges();
+                var deal = new Deal { Name = "Test Deal", TypeId = dt.Entity.Id, StateId = ds.Entity.Id };
 				db.Deals.Add(deal);
 				db.SaveChanges();
 
-				var et = new Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.EventType { Name = "Summary" };
-				var es = new Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.EventState { State = "Done" };
+				var et = new EventType { Name = "Summary" };
+				var es = new EventState { State = "Done" };
 				db.AddRange(et, es);
 				db.SaveChanges();
 
@@ -50,9 +55,9 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
 		public async Task Handler_ReturnsDto_ForExistingId()
 		{
 			var existing = await DbContext.Events.FirstAsync();
-			var handler = new Sai.DealAssistant.Application.Entities.Events.Queries.GetEventQuery.Handler(_repo, _mapper);
+			var handler = new GetEventQuery.Handler(_repo, _mapper);
 
-			var result = await handler.Handle(new Sai.DealAssistant.Application.Entities.Events.Queries.GetEventQuery(existing.Id), CancellationToken.None);
+			var result = await handler.Handle(new GetEventQuery(existing.Id), CancellationToken.None);
 
 			Assert.Equal(existing.Id, result.Id);
 			Assert.Equal(existing.Agenda, result.Agenda);
@@ -62,9 +67,9 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
 		[Fact]
 		public async Task Handler_ThrowsNotFound_ForMissingId()
 		{
-			var handler = new Sai.DealAssistant.Application.Entities.Events.Queries.GetEventQuery.Handler(_repo, _mapper);
+			var handler = new GetEventQuery.Handler(_repo, _mapper);
 
-			await Assert.ThrowsAsync<NotFoundExceptionOverride>(() => handler.Handle(new Sai.DealAssistant.Application.Entities.Events.Queries.GetEventQuery(9999), CancellationToken.None));
+			await Assert.ThrowsAsync<NotFoundExceptionOverride>(() => handler.Handle(new GetEventQuery(9999), CancellationToken.None));
 		}
 	}
 }

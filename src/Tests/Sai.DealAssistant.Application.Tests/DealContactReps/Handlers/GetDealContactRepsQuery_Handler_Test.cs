@@ -1,11 +1,14 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Sai.DealAssistant.Application.Entities.DealContactReps.Dtos;
+using Sai.DealAssistant.Application.Entities.DealContactReps.Queries;
 using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Unit;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
@@ -22,8 +25,11 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
             // Seed test data
             using (var db = CreateNewDbContext())
             {
-                var deal1 = new Deal { Name = "Deal A" };
-                var deal2 = new Deal { Name = "Deal B" };
+                var state = db.DealStates.Add(new DealState { State = "Open" });
+                var type = db.DealTypes.Add(new DealType { Type = "Standard" });
+                db.SaveChanges();
+                var deal1 = new Deal { Name = "Deal A" , StateId = state.Entity.Id, TypeId = type.Entity.Id};
+                var deal2 = new Deal { Name = "Deal B", StateId = state.Entity.Id, TypeId = type.Entity.Id };
                 db.AddRange(deal1, deal2);
                 db.SaveChanges();
 
@@ -43,10 +49,10 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         public async Task Handler_ReturnsOnlyRepsForGivenDeal_OrderedByName()
         {
             // Arrange
-            var handler = new Sai.DealAssistant.Application.Entities.DealContactReps.Queries.GetDealContactRepsQuery.Handler(_repo);
+            var handler = new GetDealContactRepsQuery.Handler(_repo);
 
             var deal = DbContext.Deals.Include(d => d.ContactReps).First();
-            var query = new Sai.DealAssistant.Application.Entities.DealContactReps.Queries.GetDealContactRepsQuery { DealId = deal.Id };
+            var query = new GetDealContactRepsQuery { DealId = deal.Id };
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
@@ -55,7 +61,7 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
             var expected = DbContext.DealContactReps
                 .Where(p => p.DealId == deal.Id)
                 .OrderBy(p => p.Name)
-                .Select(p => new Sai.DealAssistant.Application.Entities.DealContactReps.Dtos.DealContactRepListItemDto
+                .Select(p => new DealContactRepListItemDto
                 {
                     Id = p.Id,
                     Name = p.Name,

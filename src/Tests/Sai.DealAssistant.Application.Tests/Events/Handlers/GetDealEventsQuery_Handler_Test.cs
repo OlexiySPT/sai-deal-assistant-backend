@@ -2,7 +2,10 @@ using System;
 using System.Linq;
 using System.Threading;
 using Microsoft.EntityFrameworkCore;
+using Sai.DealAssistant.Application.Entities.Events.Dtos;
+using Sai.DealAssistant.Application.Entities.Events.Queries;
 using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Unit;
@@ -22,16 +25,22 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
             // Seed test data
             using (var db = CreateNewDbContext())
             {
-                var deal1 = new Deal { Name = "Deal A" };
-                var deal2 = new Deal { Name = "Deal B" };
+                var dealtype = db.DealTypes.Add(new DealType { Type = "Standard" });
+                var dealstate = db.DealStates.Add(new DealState { State = "Open" });
+                var eventtype = db.EventTypes.Add(new EventType { Name = "Meeting" });
+                var eventstate = db.EventStates.Add(new EventState { State = "Planned" });
+                db.SaveChanges();
+
+                var deal1 = new Deal { Name = "Deal A" , TypeId = dealtype.Entity.Id, StateId = dealstate.Entity.Id};
+                var deal2 = new Deal { Name = "Deal B", TypeId = dealtype.Entity.Id, StateId = dealstate.Entity.Id };
                 db.AddRange(deal1, deal2);
                 db.SaveChanges();
 
                 var events = new[]
                 {
-                    new Event { Date = DateTimeOffset.UtcNow.AddDays(-1), Agenda = "A1", DealId = deal1.Id },
-                    new Event { Date = DateTimeOffset.UtcNow.AddDays(-2), Agenda = "A2", DealId = deal1.Id },
-                    new Event { Date = DateTimeOffset.UtcNow, Agenda = "B1", DealId = deal2.Id }
+                    new Event { Date = DateTimeOffset.UtcNow.AddDays(-1), Agenda = "A1", DealId = deal1.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id},
+                    new Event { Date = DateTimeOffset.UtcNow.AddDays(-2), Agenda = "A2", DealId = deal1.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id},
+                    new Event { Date = DateTimeOffset.UtcNow, Agenda = "B1", DealId = deal2.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id}
                 };
 
                 db.Events.AddRange(events);
@@ -40,12 +49,12 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
         }
 
         [Fact]
-        public async void Handler_ReturnsOnlyEventsForGivenDeal_OrderedByDateDesc()
+        public async void Handler_ReturnsOnlyEventsForGivenDeal_OrderedByIdDesc()
         {
             // Arrange
-            var handler = new Sai.DealAssistant.Application.Entities.Events.Queries.GetDealEventsQuery.Handler(_repo);
+            var handler = new GetDealEventsQuery.Handler(_repo);
             var deal = DbContext.Deals.Include(d => d.Events).First();
-            var query = new Sai.DealAssistant.Application.Entities.Events.Queries.GetDealEventsQuery { DealId = deal.Id };
+            var query = new GetDealEventsQuery { DealId = deal.Id };
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
@@ -53,8 +62,8 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
             // Assert - expected built from DbContext
             var expected = DbContext.Events
                 .Where(p => p.DealId == deal.Id)
-                .OrderByDescending(p => p.Date)
-                .Select(p => new Sai.DealAssistant.Application.Entities.Events.Dtos.EventListItemDto
+                .OrderByDescending(p => p.Id)
+                .Select(p => new EventListItemDto
                 {
                     Id = p.Id,
                     Date = p.Date,
@@ -69,8 +78,6 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
             Assert.Equal(expected.Count, result.TotalItems);
             Assert.Equal(expected.Count, result.Items.Count);
             Assert.Equal(expected.Select(x => x.Id), result.Items.Select(x => x.Id));
-            // ensure ordering by date desc
-            Assert.Equal(expected.Select(x => x.Date), result.Items.Select(x => x.Date));
         }
     }
 }

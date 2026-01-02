@@ -72,8 +72,9 @@ public class GetDealListQuery : PaginatedQueryRequest<QueryResult<DealListItemDt
 					Description = p.Description,
 					Industry = p.Industry,
 					State = p.State.State,
-					Type = p.Type.Type
-				},
+					Type = p.Type.Type,
+					CreatedAt = p.CreatedAt,
+                },
 				request.Page,
 				request.PageSize,
 				string.IsNullOrWhiteSpace(request.SortBy) ? null : request.SortBy.ToLowerInvariant(),

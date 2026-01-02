@@ -10,8 +10,10 @@ using Sai.DealAssistant.Domain.Repositories.Generic;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Unit;
+using System;
 using System.Linq;
 using System.Threading;
+using System.Xml.Linq;
 using Xunit;
 
 namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
@@ -55,7 +57,8 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 			// Arrange
 			var handler = new GetDealListQuery.Handler(_dealRepository);
 			var nameFragment = "Deal 1"; // should match Deal 1, Deal 10, Deal 11, etc.
-			var query = new GetDealListQuery { Name = nameFragment };
+			int pageSize = 100;
+			var query = new GetDealListQuery { Name = nameFragment , Page = 1, PageSize = pageSize};
 
 			// Act
 			var result = await handler.Handle(query, CancellationToken.None);
@@ -64,17 +67,20 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 			var expected = DbContext.Deals
 				.Include(d => d.State)
 				.Where(d => d.Name != null && d.Name.Contains(nameFragment))
-				.Select(d => new DealListItemDto
-				{
-					Id = d.Id,
-					Name = d.Name,
-					Description = d.Description,
-					Industry = d.Industry,
-					State = d.State.State
-				})
+				.Select(p => new DealListItemDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Industry = p.Industry,
+                    State = p.State.State,
+                    Type = p.Type.Type,
+                    CreatedAt = p.CreatedAt,
+                })
+				.Take(pageSize)
 				.ToList();
 
-			Assert.Equal(expected.Count, result.TotalItems);
+            Assert.Equal(expected.Count, result.TotalItems);
 			Assert.Equal(expected.Count, result.Items.Count);
 			Assert.Equivalent(expected.OrderBy(x => x.Id), result.Items.OrderBy(x => x.Id));
 		}
@@ -85,7 +91,8 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 			// Arrange
 			var handler = new GetDealListQuery.Handler(_dealRepository);
 			var descFragment = "Special desc";
-			var query = new GetDealListQuery { Description = descFragment };
+            int pageSize = 100;
+            var query = new GetDealListQuery { Description = descFragment , Page = 1, PageSize = pageSize};
 
 			// Act
 			var result = await handler.Handle(query, CancellationToken.None);
@@ -94,15 +101,18 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 			var expected = DbContext.Deals
 				.Include(d => d.State)
 				.Where(d => d.Description != null && d.Description.Contains(descFragment))
-				.Select(d => new DealListItemDto
-				{
-					Id = d.Id,
-					Name = d.Name,
-					Description = d.Description,
-					Industry = d.Industry,
-					State = d.State.State
-				})
-				.ToList();
+				.Select(p => new DealListItemDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Industry = p.Industry,
+                    State = p.State.State,
+                    Type = p.Type.Type,
+                    CreatedAt = p.CreatedAt,
+                })
+				.Take(pageSize)
+                .ToList();
 
 			Assert.Equal(expected.Count, result.TotalItems);
 			Assert.Equal(expected.Count, result.Items.Count);
@@ -115,7 +125,8 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 			// Arrange
 			var handler = new GetDealListQuery.Handler(_dealRepository);
 			var industry = "Software";
-			var query = new GetDealListQuery { Industry = industry };
+            int pageSize = 100;
+            var query = new GetDealListQuery { Industry = industry, Page = 1, PageSize = pageSize};
 
 			// Act
 			var result = await handler.Handle(query, CancellationToken.None);
@@ -124,14 +135,16 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 			var expected = DbContext.Deals
 				.Include(d => d.State)
 				.Where(d => d.Industry != null && d.Industry.Contains(industry))
-				.Select(d => new DealListItemDto
-				{
-					Id = d.Id,
-					Name = d.Name,
-					Description = d.Description,
-					Industry = d.Industry,
-					State = d.State.State
-				})
+				.Select(p => new DealListItemDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Industry = p.Industry,
+                    State = p.State.State,
+                    Type = p.Type.Type,
+                    CreatedAt = p.CreatedAt,
+                })
 				.ToList();
 
 			Assert.Equal(expected.Count, result.TotalItems);
@@ -153,14 +166,16 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 			var expected = DbContext.Deals
 				.Include(d => d.State)
 				.OrderBy(d => d.Name)
-				.Select(d => new DealListItemDto
-				{
-					Id = d.Id,
-					Name = d.Name,
-					Description = d.Description,
-					Industry = d.Industry,
-					State = d.State.State
-				})
+				.Select(p => new DealListItemDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Industry = p.Industry,
+                    State = p.State.State,
+                    Type = p.Type.Type,
+                    CreatedAt = p.CreatedAt,
+                })
 				.ToList();
 
 			Assert.Equal(expected.Count, result.TotalItems);
@@ -181,14 +196,16 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 			var expected = DbContext.Deals
 				.Include(d => d.State)
 				.OrderByDescending(d => d.Name)
-				.Select(d => new DealListItemDto
-				{
-					Id = d.Id,
-					Name = d.Name,
-					Description = d.Description,
-					Industry = d.Industry,
-					State = d.State.State
-				})
+				.Select(p => new DealListItemDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Industry = p.Industry,
+                    State = p.State.State,
+                    Type = p.Type.Type,
+                    CreatedAt = p.CreatedAt,
+                })
 				.ToList();
 
 			Assert.Equal(expected.Count, result.TotalItems);
@@ -209,14 +226,16 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 			var expected = DbContext.Deals
 				.Include(d => d.State)
 				.OrderBy(d => d.Industry)
-				.Select(d => new DealListItemDto
-				{
-					Id = d.Id,
-					Name = d.Name,
-					Description = d.Description,
-					Industry = d.Industry,
-					State = d.State.State
-				})
+				.Select(p => new DealListItemDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Industry = p.Industry,
+                    State = p.State.State,
+                    Type = p.Type.Type,
+                    CreatedAt = p.CreatedAt,
+                })
 				.ToList();
 
 			Assert.Equal(expected.Count, result.TotalItems);
@@ -237,14 +256,16 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 			var expected = DbContext.Deals
 				.Include(d => d.State)
 				.OrderByDescending(d => d.Industry)
-				.Select(d => new DealListItemDto
-				{
-					Id = d.Id,
-					Name = d.Name,
-					Description = d.Description,
-					Industry = d.Industry,
-					State = d.State.State
-				})
+				.Select(p => new DealListItemDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Industry = p.Industry,
+                    State = p.State.State,
+                    Type = p.Type.Type,
+                    CreatedAt = p.CreatedAt,
+                })
 				.ToList();
 
 			Assert.Equal(expected.Count, result.TotalItems);
@@ -258,24 +279,28 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 			var handler = new GetDealListQuery.Handler(_dealRepository);
 
 			var state = DbContext.DealStates.First();
-			var query = new GetDealListQuery{ StateId = state.Id };
+			int pageSize = 100;
+            var query = new GetDealListQuery{ StateId = state.Id, Page = 1, PageSize = pageSize };
 
-			// Act
-			var result = await handler.Handle(query, CancellationToken.None);
+            // Act
+            var result = await handler.Handle(query, CancellationToken.None);
 
 			// Assert
 			var expected = DbContext.Deals
 				.Include(d => d.State)
 				.Where(d => d.StateId == state.Id)
-				.Select(d => new DealListItemDto
-				{
-					Id = d.Id,
-					Name = d.Name,
-					Description = d.Description,
-					Industry = d.Industry,
-					State = d.State.State
-				})
-				.ToList();
+				.Select(p => new DealListItemDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Industry = p.Industry,
+                    State = p.State.State,
+                    Type = p.Type.Type,
+                    CreatedAt = p.CreatedAt,
+                })
+				.Take(pageSize)
+                .ToList();
 
 			Assert.Equal(expected.Count, result.TotalItems);
 			Assert.Equal(expected.Count, result.Items.Count);

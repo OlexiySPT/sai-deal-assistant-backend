@@ -21,7 +21,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             typeCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventType> { new EventType { Id = 1 } });
             stateCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventState> { new EventState { Id = 2 } });
 
-            var validator = new UpdateEventCommand.Validator((IEnumCache<EventState>)typeCacheMock.Object, (IEnumCache<EventType>)stateCacheMock.Object);
+            var validator = new UpdateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object);
 
             var cmd = new UpdateEventCommand
             {
@@ -48,7 +48,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             typeCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventType> { new EventType { Id = 1 } });
             stateCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventState> { new EventState { Id = 2 } });
 
-            var validator = new UpdateEventCommand.Validator((IEnumCache<EventState>)typeCacheMock.Object, (IEnumCache<EventType>)stateCacheMock.Object);
+            var validator = new UpdateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object);
 
             var cmd = new UpdateEventCommand
             {
@@ -72,7 +72,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             typeCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventType>()); // no types
             stateCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventState> { new EventState { Id = 2 } });
 
-            var validator = new UpdateEventCommand.Validator((IEnumCache<EventState>)typeCacheMock.Object, (IEnumCache<EventType>)stateCacheMock.Object);
+            var validator = new UpdateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object);
 
             var cmd = new UpdateEventCommand
             {
@@ -96,7 +96,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             typeCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventType> { new EventType { Id = 1 } });
             stateCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventState>()); // no states
 
-            var validator = new UpdateEventCommand.Validator((IEnumCache<EventState>)typeCacheMock.Object, (IEnumCache<EventType>)stateCacheMock.Object);
+            var validator = new UpdateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object);
 
             var cmd = new UpdateEventCommand
             {
@@ -120,7 +120,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             typeCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventType> { new EventType { Id = 1 } });
             stateCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventState> { new EventState { Id = 2 } });
 
-            var validator = new UpdateEventCommand.Validator((IEnumCache<EventState>)typeCacheMock.Object, (IEnumCache<EventType>)stateCacheMock.Object);
+            var validator = new UpdateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object);
 
             var cmd = new UpdateEventCommand
             {

@@ -25,7 +25,7 @@ public class GetDealEventsQuery : IRequest<QueryResult<EventListItemDto>>
 
         public async Task<QueryResult<EventListItemDto>> Handle(GetDealEventsQuery request, CancellationToken cancellationToken)
         {
-            var qry = _repository.GetAll().Where(p => p.DealId == request.DealId).OrderByDescending(p => p.Date);
+            var qry = _repository.GetAll().Where(p => p.DealId == request.DealId).OrderByDescending(p => p.Id);
 
             var totalItems = await _repository.CountAsync(qry);
 
