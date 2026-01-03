@@ -15,12 +15,12 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
 {
     public class GetDealContactRepsQuery_Handler_Test : UnitTestBase
     {
-        private readonly ReadRepository<AppDbContext, DealContactRep> _repo;
+        private readonly ReadRepository<AppDbContext, ContactPerson> _repo;
 
         public GetDealContactRepsQuery_Handler_Test()
             : base(seedTestData: false)
         {
-            _repo = new ReadRepository<AppDbContext, DealContactRep>(DbContext);
+            _repo = new ReadRepository<AppDbContext, ContactPerson>(DbContext);
 
             // Seed test data
             using (var db = CreateNewDbContext())
@@ -35,12 +35,12 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
 
                 var reps = new[]
                 {
-                    new DealContactRep { Name = "Zoe", Email = "z@example.com", DealId = deal1.Id },
-                    new DealContactRep { Name = "Alice", Email = "a@example.com", DealId = deal1.Id },
-                    new DealContactRep { Name = "Bob", Email = "b@example.com", DealId = deal2.Id }
+                    new ContactPerson { Name = "Zoe", Email = "z@example.com", DealId = deal1.Id },
+                    new ContactPerson { Name = "Alice", Email = "a@example.com", DealId = deal1.Id },
+                    new ContactPerson { Name = "Bob", Email = "b@example.com", DealId = deal2.Id }
                 };
 
-                db.DealContactReps.AddRange(reps);
+                db.ContactPersons.AddRange(reps);
                 db.SaveChanges();
             }
         }
@@ -51,14 +51,14 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
             // Arrange
             var handler = new GetDealContactRepsQuery.Handler(_repo);
 
-            var deal = DbContext.Deals.Include(d => d.ContactReps).First();
+            var deal = DbContext.Deals.Include(d => d.ContactPersons).First();
             var query = new GetDealContactRepsQuery { DealId = deal.Id };
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert - expected built from DbContext
-            var expected = DbContext.DealContactReps
+            var expected = DbContext.ContactPersons
                 .Where(p => p.DealId == deal.Id)
                 .OrderBy(p => p.Name)
                 .Select(p => new DealContactRepListItemDto

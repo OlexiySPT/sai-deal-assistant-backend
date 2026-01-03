@@ -23,11 +23,11 @@ public class Event : BaseEntity
     public int StateId { get; set; } = 1;
     public EventState State { get; set; } = default!;
 
+    public int? ContactPersonId { get; set; }
+    public ContactPerson? ContactPerson { get; set; }
+
     #region Navigation
     public ICollection<EventNote> Notes { get; set; }
         = new Collection<EventNote>();
-
-    public ICollection<EventTag> Tags { get; set; }
-        = new Collection<EventTag>();
     #endregion
 }

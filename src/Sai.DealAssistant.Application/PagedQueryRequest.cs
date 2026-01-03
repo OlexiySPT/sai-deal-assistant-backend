@@ -3,7 +3,7 @@ using Sai.DealAssistant.Common.Enums;
 
 namespace Sai.DealAssistant.Application
 {
-	public abstract class PaginatedQueryRequest<TRequest> : IRequest<TRequest>
+	public abstract class PagedQueryRequest<TRequest> : IRequest<TRequest>
 	{
 		public string? SortBy { get; set; }
 

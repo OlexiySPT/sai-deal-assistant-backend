@@ -16,7 +16,7 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         [Fact]
         public async Task Create_Handler_ReturnsDto_OnSuccess()
         {
-            var repoMock = new Mock<ICrudRepository<DealContactRep>>();
+            var repoMock = new Mock<ICrudRepository<ContactPerson>>();
             var mapperMock = new Mock<IMapper>();
 
             var cmd = new CreateDealContactRepCommand
@@ -26,11 +26,11 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
                 Email = "new@example.com"
             };
 
-            var mappedEntity = new DealContactRep { Name = cmd.Name, Email = cmd.Email, DealId = cmd.DealId };
-            var createdEntity = new DealContactRep { Id = 123, Name = cmd.Name, Email = cmd.Email, DealId = cmd.DealId };
+            var mappedEntity = new ContactPerson { Name = cmd.Name, Email = cmd.Email, DealId = cmd.DealId };
+            var createdEntity = new ContactPerson { Id = 123, Name = cmd.Name, Email = cmd.Email, DealId = cmd.DealId };
             var returnedDto = new DealContactRepDto { Id = createdEntity.Id, Name = createdEntity.Name, Email = createdEntity.Email };
 
-            mapperMock.Setup(m => m.Map<DealContactRep>(It.IsAny<CreateDealContactRepCommand>())).Returns(mappedEntity);
+            mapperMock.Setup(m => m.Map<ContactPerson>(It.IsAny<CreateDealContactRepCommand>())).Returns(mappedEntity);
             repoMock.Setup(r => r.CreateAsync(mappedEntity)).ReturnsAsync(createdEntity);
             mapperMock.Setup(m => m.Map<DealContactRepDto>(createdEntity)).Returns(returnedDto);
 
@@ -46,14 +46,14 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         [Fact]
         public async Task Create_Handler_ThrowsNotFound_WhenCreateReturnsNull()
         {
-            var repoMock = new Mock<ICrudRepository<DealContactRep>>();
+            var repoMock = new Mock<ICrudRepository<ContactPerson>>();
             var mapperMock = new Mock<IMapper>();
 
             var cmd = new CreateDealContactRepCommand { DealId = 1, Name = "X" };
-            var mappedEntity = new DealContactRep { Name = "X", DealId = 1 };
+            var mappedEntity = new ContactPerson { Name = "X", DealId = 1 };
 
-            mapperMock.Setup(m => m.Map<DealContactRep>(It.IsAny<CreateDealContactRepCommand>())).Returns(mappedEntity);
-            repoMock.Setup(r => r.CreateAsync(mappedEntity)).ReturnsAsync((DealContactRep?)null);
+            mapperMock.Setup(m => m.Map<ContactPerson>(It.IsAny<CreateDealContactRepCommand>())).Returns(mappedEntity);
+            repoMock.Setup(r => r.CreateAsync(mappedEntity)).ReturnsAsync((ContactPerson?)null);
 
             var handler = new CreateDealContactRepCommand.Handler(repoMock.Object, mapperMock.Object);
 
@@ -63,15 +63,15 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         [Fact]
         public async Task Update_Handler_ReturnsDto_OnSuccess()
         {
-            var repoMock = new Mock<ICrudRepository<DealContactRep>>();
+            var repoMock = new Mock<ICrudRepository<ContactPerson>>();
             var mapperMock = new Mock<IMapper>();
 
             var cmd = new UpdateDealContactRepCommand { Id = 5, Name = "Updated", Email = "u@example.com" };
-            var mappedEntity = new DealContactRep { Id = cmd.Id, Name = cmd.Name, Email = cmd.Email };
-            var updatedEntity = new DealContactRep { Id = cmd.Id, Name = cmd.Name, Email = cmd.Email };
+            var mappedEntity = new ContactPerson { Id = cmd.Id, Name = cmd.Name, Email = cmd.Email };
+            var updatedEntity = new ContactPerson { Id = cmd.Id, Name = cmd.Name, Email = cmd.Email };
             var returnedDto = new DealContactRepDto { Id = cmd.Id, Name = cmd.Name, Email = cmd.Email };
 
-            mapperMock.Setup(m => m.Map<DealContactRep>(It.IsAny<UpdateDealContactRepCommand>())).Returns(mappedEntity);
+            mapperMock.Setup(m => m.Map<ContactPerson>(It.IsAny<UpdateDealContactRepCommand>())).Returns(mappedEntity);
             repoMock.Setup(r => r.UpdateAsync(mappedEntity)).ReturnsAsync(updatedEntity);
             mapperMock.Setup(m => m.Map<DealContactRepDto>(updatedEntity)).Returns(returnedDto);
 
@@ -87,14 +87,14 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         [Fact]
         public async Task Update_Handler_ThrowsNotFound_WhenUpdateReturnsNull()
         {
-            var repoMock = new Mock<ICrudRepository<DealContactRep>>();
+            var repoMock = new Mock<ICrudRepository<ContactPerson>>();
             var mapperMock = new Mock<IMapper>();
 
             var cmd = new UpdateDealContactRepCommand { Id = 99, Name = "X" };
-            var mappedEntity = new DealContactRep { Id = cmd.Id, Name = cmd.Name };
+            var mappedEntity = new ContactPerson { Id = cmd.Id, Name = cmd.Name };
 
-            mapperMock.Setup(m => m.Map<DealContactRep>(It.IsAny<UpdateDealContactRepCommand>())).Returns(mappedEntity);
-            repoMock.Setup(r => r.UpdateAsync(mappedEntity)).ReturnsAsync((DealContactRep?)null);
+            mapperMock.Setup(m => m.Map<ContactPerson>(It.IsAny<UpdateDealContactRepCommand>())).Returns(mappedEntity);
+            repoMock.Setup(r => r.UpdateAsync(mappedEntity)).ReturnsAsync((ContactPerson?)null);
 
             var handler = new UpdateDealContactRepCommand.Handler(repoMock.Object, mapperMock.Object);
 
@@ -104,10 +104,10 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         [Fact]
         public async Task Delete_Handler_ReturnsDto_OnSuccess()
         {
-            var repoMock = new Mock<ICrudRepository<DealContactRep>>();
+            var repoMock = new Mock<ICrudRepository<ContactPerson>>();
             var mapperMock = new Mock<IMapper>();
 
-            var deletedEntity = new DealContactRep { Id = 77, Name = "Del", Email = "d@example.com" };
+            var deletedEntity = new ContactPerson { Id = 77, Name = "Del", Email = "d@example.com" };
             var returnedDto = new DealContactRepDto { Id = 77, Name = "Del", Email = "d@example.com" };
 
             repoMock.Setup(r => r.DeleteAsync(deletedEntity.Id)).ReturnsAsync(deletedEntity);
@@ -124,10 +124,10 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         [Fact]
         public async Task Delete_Handler_ThrowsNotFound_WhenDeleteReturnsNull()
         {
-            var repoMock = new Mock<ICrudRepository<DealContactRep>>();
+            var repoMock = new Mock<ICrudRepository<ContactPerson>>();
             var mapperMock = new Mock<IMapper>();
 
-            repoMock.Setup(r => r.DeleteAsync(999)).ReturnsAsync((DealContactRep?)null);
+            repoMock.Setup(r => r.DeleteAsync(999)).ReturnsAsync((ContactPerson?)null);
 
             var handler = new DeleteDealContactRepCommand.Handler(repoMock.Object, mapperMock.Object);
 

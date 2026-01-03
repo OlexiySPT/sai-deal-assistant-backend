@@ -1,9 +1,8 @@
-﻿using System;
-
-namespace Sai.DealAssistant.Domain.Entities;
+﻿namespace Sai.DealAssistant.Domain.Entities;
 
 public class EventNote : BaseEntity
 {
+    public int Order { get; set; } = 0;
     public string Text { get; set; } = string.Empty;
 
     public int EventId { get; set; }

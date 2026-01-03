@@ -12,8 +12,8 @@ using Sai.DealAssistant.Infrastructure.Persistence;
 namespace Sai.DealAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251222022507_Initial")]
-    partial class Initial
+    [Migration("20260103174118_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,78 +23,10 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "8.0.22")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Deal", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AiBriefDescription")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AiSearchInfo")
-                        .HasMaxLength(4095)
-                        .HasColumnType("varchar");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Industry")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar");
-
-                    b.Property<int>("StateId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Status")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar");
-
-                    b.Property<int>("TypeId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("UpdatedBy")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Url")
-                        .HasMaxLength(4095)
-                        .HasColumnType("varchar");
-
-                    b.Property<uint>("xmin")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasDefaultValue(0u)
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StateId");
-
-                    b.HasIndex("TypeId");
-
-                    b.ToTable("Deals");
-                });
-
-            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealContactRep", b =>
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ContactPerson", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -148,7 +80,130 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasIndex("DealId");
 
-                    b.ToTable("DealContactReps");
+                    b.ToTable("ContactPersons");
+                });
+
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Deal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AiBriefDescription")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AiSearchInfo")
+                        .HasMaxLength(4095)
+                        .HasColumnType("varchar");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("citext");
+
+                    b.Property<string>("Industry")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar");
+
+                    b.Property<int>("StateId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Url")
+                        .HasMaxLength(4095)
+                        .HasColumnType("varchar");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasDefaultValue(0u)
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Industry")
+                        .HasDatabaseName("IX_Deals_Lower90_Industry")
+                        .HasAnnotation("Npgsql:IndexExpression", "lower(left(\"Industry\", 90))");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_Deals_Lower90_Name")
+                        .HasAnnotation("Npgsql:IndexExpression", "lower(left(\"Name\", 90))");
+
+                    b.HasIndex("StateId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("Deals");
+                });
+
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DealId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Tag")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("integer");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasDefaultValue(0u)
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DealId");
+
+                    b.HasIndex("Tag")
+                        .HasDatabaseName("IX_DealTagss_Lower90_Tag")
+                        .HasAnnotation("Npgsql:IndexExpression", "lower(left(\"Tag\", 90))");
+
+                    b.ToTable("DealTags");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Event", b =>
@@ -162,6 +217,9 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.Property<string>("Agenda")
                         .HasColumnType("text");
 
+                    b.Property<int?>("ContactPersonId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -172,6 +230,9 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("timestamptz");
 
                     b.Property<int>("DealId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Pos")
                         .HasColumnType("integer");
 
                     b.Property<string>("Result")
@@ -197,6 +258,8 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnName("xmin");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContactPersonId");
 
                     b.HasIndex("DealId");
 
@@ -239,48 +302,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.HasIndex("EventId");
 
                     b.ToTable("EventNotes");
-                });
-
-            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.EventTag", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("EventId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Tag")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("UpdatedBy")
-                        .HasColumnType("integer");
-
-                    b.Property<uint>("xmin")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasDefaultValue(0u)
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("EventTags");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.DealState", b =>
@@ -402,6 +423,17 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ContactPerson", b =>
+                {
+                    b.HasOne("Sai.DealAssistant.Domain.Entities.Deal", "Deal")
+                        .WithMany("ContactPersons")
+                        .HasForeignKey("DealId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Deal");
+                });
+
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Deal", b =>
                 {
                     b.HasOne("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.DealState", "State")
@@ -421,10 +453,10 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.Navigation("Type");
                 });
 
-            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealContactRep", b =>
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealTag", b =>
                 {
                     b.HasOne("Sai.DealAssistant.Domain.Entities.Deal", "Deal")
-                        .WithMany("ContactReps")
+                        .WithMany("Tags")
                         .HasForeignKey("DealId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -434,6 +466,10 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Event", b =>
                 {
+                    b.HasOne("Sai.DealAssistant.Domain.Entities.ContactPerson", "ContactPerson")
+                        .WithMany()
+                        .HasForeignKey("ContactPersonId");
+
                     b.HasOne("Sai.DealAssistant.Domain.Entities.Deal", "Deal")
                         .WithMany("Events")
                         .HasForeignKey("DealId")
@@ -451,6 +487,8 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("ContactPerson");
 
                     b.Navigation("Deal");
 
@@ -470,29 +508,18 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.Navigation("Event");
                 });
 
-            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.EventTag", b =>
-                {
-                    b.HasOne("Sai.DealAssistant.Domain.Entities.Event", "Event")
-                        .WithMany("Tags")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-                });
-
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Deal", b =>
                 {
-                    b.Navigation("ContactReps");
+                    b.Navigation("ContactPersons");
 
                     b.Navigation("Events");
+
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Event", b =>
                 {
                     b.Navigation("Notes");
-
-                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.DealState", b =>

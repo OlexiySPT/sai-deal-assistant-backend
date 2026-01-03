@@ -51,10 +51,10 @@ public class UpdateDealContactRepCommand : DealContactRepDto, IRequest<DealConta
 
     public class Handler : IRequestHandler<UpdateDealContactRepCommand, DealContactRepDto>
     {
-        private readonly ICrudRepository<DealContactRep> _repository;
+        private readonly ICrudRepository<ContactPerson> _repository;
         private readonly IMapper _mapper;
 
-        public Handler(ICrudRepository<DealContactRep> repository, IMapper mapper)
+        public Handler(ICrudRepository<ContactPerson> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -62,12 +62,12 @@ public class UpdateDealContactRepCommand : DealContactRepDto, IRequest<DealConta
 
         public async Task<DealContactRepDto> Handle(UpdateDealContactRepCommand request, CancellationToken cancellationToken)
         {
-            var toUpdate = _mapper.Map<DealContactRep>(request);
+            var toUpdate = _mapper.Map<ContactPerson>(request);
             var updated = await _repository.UpdateAsync(toUpdate);
 
             if (updated == null)
             {
-                throw new NotFoundExceptionOverride(nameof(DealContactRep), request.Id);
+                throw new NotFoundExceptionOverride(nameof(ContactPerson), request.Id);
             }
 
             return _mapper.Map<DealContactRepDto>(updated);
@@ -77,7 +77,7 @@ public class UpdateDealContactRepCommand : DealContactRepDto, IRequest<DealConta
         {
             public MappingProfile()
             {
-                CreateMap<UpdateDealContactRepCommand, DealContactRep>().ReverseMap();
+                CreateMap<UpdateDealContactRepCommand, ContactPerson>().ReverseMap();
             }
         }
     }

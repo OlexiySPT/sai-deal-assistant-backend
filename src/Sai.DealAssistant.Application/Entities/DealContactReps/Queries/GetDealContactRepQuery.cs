@@ -14,10 +14,10 @@ public class GetDealContactRepQuery : IRequest<DealContactRepDto>
 
     public class Handler : IRequestHandler<GetDealContactRepQuery, DealContactRepDto>
     {
-        private readonly IReadRepository<DealContactRep> _repository;
+        private readonly IReadRepository<ContactPerson> _repository;
         private readonly IMapper _mapper;
 
-        public Handler(IReadRepository<DealContactRep> repository, IMapper mapper)
+        public Handler(IReadRepository<ContactPerson> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -28,7 +28,7 @@ public class GetDealContactRepQuery : IRequest<DealContactRepDto>
             var entity = await _repository.FirstOrDefaultAsync(p => p.Id == request.Id);
             if (entity == null)
             {
-                throw new NotFoundExceptionOverride(nameof(DealContactRep), request.Id);
+                throw new NotFoundExceptionOverride(nameof(ContactPerson), request.Id);
             }
 
             return _mapper.Map<DealContactRepDto>(entity);

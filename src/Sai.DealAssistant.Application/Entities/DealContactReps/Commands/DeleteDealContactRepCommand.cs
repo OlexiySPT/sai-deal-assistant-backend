@@ -14,10 +14,10 @@ public class DeleteDealContactRepCommand : IRequest<DealContactRepDto>
 
     public class Handler : IRequestHandler<DeleteDealContactRepCommand, DealContactRepDto>
     {
-        private readonly ICrudRepository<DealContactRep> _repository;
+        private readonly ICrudRepository<ContactPerson> _repository;
         private readonly IMapper _mapper;
 
-        public Handler(ICrudRepository<DealContactRep> repository, IMapper mapper)
+        public Handler(ICrudRepository<ContactPerson> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -25,11 +25,11 @@ public class DeleteDealContactRepCommand : IRequest<DealContactRepDto>
 
         public async Task<DealContactRepDto> Handle(DeleteDealContactRepCommand request, CancellationToken cancellationToken)
         {
-            DealContactRep? deleted = await _repository.DeleteAsync(request.Id);
+            ContactPerson? deleted = await _repository.DeleteAsync(request.Id);
 
             if (deleted == null)
             {
-                throw new NotFoundExceptionOverride(nameof(DealContactRep), request.Id);
+                throw new NotFoundExceptionOverride(nameof(ContactPerson), request.Id);
             }
 
             return _mapper.Map<DealContactRepDto>(deleted);

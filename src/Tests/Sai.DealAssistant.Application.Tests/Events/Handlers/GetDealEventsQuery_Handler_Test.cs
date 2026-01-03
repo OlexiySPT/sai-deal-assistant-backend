@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading;
+using AutoFixture;
 using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Application.Entities.Events.Dtos;
 using Sai.DealAssistant.Application.Entities.Events.Queries;
@@ -34,13 +35,15 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
                 var deal1 = new Deal { Name = "Deal A" , TypeId = dealtype.Entity.Id, StateId = dealstate.Entity.Id};
                 var deal2 = new Deal { Name = "Deal B", TypeId = dealtype.Entity.Id, StateId = dealstate.Entity.Id };
                 db.AddRange(deal1, deal2);
+                deal1.ContactPersons.Add(new ContactPerson { Name = "Kurt Tank" });
+                deal2.ContactPersons.Add(new ContactPerson { Name = "leroy Grumman" });
                 db.SaveChanges();
 
-                var events = new[]
+                var events = new []
                 {
-                    new Event { Date = DateTimeOffset.UtcNow.AddDays(-1), Agenda = "A1", DealId = deal1.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id},
-                    new Event { Date = DateTimeOffset.UtcNow.AddDays(-2), Agenda = "A2", DealId = deal1.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id},
-                    new Event { Date = DateTimeOffset.UtcNow, Agenda = "B1", DealId = deal2.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id}
+                    new Event { Date = DateTimeOffset.UtcNow.AddDays(-1), Agenda = "A1", DealId = deal1.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id, ContactPersonId = deal1.ContactPersons.First().Id },
+                    new Event { Date = DateTimeOffset.UtcNow.AddDays(-2), Agenda = "A2", DealId = deal1.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id, ContactPersonId = deal1.ContactPersons.First().Id },
+                    new Event { Date = DateTimeOffset.UtcNow, Agenda = "B1", DealId = deal2.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id, ContactPersonId = deal2.ContactPersons.First().Id }
                 };
 
                 db.Events.AddRange(events);
@@ -71,13 +74,15 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
                     Agenda = p.Agenda,
                     Result = p.Result,
                     State = p.State != null ? p.State.State : null!,
-                    Type = p.Type != null ? p.Type.Name : null!
+                    Type = p.Type != null ? p.Type.Name : null!,
+                    ContactPerson = p.ContactPerson != null ? $"{p.ContactPerson.Name}, {p.ContactPerson.Position}" : null
                 })
                 .ToList();
 
             Assert.Equal(expected.Count, result.TotalItems);
             Assert.Equal(expected.Count, result.Items.Count);
             Assert.Equal(expected.Select(x => x.Id), result.Items.Select(x => x.Id));
+            Assert.Equal(expected.Select(x => x.ContactPerson), result.Items.Select(x => x.ContactPerson));
         }
     }
 }

@@ -25,12 +25,13 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
                 DealId = 1,
                 Date = DateTimeOffset.UtcNow,
                 TypeId = 1,
-                StateId = 1
+                StateId = 1,
+                ContactPersonId = 5
             };
 
-            var mappedEntity = new Event { Date = cmd.Date, DealId = cmd.DealId, TypeId = cmd.TypeId, StateId = cmd.StateId };
-            var createdEntity = new Event { Id = 123, Date = cmd.Date, DealId = cmd.DealId, TypeId = cmd.TypeId, StateId = cmd.StateId };
-            var returnedDto = new EventDto { Id = createdEntity.Id, Date = createdEntity.Date, TypeId = createdEntity.TypeId, StateId = createdEntity.StateId };
+            var mappedEntity = new Event { Date = cmd.Date, DealId = cmd.DealId, TypeId = cmd.TypeId, StateId = cmd.StateId, ContactPersonId = cmd.ContactPersonId };
+            var createdEntity = new Event { Id = 123, Date = cmd.Date, DealId = cmd.DealId, TypeId = cmd.TypeId, StateId = cmd.StateId, ContactPersonId = cmd.ContactPersonId };
+            var returnedDto = new EventDto { Id = createdEntity.Id, Date = createdEntity.Date, TypeId = createdEntity.TypeId, StateId = createdEntity.StateId, ContactPersonId = createdEntity.ContactPersonId };
 
             mapperMock.Setup(m => m.Map<Event>(It.IsAny<CreateEventCommand>())).Returns(mappedEntity);
             repoMock.Setup(r => r.CreateAsync(mappedEntity)).ReturnsAsync(createdEntity);
@@ -42,6 +43,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
 
             Assert.Equal(returnedDto.Id, result.Id);
             Assert.Equal(returnedDto.Date, result.Date);
+            Assert.Equal(returnedDto.ContactPersonId, result.ContactPersonId);
             repoMock.Verify(r => r.CreateAsync(mappedEntity), Times.Once);
         }
 
@@ -51,8 +53,8 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
             var repoMock = new Mock<ICrudRepository<Event>>();
             var mapperMock = new Mock<IMapper>();
 
-            var cmd = new CreateEventCommand { DealId = 1, Date = DateTimeOffset.UtcNow };
-            var mappedEntity = new Event { Date = cmd.Date, DealId = cmd.DealId };
+            var cmd = new CreateEventCommand { DealId = 1, Date = DateTimeOffset.UtcNow, ContactPersonId = 7 };
+            var mappedEntity = new Event { Date = cmd.Date, DealId = cmd.DealId, ContactPersonId = cmd.ContactPersonId };
 
             mapperMock.Setup(m => m.Map<Event>(It.IsAny<CreateEventCommand>())).Returns(mappedEntity);
             repoMock.Setup(r => r.CreateAsync(mappedEntity)).ReturnsAsync((Event?)null);
@@ -68,10 +70,10 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
             var repoMock = new Mock<ICrudRepository<Event>>();
             var mapperMock = new Mock<IMapper>();
 
-            var cmd = new UpdateEventCommand { Id = 5, Date = DateTimeOffset.UtcNow, TypeId = 1, StateId = 1 };
-            var mappedEntity = new Event { Id = cmd.Id, Date = cmd.Date, TypeId = cmd.TypeId, StateId = cmd.StateId };
-            var updatedEntity = new Event { Id = cmd.Id, Date = cmd.Date, TypeId = cmd.TypeId, StateId = cmd.StateId };
-            var returnedDto = new EventDto { Id = cmd.Id, Date = cmd.Date, TypeId = cmd.TypeId, StateId = cmd.StateId };
+            var cmd = new UpdateEventCommand { Id = 5, Date = DateTimeOffset.UtcNow, TypeId = 1, StateId = 1, ContactPersonId = 11 };
+            var mappedEntity = new Event { Id = cmd.Id, Date = cmd.Date, TypeId = cmd.TypeId, StateId = cmd.StateId, ContactPersonId = cmd.ContactPersonId };
+            var updatedEntity = new Event { Id = cmd.Id, Date = cmd.Date, TypeId = cmd.TypeId, StateId = cmd.StateId, ContactPersonId = cmd.ContactPersonId };
+            var returnedDto = new EventDto { Id = cmd.Id, Date = cmd.Date, TypeId = cmd.TypeId, StateId = cmd.StateId, ContactPersonId = cmd.ContactPersonId };
 
             mapperMock.Setup(m => m.Map<Event>(It.IsAny<UpdateEventCommand>())).Returns(mappedEntity);
             repoMock.Setup(r => r.UpdateAsync(mappedEntity)).ReturnsAsync(updatedEntity);
@@ -83,6 +85,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
 
             Assert.Equal(returnedDto.Id, result.Id);
             Assert.Equal(returnedDto.Date, result.Date);
+            Assert.Equal(returnedDto.ContactPersonId, result.ContactPersonId);
             repoMock.Verify(r => r.UpdateAsync(mappedEntity), Times.Once);
         }
 
@@ -92,8 +95,8 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
             var repoMock = new Mock<ICrudRepository<Event>>();
             var mapperMock = new Mock<IMapper>();
 
-            var cmd = new UpdateEventCommand { Id = 99, Date = DateTimeOffset.UtcNow };
-            var mappedEntity = new Event { Id = cmd.Id, Date = cmd.Date };
+            var cmd = new UpdateEventCommand { Id = 99, Date = DateTimeOffset.UtcNow, ContactPersonId = 13 };
+            var mappedEntity = new Event { Id = cmd.Id, Date = cmd.Date, ContactPersonId = cmd.ContactPersonId };
 
             mapperMock.Setup(m => m.Map<Event>(It.IsAny<UpdateEventCommand>())).Returns(mappedEntity);
             repoMock.Setup(r => r.UpdateAsync(mappedEntity)).ReturnsAsync((Event?)null);
@@ -109,8 +112,8 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
             var repoMock = new Mock<ICrudRepository<Event>>();
             var mapperMock = new Mock<IMapper>();
 
-            var deletedEntity = new Event { Id = 77, Date = DateTimeOffset.UtcNow, Agenda = "Del" };
-            var returnedDto = new EventDto { Id = 77, Date = deletedEntity.Date, Agenda = deletedEntity.Agenda };
+            var deletedEntity = new Event { Id = 77, Date = DateTimeOffset.UtcNow, Agenda = "Del", ContactPersonId = 21 };
+            var returnedDto = new EventDto { Id = 77, Date = deletedEntity.Date, Agenda = deletedEntity.Agenda, ContactPersonId = deletedEntity.ContactPersonId };
 
             repoMock.Setup(r => r.DeleteAsync(deletedEntity.Id)).ReturnsAsync(deletedEntity);
             mapperMock.Setup(m => m.Map<EventDto>(deletedEntity)).Returns(returnedDto);
@@ -120,6 +123,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
             var result = await handler.Handle(new DeleteEventCommand(deletedEntity.Id), CancellationToken.None);
 
             Assert.Equal(returnedDto.Id, result.Id);
+            Assert.Equal(returnedDto.ContactPersonId, result.ContactPersonId);
             repoMock.Verify(r => r.DeleteAsync(deletedEntity.Id), Times.Once);
         }
 

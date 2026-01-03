@@ -59,10 +59,10 @@ public class CreateDealContactRepCommand : DealContactRepDto, IRequest<DealConta
 
     public class Handler : IRequestHandler<CreateDealContactRepCommand, DealContactRepDto>
     {
-        private readonly ICrudRepository<DealContactRep> _repository;
+        private readonly ICrudRepository<ContactPerson> _repository;
         private readonly IMapper _mapper;
 
-        public Handler(ICrudRepository<DealContactRep> repository, IMapper mapper)
+        public Handler(ICrudRepository<ContactPerson> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -70,12 +70,12 @@ public class CreateDealContactRepCommand : DealContactRepDto, IRequest<DealConta
 
         public async Task<DealContactRepDto> Handle(CreateDealContactRepCommand request, CancellationToken cancellationToken)
         {
-            var newEntity = _mapper.Map<DealContactRep>(request);
-            DealContactRep? created = await _repository.CreateAsync(newEntity);
+            var newEntity = _mapper.Map<ContactPerson>(request);
+            ContactPerson? created = await _repository.CreateAsync(newEntity);
 
             if (created == null)
             {
-                throw new NotFoundExceptionOverride(nameof(DealContactRep), request.DealId);
+                throw new NotFoundExceptionOverride(nameof(ContactPerson), request.DealId);
             }
 
             return _mapper.Map<DealContactRepDto>(created);
@@ -85,7 +85,7 @@ public class CreateDealContactRepCommand : DealContactRepDto, IRequest<DealConta
         {
             public MappingProfile()
             {
-                CreateMap<CreateDealContactRepCommand, DealContactRep>();
+                CreateMap<CreateDealContactRepCommand, ContactPerson>();
             }
         }
     }

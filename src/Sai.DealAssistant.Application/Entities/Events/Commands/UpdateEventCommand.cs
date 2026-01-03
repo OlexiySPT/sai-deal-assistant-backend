@@ -15,11 +15,19 @@ public class UpdateEventCommand : EventDto, IRequest<EventDto>
     {
         private readonly IEnumCache<EventState> _eventStateCache;
         private readonly IEnumCache<EventType> _eventTypeCache;
+        private readonly ICrudRepository<ContactPerson> _contactPersonRepository;
+        private readonly ICrudRepository<Event> _eventRepository;
 
-        public Validator(IEnumCache<EventState> eventStateCache, IEnumCache<EventType> eventTypeCache)
+        public Validator(
+            IEnumCache<EventState> eventStateCache,
+            IEnumCache<EventType> eventTypeCache,
+            ICrudRepository<ContactPerson> contactPersonRepository,
+            ICrudRepository<Event> eventRepository)
         {
             _eventStateCache = eventStateCache;
             _eventTypeCache = eventTypeCache;
+            _contactPersonRepository = contactPersonRepository;
+            _eventRepository = eventRepository;
 
             RuleFor(c => c.Id)
                 .GreaterThan(0)
@@ -32,6 +40,19 @@ public class UpdateEventCommand : EventDto, IRequest<EventDto>
             RuleFor(c => c.StateId)
                 .MustAsync(async (cmd, stateId, cToken) => (await _eventStateCache.GetAllAsync()).Any(p => p.Id == stateId))
                 .WithMessage($"Incorrect State Id. It must be one of [{string.Join(", ", _eventStateCache.GetAllAsync().Result.Select(p => p.Id.ToString()))}]");
+
+            RuleFor(c => c.ContactPersonId)
+                .MustAsync(async (cmd, contactPersonId, cToken) =>
+                {
+                    if (contactPersonId is null)
+                    {
+                        return true;
+                    }
+                    var dealId = _eventRepository.GetAll().Where(c => c.Id == cmd.Id).Select(p => p.DealId).FirstOrDefault();
+                    return await _contactPersonRepository.ExistsAsync(c => c.Id == contactPersonId && c.DealId == dealId);
+                })
+                .WithMessage(cmd => $"Contact Person with Id {cmd.ContactPersonId} was not found for this deal.");
+
 
             RuleFor(c => c.Date)
                 .NotEmpty()

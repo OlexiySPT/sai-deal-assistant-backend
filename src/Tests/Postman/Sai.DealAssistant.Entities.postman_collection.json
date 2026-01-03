@@ -251,14 +251,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{BaseUrl}}/api/events/1367",
+							"raw": "{{BaseUrl}}/api/events/692",
 							"host": [
 								"{{BaseUrl}}"
 							],
 							"path": [
 								"api",
 								"events",
-								"1367"
+								"692"
 							]
 						},
 						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json'"
@@ -281,7 +281,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"DealId\": 2,\r\n    \"date\": \"2026-01-03\",\r\n    \"agenda\": \"Kabanah call 2\",\r\n    \"result\": \"Very good too\",\r\n    \"typeId\": 2,\r\n    \"stateId\": 1\r\n}",
+							"raw": "{\r\n    \"DealId\": 2,\r\n    \"date\": \"2026-01-03\",\r\n    \"agenda\": \"Kabanah call 32\",\r\n    \"result\": \"Very good too3\",\r\n    \"contactPersonId\": 5,\r\n    \"typeId\": 2,\r\n    \"stateId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -318,7 +318,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"date\": \"2026-01-05\",\r\n    \"agenda\": \"Kabanah call 2 updated\",\r\n    \"result\": \"Very good too updated\",\r\n    \"typeId\": 2,\r\n    \"stateId\": 2\r\n}",
+							"raw": "{\r\n    \"DealId\": 2,\r\n    \"date\": \"2026-01-03\",\r\n    \"agenda\": \"Kabanah call 326\",\r\n    \"result\": \"Very good too36\",\r\n    \"contactPersonId\": 6,\r\n    \"typeId\": 2,\r\n    \"stateId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -326,14 +326,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{BaseUrl}}/api/events/2052",
+							"raw": "{{BaseUrl}}/api/events/692",
 							"host": [
 								"{{BaseUrl}}"
 							],
 							"path": [
 								"api",
 								"events",
-								"2052"
+								"692"
 							]
 						},
 						"description": "Generated from cURL: curl -X 'PUT' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
@@ -351,14 +351,174 @@
 							}
 						],
 						"url": {
-							"raw": "{{BaseUrl}}/api/events/2052",
+							"raw": "{{BaseUrl}}/api/events/692",
 							"host": [
 								"{{BaseUrl}}"
 							],
 							"path": [
 								"api",
 								"events",
-								"2052"
+								"692"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'DELETE' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ContactPersons",
+			"item": [
+				{
+					"name": "GetContactPersons",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/ContactPersons?dealid=2",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"ContactPersons"
+							],
+							"query": [
+								{
+									"key": "dealid",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "GetContactPerson",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/ContactPersons/83",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"ContactPersons",
+								"83"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateContactPerson",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"DealId\": 2,\r\n    \"name\": \"Kabanah Wilson\",\r\n    \"position\": \"Head of Kabanahs\",\r\n    \"phone\": \"+1-555-777-2332\",\r\n    \"email\": \"kabanah.wilson770@acme.example.com\",\r\n    \"description\": \"Technical contact responsible for Kabanah\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/ContactPersons",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"ContactPersons"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateContactPerson",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Kabanah Wilson updated\",\r\n    \"position\": \"Head of Kabanahs updated\",\r\n    \"phone\": \"+1-555-111-2332\",\r\n    \"email\": \"kabanah.updated.wilson770@acme.example.com\",\r\n    \"description\": \"Technical contact responsible for Kabanah updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/ContactPersons/834",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"ContactPersons",
+								"834"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'PUT' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteContactPerson",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/ContactPersons/83453",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"ContactPersons",
+								"83453"
 							]
 						},
 						"description": "Generated from cURL: curl -X 'DELETE' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: */*'"

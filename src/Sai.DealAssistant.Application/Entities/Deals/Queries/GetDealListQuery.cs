@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
 
-public class GetDealListQuery : PaginatedQueryRequest<QueryResult<DealListItemDto>>
+public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 {
 	public GetDealListQuery()
 		: base()

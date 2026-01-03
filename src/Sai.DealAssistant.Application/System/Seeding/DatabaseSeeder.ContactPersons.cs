@@ -1,14 +1,10 @@
-// Sai.DealAssistant.Application\System\Seeding\DatabaseSeeder.DealContactReps.cs
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Sai.DealAssistant.Domain.Entities;
 
 namespace Sai.DealAssistant.Application.System.Seeding;
 
 public partial class DatabaseSeeder
 {
-	public static IEnumerable<DealContactRep> GetTestContactRepsForDeal(Deal deal)
+	public static IEnumerable<ContactPerson> GetTestContactPersonsForDeal(Deal deal)
 	{
 		if (deal is null) throw new ArgumentNullException(nameof(deal));
 
@@ -32,7 +28,7 @@ public partial class DatabaseSeeder
 		// deterministically choose number of reps: 1..10
 		var count = 1 + (seed % 10);
 
-		var reps = new List<DealContactRep>(count);
+		var reps = new List<ContactPerson>(count);
 
 		// Ensure variety but deterministic ordering
 		for (var i = 0; i < count; i++)
@@ -49,7 +45,7 @@ public partial class DatabaseSeeder
 			// phone in realistic NANP format with deterministic values
 			var phone = $"+1-555-{rnd.Next(200, 999):D3}-{rnd.Next(1000, 9999):D4}";
 
-			reps.Add(new DealContactRep
+			reps.Add(new ContactPerson
 			{
 				Name = name,
 				Position = pos,

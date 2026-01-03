@@ -50,6 +50,17 @@ public static class StringSearchExpressions
             typeof(string).GetMethod(nameof(string.EndsWith), new[] { typeof(string) })!
         );
     }
+    public static Expression<Func<T, bool>> CaseInsensitiveEquals<T>(
+        Expression<Func<T, string?>> selector, string? search
+    )
+    where T : class
+    {
+        return CaseInsensitiveStrMethodCall(
+            selector,
+            search,
+            typeof(string).GetMethod(nameof(string.Equals), new[] { typeof(string) })!
+        );
+    }
 
     #region Helpers
 

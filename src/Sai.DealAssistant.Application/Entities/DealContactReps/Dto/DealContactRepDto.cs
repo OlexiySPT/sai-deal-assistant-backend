@@ -16,7 +16,7 @@ public class DealContactRepDto
     {
         public MappingProfile()
         {
-            CreateMap<DealContactRep, DealContactRepDto>().ReverseMap();
+            CreateMap<ContactPerson, DealContactRepDto>().ReverseMap();
         }
     }
 }

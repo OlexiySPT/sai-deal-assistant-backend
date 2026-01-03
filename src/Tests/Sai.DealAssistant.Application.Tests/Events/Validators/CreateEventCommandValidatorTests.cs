@@ -20,13 +20,21 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             var typeCacheMock = new Mock<IEnumCache<EventType>>();
             var stateCacheMock = new Mock<IEnumCache<EventState>>();
             var dealRepoMock = new Mock<IReadRepository<Deal>>();
+            var contactPersonRepoMock = new Mock<IReadRepository<ContactPerson>>();
 
             typeCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventType> { new EventType { Id = 1 } });
             stateCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventState> { new EventState { Id = 2 } });
             dealRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Deal, bool>>>()))
                 .ReturnsAsync(new Deal { Id = 10 });
+            // No ContactPersonId provided -> repository may return null, it's irrelevant for this case
+            contactPersonRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ContactPerson, bool>>>()))
+                .ReturnsAsync((ContactPerson?)null);
 
-            var validator = new CreateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object, dealRepoMock.Object);
+            var validator = new CreateEventCommand.Validator(
+                stateCacheMock.Object,
+                typeCacheMock.Object,
+                dealRepoMock.Object,
+                contactPersonRepoMock.Object);
 
             var cmd = new CreateEventCommand
             {
@@ -50,13 +58,20 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             var typeCacheMock = new Mock<IEnumCache<EventType>>();
             var stateCacheMock = new Mock<IEnumCache<EventState>>();
             var dealRepoMock = new Mock<IReadRepository<Deal>>();
+            var contactPersonRepoMock = new Mock<IReadRepository<ContactPerson>>();
 
             typeCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventType>()); // empty -> invalid
             stateCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventState> { new EventState { Id = 2 } });
             dealRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Deal, bool>>>()))
                 .ReturnsAsync(new Deal { Id = 10 });
+            contactPersonRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ContactPerson, bool>>>()))
+                .ReturnsAsync((ContactPerson?)null);
 
-            var validator = new CreateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object, dealRepoMock.Object);
+            var validator = new CreateEventCommand.Validator(
+                stateCacheMock.Object,
+                typeCacheMock.Object,
+                dealRepoMock.Object,
+                contactPersonRepoMock.Object);
 
             var cmd = new CreateEventCommand
             {
@@ -77,13 +92,20 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             var typeCacheMock = new Mock<IEnumCache<EventType>>();
             var stateCacheMock = new Mock<IEnumCache<EventState>>();
             var dealRepoMock = new Mock<IReadRepository<Deal>>();
+            var contactPersonRepoMock = new Mock<IReadRepository<ContactPerson>>();
 
             typeCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventType> { new EventType { Id = 1 } });
             stateCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventState>()); // empty -> invalid
             dealRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Deal, bool>>>()))
                 .ReturnsAsync(new Deal { Id = 10 });
+            contactPersonRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ContactPerson, bool>>>()))
+                .ReturnsAsync((ContactPerson?)null);
 
-            var validator = new CreateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object, dealRepoMock.Object);
+            var validator = new CreateEventCommand.Validator(
+                stateCacheMock.Object,
+                typeCacheMock.Object,
+                dealRepoMock.Object,
+                contactPersonRepoMock.Object);
 
             var cmd = new CreateEventCommand
             {
@@ -104,13 +126,20 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             var typeCacheMock = new Mock<IEnumCache<EventType>>();
             var stateCacheMock = new Mock<IEnumCache<EventState>>();
             var dealRepoMock = new Mock<IReadRepository<Deal>>();
+            var contactPersonRepoMock = new Mock<IReadRepository<ContactPerson>>();
 
             typeCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventType> { new EventType { Id = 1 } });
             stateCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventState> { new EventState { Id = 2 } });
             dealRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Deal, bool>>>()))
                 .ReturnsAsync((Deal?)null); // deal not found
+            contactPersonRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ContactPerson, bool>>>()))
+                .ReturnsAsync((ContactPerson?)null);
 
-            var validator = new CreateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object, dealRepoMock.Object);
+            var validator = new CreateEventCommand.Validator(
+                stateCacheMock.Object,
+                typeCacheMock.Object,
+                dealRepoMock.Object,
+                contactPersonRepoMock.Object);
 
             var cmd = new CreateEventCommand
             {
@@ -131,13 +160,20 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             var typeCacheMock = new Mock<IEnumCache<EventType>>();
             var stateCacheMock = new Mock<IEnumCache<EventState>>();
             var dealRepoMock = new Mock<IReadRepository<Deal>>();
+            var contactPersonRepoMock = new Mock<IReadRepository<ContactPerson>>();
 
             typeCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventType> { new EventType { Id = 1 } });
             stateCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventState> { new EventState { Id = 2 } });
             dealRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Deal, bool>>>()))
                 .ReturnsAsync(new Deal { Id = 10 });
+            contactPersonRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ContactPerson, bool>>>()))
+                .ReturnsAsync((ContactPerson?)null);
 
-            var validator = new CreateEventCommand.Validator(stateCacheMock.Object, typeCacheMock.Object, dealRepoMock.Object);
+            var validator = new CreateEventCommand.Validator(
+                stateCacheMock.Object,
+                typeCacheMock.Object,
+                dealRepoMock.Object,
+                contactPersonRepoMock.Object);
 
             var cmd = new CreateEventCommand
             {
@@ -150,6 +186,82 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             var result = await validator.TestValidateAsync(cmd);
 
             result.ShouldHaveValidationErrorFor(c => c.Date);
+        }
+
+        [Fact]
+        public async Task Validator_WithContactPersonId_AndExists_PassesValidation()
+        {
+            var typeCacheMock = new Mock<IEnumCache<EventType>>();
+            var stateCacheMock = new Mock<IEnumCache<EventState>>();
+            var dealRepoMock = new Mock<IReadRepository<Deal>>();
+            var contactPersonRepoMock = new Mock<IReadRepository<ContactPerson>>();
+
+            typeCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventType> { new EventType { Id = 1 } });
+            stateCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventState> { new EventState { Id = 2 } });
+            dealRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Deal, bool>>>()))
+                .ReturnsAsync(new Deal { Id = 10, ContactPersons = new List<ContactPerson> { new ContactPerson { Id=5 } } });
+            // Contact person exists and belongs to the deal
+            contactPersonRepoMock.Setup(r => r.ExistsAsync(It.IsAny<Expression<Func<ContactPerson, bool>>>()))
+                .ReturnsAsync(true);
+
+            var validator = new CreateEventCommand.Validator(
+                stateCacheMock.Object,
+                typeCacheMock.Object,
+                dealRepoMock.Object,
+                contactPersonRepoMock.Object);
+
+            var cmd = new CreateEventCommand
+            {
+                DealId = 10,
+                TypeId = 1,
+                StateId = 2,
+                ContactPersonId = 5,
+                Date = DateTimeOffset.UtcNow
+            };
+
+            var result = await validator.TestValidateAsync(cmd);
+
+            result.ShouldNotHaveValidationErrorFor(c => c.ContactPersonId);
+            result.ShouldNotHaveValidationErrorFor(c => c.DealId);
+            result.ShouldNotHaveValidationErrorFor(c => c.TypeId);
+            result.ShouldNotHaveValidationErrorFor(c => c.StateId);
+            result.ShouldNotHaveValidationErrorFor(c => c.Date);
+        }
+
+        [Fact]
+        public async Task Validator_WithContactPersonId_NotFound_FailsValidation()
+        {
+            var typeCacheMock = new Mock<IEnumCache<EventType>>();
+            var stateCacheMock = new Mock<IEnumCache<EventState>>();
+            var dealRepoMock = new Mock<IReadRepository<Deal>>();
+            var contactPersonRepoMock = new Mock<IReadRepository<ContactPerson>>();
+
+            typeCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventType> { new EventType { Id = 1 } });
+            stateCacheMock.Setup(c => c.GetAllAsync()).ReturnsAsync(new List<EventState> { new EventState { Id = 2 } });
+            dealRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Deal, bool>>>()))
+                .ReturnsAsync(new Deal { Id = 10 });
+            // Contact person not found
+            contactPersonRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ContactPerson, bool>>>()))
+                .ReturnsAsync((ContactPerson?)null);
+
+            var validator = new CreateEventCommand.Validator(
+                stateCacheMock.Object,
+                typeCacheMock.Object,
+                dealRepoMock.Object,
+                contactPersonRepoMock.Object);
+
+            var cmd = new CreateEventCommand
+            {
+                DealId = 10,
+                TypeId = 1,
+                StateId = 2,
+                ContactPersonId = 99,
+                Date = DateTimeOffset.UtcNow
+            };
+
+            var result = await validator.TestValidateAsync(cmd);
+
+            result.ShouldHaveValidationErrorFor(c => c.ContactPersonId);
         }
     }
 }

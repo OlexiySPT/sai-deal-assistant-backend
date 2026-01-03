@@ -15,7 +15,7 @@ public class DealContactRepListItemDto
     {
         public MappingProfile()
         {
-            CreateMap<DealContactRep, DealContactRepListItemDto>();
+            CreateMap<ContactPerson, DealContactRepListItemDto>();
         }
     }
 }

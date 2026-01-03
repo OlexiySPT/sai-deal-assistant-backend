@@ -35,6 +35,7 @@ public class GetDealEventsQuery : IRequest<QueryResult<EventListItemDto>>
                 {
                     Id = p.Id,
                     Date = p.Date,
+                    ContactPerson = (p.ContactPerson == null ? null : p.ContactPerson.Name + ", " + p.ContactPerson.Position),
                     Pos = p.Pos,
                     Agenda = p.Agenda,
                     Result = p.Result,

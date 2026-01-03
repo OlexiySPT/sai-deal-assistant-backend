@@ -19,5 +19,7 @@ public interface ISeedRepository
 
 	Task SeedEventsAsync(Func<Deal, IEnumerable<Event>> getEventsForDeal);
 
-	Task SeedDealContactRepsAsync(Func<Deal, IEnumerable<DealContactRep>> getRepsForDeal);
+	Task SeedDealContactPersonsAsync(Func<Deal, IEnumerable<ContactPerson>> getRepsForDeal);
+
+	Task SeedDealTagsAsync(Func<int, IEnumerable<DealTag>> getTagsForDeal);
 }

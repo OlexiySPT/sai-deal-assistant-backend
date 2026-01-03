@@ -16,13 +16,13 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
 {
     public class GetDealContactRepQuery_Handler_Test : UnitTestBase
     {
-        private readonly ReadRepository<AppDbContext, DealContactRep> _repo;
+        private readonly ReadRepository<AppDbContext, ContactPerson> _repo;
         private readonly IMapper _mapper;
 
         public GetDealContactRepQuery_Handler_Test()
             : base(seedTestData: false)
         {
-            _repo = new ReadRepository<AppDbContext, DealContactRep>(DbContext);
+            _repo = new ReadRepository<AppDbContext, ContactPerson>(DbContext);
 
             // Configure mapper for DealContactRep -> DealContactRepDto
             var cfg = new MapperConfiguration(cfg =>
@@ -41,7 +41,7 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
                 var added = db.Deals.Add(deal);
                 db.SaveChanges();
 
-                db.DealContactReps.Add(new DealContactRep { Name = "John Doe", Email = "john@example.com", DealId = added.Entity.Id });
+                db.ContactPersons.Add(new ContactPerson { Name = "John Doe", Email = "john@example.com", DealId = added.Entity.Id });
                 db.SaveChanges();
             }
         }
@@ -49,7 +49,7 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         [Fact]
         public async Task Handler_ReturnsDto_ForExistingId()
         {
-            var existing = await DbContext.DealContactReps.FirstAsync();
+            var existing = await DbContext.ContactPersons.FirstAsync();
             var handler = new GetDealContactRepQuery.Handler(_repo, _mapper);
 
             var result = await handler.Handle(new GetDealContactRepQuery(existing.Id), CancellationToken.None);

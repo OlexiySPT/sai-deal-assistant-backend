@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Sai.DealAssistant.Domain.Entities;
 using System.Security.Cryptography;
 using System.Text;
-using Sai.DealAssistant.Domain.Entities;
 
 namespace Sai.DealAssistant.Application.System.Seeding;
 
@@ -14,7 +11,7 @@ public partial class DatabaseSeeder
 		if (deal is null) throw new ArgumentNullException(nameof(deal));
 
 		// Deterministic seed derived from deal.Name + Id to keep events stable and uniquely dependent on the deal.
-		var seed = GetDeterministicSeed(deal.Name);
+		var seed = GetDeterministicSeed($"{deal.Name}-{deal.Id}");
 		var rnd = new Random(seed);
 
 		// Realistic event templates (typical sales lifecycle)
@@ -47,6 +44,10 @@ public partial class DatabaseSeeder
 		var end = deal.CreatedAt.AddMonths(3);
 		var start = end.AddYears(-1);
 
+		// Get contact persons that the contact-person seeder would create for this deal,
+		// so we can deterministically assign one (or none) to each generated event.
+		var contactPersons = deal.ContactPersons?.ToArray();
+
 		var events = new List<Event>(count);
 
 		for (var i = 0; i < count; i++)
@@ -69,6 +70,14 @@ public partial class DatabaseSeeder
 			var typeId = 1 + rnd.Next(0, 6);   // 1..6
 			var stateId = 1 + rnd.Next(0, 5);  // 1..5
 
+			// Deterministically pick a contact person for this event if any exist for the deal.
+			// Using the same rnd (seeded by deal) keeps assignment repeatable.
+			ContactPerson? chosenContact = null;
+			if (contactPersons?.Length > 0)
+			{
+				chosenContact = contactPersons[rnd.Next(contactPersons.Length)];
+			}
+
 			events.Add(new Event
 			{
 				Pos = i,
@@ -77,7 +86,9 @@ public partial class DatabaseSeeder
 				Result = result,
 				TypeId = typeId,
 				StateId = stateId,
-				DealId = deal.Id
+				DealId = deal.Id,
+				// Assign ContactPersonId when available; leave null otherwise.
+				ContactPersonId = chosenContact?.Id
 			});
 		}
 

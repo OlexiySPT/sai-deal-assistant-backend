@@ -7,11 +7,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Sai.DealAssistant.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:citext", ",,");
+
             migrationBuilder.CreateTable(
                 name: "DealStates",
                 columns: table => new
@@ -91,7 +94,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "varchar", maxLength: 255, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "citext", nullable: true),
                     Url = table.Column<string>(type: "varchar", maxLength: 4095, nullable: true),
                     AiSearchInfo = table.Column<string>(type: "varchar", maxLength: 4095, nullable: true),
                     AiBriefDescription = table.Column<string>(type: "text", nullable: true),
@@ -123,7 +126,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DealContactReps",
+                name: "ContactPersons",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -142,9 +145,34 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DealContactReps", x => x.Id);
+                    table.PrimaryKey("PK_ContactPersons", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DealContactReps_Deals_DealId",
+                        name: "FK_ContactPersons_Deals_DealId",
+                        column: x => x.DealId,
+                        principalTable: "Deals",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DealTags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Tag = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    DealId = table.Column<int>(type: "integer", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false, defaultValue: 0u),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    CreatedBy = table.Column<int>(type: "integer", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    UpdatedBy = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DealTags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DealTags_Deals_DealId",
                         column: x => x.DealId,
                         principalTable: "Deals",
                         principalColumn: "Id",
@@ -158,11 +186,13 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Date = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
+                    Pos = table.Column<int>(type: "integer", nullable: false),
                     Agenda = table.Column<string>(type: "text", nullable: true),
                     Result = table.Column<string>(type: "text", nullable: true),
                     TypeId = table.Column<int>(type: "integer", nullable: false),
                     DealId = table.Column<int>(type: "integer", nullable: false),
                     StateId = table.Column<int>(type: "integer", nullable: false),
+                    ContactPersonId = table.Column<int>(type: "integer", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false, defaultValue: 0u),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<int>(type: "integer", nullable: false),
@@ -172,6 +202,11 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Events", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Events_ContactPersons_ContactPersonId",
+                        column: x => x.ContactPersonId,
+                        principalTable: "ContactPersons",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Events_Deals_DealId",
                         column: x => x.DealId,
@@ -216,35 +251,20 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "EventTags",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    EventId = table.Column<int>(type: "integer", nullable: false),
-                    Tag = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false, defaultValue: 0u),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<int>(type: "integer", nullable: false),
-                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EventTags", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EventTags_Events_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Events",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_ContactPersons_DealId",
+                table: "ContactPersons",
+                column: "DealId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DealContactReps_DealId",
-                table: "DealContactReps",
-                column: "DealId");
+                name: "IX_Deals_Lower90_Industry",
+                table: "Deals",
+                column: "Industry");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Deals_Lower90_Name",
+                table: "Deals",
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Deals_StateId",
@@ -257,9 +277,24 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DealTags_DealId",
+                table: "DealTags",
+                column: "DealId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DealTagss_Lower90_Tag",
+                table: "DealTags",
+                column: "Tag");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EventNotes_EventId",
                 table: "EventNotes",
                 column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_ContactPersonId",
+                table: "Events",
+                column: "ContactPersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_DealId",
@@ -275,24 +310,16 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 name: "IX_Events_TypeId",
                 table: "Events",
                 column: "TypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EventTags_EventId",
-                table: "EventTags",
-                column: "EventId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DealContactReps");
+                name: "DealTags");
 
             migrationBuilder.DropTable(
                 name: "EventNotes");
-
-            migrationBuilder.DropTable(
-                name: "EventTags");
 
             migrationBuilder.DropTable(
                 name: "Users");
@@ -301,13 +328,16 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 name: "Events");
 
             migrationBuilder.DropTable(
-                name: "Deals");
+                name: "ContactPersons");
 
             migrationBuilder.DropTable(
                 name: "EventStates");
 
             migrationBuilder.DropTable(
                 name: "EventTypes");
+
+            migrationBuilder.DropTable(
+                name: "Deals");
 
             migrationBuilder.DropTable(
                 name: "DealStates");

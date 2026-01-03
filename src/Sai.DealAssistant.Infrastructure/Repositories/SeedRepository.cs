@@ -122,11 +122,10 @@ public class SeedRepository : ISeedRepository
 		_logger.LogInformation("Users table filled.");
 	}
 
-	// New: seed events (keeps notes and tags attached). Inserts only events that don't already exist.
 	public async Task SeedEventsAsync(Func<Deal, IEnumerable<Event>> getEvents)
 	{
 		// Iterate all deals, generate deterministic events for each and upsert them.
-		var deals = await _appDbContext.Deals.AsNoTracking().ToListAsync();
+		var deals = await _appDbContext.Deals.Include(p=>p.ContactPersons).AsNoTracking().ToListAsync();
 
 		foreach (var deal in deals)
 		{
@@ -137,7 +136,6 @@ public class SeedRepository : ISeedRepository
 			var existingEvents = await _appDbContext.Events
 				.Where(e => e.DealId == deal.Id)
 				.Include(e => e.Notes)
-				.Include(e => e.Tags)
 				.ToListAsync();
 
 			foreach (var gen in generatedEvents)
@@ -166,7 +164,7 @@ public class SeedRepository : ISeedRepository
 		_logger.LogInformation("Events upsert completed.");
 	}
 
-	public async Task SeedDealContactRepsAsync(Func<Deal, IEnumerable<DealContactRep>> getRepsForDeal)
+	public async Task SeedDealContactPersonsAsync(Func<Deal, IEnumerable<ContactPerson>> getRepsForDeal)
 	{
 		var deals = await _appDbContext.Deals.AsNoTracking().ToListAsync();
 
@@ -174,7 +172,7 @@ public class SeedRepository : ISeedRepository
 		{
 			var generatedReps = getRepsForDeal(deal).ToArray();
 
-			var existingReps = await _appDbContext.DealContactReps
+			var existingReps = await _appDbContext.ContactPersons
 				.Where(r => r.DealId == deal.Id)
 				.ToListAsync();
 
@@ -184,7 +182,7 @@ public class SeedRepository : ISeedRepository
 				var match = existingReps.FirstOrDefault(r => string.Equals(r.Name, gen.Name, StringComparison.OrdinalIgnoreCase));
 				if (match is null)
 				{
-					_appDbContext.DealContactReps.Add(gen);
+					_appDbContext.ContactPersons.Add(gen);
 				}
 				else
 				{
@@ -199,5 +197,45 @@ public class SeedRepository : ISeedRepository
 		await _appDbContext.SaveChangesAsync();
 
 		_logger.LogInformation("Deal contact reps upsert completed.");
-	}
+    }
+
+    // Implementation for seeding deal tags.
+    public async Task SeedDealTagsAsync(Func<int, IEnumerable<DealTag>> getTagsForDeal)
+    {
+        if (getTagsForDeal == null) return;
+
+        // Load existing deals
+        var deals = await _appDbContext.Deals.AsNoTracking().Select(d => new { d.Id }).ToListAsync();
+
+        if (deals.Count == 0) return;
+
+        // Gather tags to insert
+        var tagsToAdd = new List<DealTag>();
+
+        foreach (var d in deals)
+        {
+            var tags = getTagsForDeal(d.Id)?.ToList();
+            if (tags == null || tags.Count == 0) continue;
+
+            // Skip inserting if any tags already exist for this deal to avoid duplicates.
+            var existingForDeal = await _appDbContext.DealTags
+                .AsNoTracking()
+                .AnyAsync(t => t.DealId == d.Id);
+
+            if (existingForDeal) continue;
+
+            foreach (var tag in tags)
+            {
+                // Ensure a fresh entity (reset Id if present) and correct FK
+                tag.Id = 0;
+                tag.DealId = d.Id;
+                tagsToAdd.Add(tag);
+            }
+        }
+
+        if (tagsToAdd.Count == 0) return;
+
+        await _appDbContext.DealTags.AddRangeAsync(tagsToAdd);
+        await _appDbContext.SaveChangesAsync();
+    }
 }

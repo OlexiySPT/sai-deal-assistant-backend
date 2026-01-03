@@ -9,9 +9,9 @@ using System.Net.Mime;
 
 namespace Sai.DealAssistant.WebApi.Controllers;
 
-public class DealContactRepsController : BaseController
+public class ContactPersonsController : BaseController
 {
-    public DealContactRepsController(IMediator mediator, IMapper mapper)
+    public ContactPersonsController(IMediator mediator, IMapper mapper)
         : base(mediator, mapper)
     {
     }

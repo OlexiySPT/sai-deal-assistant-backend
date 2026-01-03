@@ -95,10 +95,13 @@ public partial class DatabaseSeeder
 		await _seedRepository.SeedDealsAsync(GetTestDeals);
 
 		// Seed contact reps for each deal so foreign keys are valid
-		await _seedRepository.SeedDealContactRepsAsync(GetTestContactRepsForDeal);
+		await _seedRepository.SeedDealContactPersonsAsync(GetTestContactPersonsForDeal);
 
-		// Seed events after deals/contact reps so foreign keys are valid
-		await _seedRepository.SeedEventsAsync(GetTestEventsForDeal);
+        
+        await _seedRepository.SeedDealTagsAsync(GetTestDealTags);
+
+        // Seed events after deals/contact reps so foreign keys are valid
+        await _seedRepository.SeedEventsAsync(GetTestEventsForDeal);
 
     }
 }

@@ -20,11 +20,15 @@ public class Deal : BaseEntity
     #region Navigation
     public DealType Type { get; set; } = default!;
     public DealState State { get; set; } = default!;
-    public ICollection<DealContactRep> ContactReps { get; set; }
-        = new Collection<DealContactRep>();
+
+    public ICollection<ContactPerson> ContactPersons { get; set; }
+        = new Collection<ContactPerson>();
 
     public ICollection<Event> Events { get; set; }
         = new Collection<Event>();
+
+    public ICollection<DealTag> Tags { get; set; }
+        = new Collection<DealTag>();
 
     #endregion
 }

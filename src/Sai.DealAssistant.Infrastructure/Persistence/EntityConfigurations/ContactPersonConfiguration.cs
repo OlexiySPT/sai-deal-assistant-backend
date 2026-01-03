@@ -5,9 +5,9 @@ using Sai.DealAssistant.Domain.Entities;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations;
 
-public class DealContactRepConfiguration : BaseEntityConfiguration<DealContactRep>
+public class ContactPersonConfiguration : BaseEntityConfiguration<ContactPerson>
 {
-    public override void Configure(EntityTypeBuilder<DealContactRep> builder)
+    public override void Configure(EntityTypeBuilder<ContactPerson> builder)
     {
         base.Configure(builder);
 
@@ -31,7 +31,7 @@ public class DealContactRepConfiguration : BaseEntityConfiguration<DealContactRe
             .HasColumnType("text");
 
         builder.HasOne(c => c.Deal)
-            .WithMany(co => co.ContactReps)
+            .WithMany(co => co.ContactPersons)
             .HasForeignKey(c => c.DealId);
 
         // Prevent reassigning Event to another Deal after insert.

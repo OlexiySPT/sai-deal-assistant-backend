@@ -5,14 +5,14 @@
 namespace Sai.DealAssistant.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class PosFieldAddedForEvents : Migration
+    public partial class OrderFieldForEventNote : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "Pos",
-                table: "Events",
+                name: "Order",
+                table: "EventNotes",
                 type: "integer",
                 nullable: false,
                 defaultValue: 0);
@@ -22,8 +22,8 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Pos",
-                table: "Events");
+                name: "Order",
+                table: "EventNotes");
         }
     }
 }

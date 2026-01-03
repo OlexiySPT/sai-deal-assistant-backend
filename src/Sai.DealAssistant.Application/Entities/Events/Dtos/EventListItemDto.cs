@@ -8,6 +8,7 @@ public class EventListItemDto
     public int Id { get; set; }
     public DateTimeOffset Date { get; set; }
     public string Type { get; set; } = default!;
+    public string? ContactPerson { get; set; }
     public string State { get; set; } = default!;
     public string? Agenda { get; set; }
     public string? Result { get; set; }
@@ -19,7 +20,8 @@ public class EventListItemDto
         {
             CreateMap<Event, EventListItemDto>()
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type!.Name))
-                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State!.State));
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State!.State))
+                .ForMember(dest => dest.ContactPerson, opt => opt.MapFrom(src => (src.ContactPerson == null ? null : $"{src.ContactPerson!.Name}, {src.ContactPerson!.Position}")));
         }
     }
 }

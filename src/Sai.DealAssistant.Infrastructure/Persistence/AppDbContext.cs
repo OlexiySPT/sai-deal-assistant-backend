@@ -9,10 +9,10 @@ public class AppDbContext : DbContext
     public virtual DbSet<User> Users => Set<User>();
 
     public virtual DbSet<Deal> Deals => Set<Deal>();
-    public virtual DbSet<DealContactRep> DealContactReps => Set<DealContactRep>();
+    public virtual DbSet<ContactPerson> ContactPersons => Set<ContactPerson>();
+    public virtual DbSet<DealTag> DealTags => Set<DealTag>();
     public virtual DbSet<Event> Events => Set<Event>();
     public virtual DbSet<EventNote> EventNotes => Set<EventNote>();
-    public virtual DbSet<EventTag> EventTags => Set<EventTag>();
 
     #region Read-only entities
     public virtual DbSet<EventType> EventTypes  => Set<EventType>();

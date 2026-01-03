@@ -17,9 +17,9 @@ public class GetDealContactRepsQuery : IRequest<QueryResult<DealContactRepListIt
 
     public class Handler : IRequestHandler<GetDealContactRepsQuery, QueryResult<DealContactRepListItemDto>>
     {
-        private readonly IReadRepository<DealContactRep> _repository;
+        private readonly IReadRepository<ContactPerson> _repository;
 
-        public Handler(IReadRepository<DealContactRep> repository)
+        public Handler(IReadRepository<ContactPerson> repository)
         {
             _repository = repository;
         }

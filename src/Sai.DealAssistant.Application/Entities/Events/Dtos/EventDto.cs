@@ -11,7 +11,7 @@ namespace Sai.DealAssistant.Application.Entities.Events.Dtos
         public int Pos { get; set; } = 0;
         public string? Agenda { get; set; }
         public string? Result { get; set; }
-
+        public int? ContactPersonId { get; set; }
         public int TypeId { get; set; }
         public int StateId { get; set; }
 

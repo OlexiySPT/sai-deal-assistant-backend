@@ -17,15 +17,18 @@ public class CreateEventCommand : EventDto, IRequest<EventDto>
         private readonly IEnumCache<EventState> _eventStateCache;
         private readonly IEnumCache<EventType> _eventTypeCache;
         private readonly IReadRepository<Deal> _dealRepository;
+        private readonly IReadRepository<ContactPerson> _contactPersonRepository;
 
         public Validator(
             IEnumCache<EventState> eventStateCache,
             IEnumCache<EventType> eventTypeCache,
-            IReadRepository<Deal> dealRepository)
+            IReadRepository<Deal> dealRepository,
+            IReadRepository<ContactPerson> contactPersonRepository)
         {
             _eventStateCache = eventStateCache;
             _eventTypeCache = eventTypeCache;
             _dealRepository = dealRepository;
+            _contactPersonRepository = contactPersonRepository;
 
             RuleFor(c => c.TypeId)
                 .MustAsync(async (cmd, typeId, cToken) => (await _eventTypeCache.GetAllAsync()).Any(p => p.Id == typeId))
@@ -40,6 +43,17 @@ public class CreateEventCommand : EventDto, IRequest<EventDto>
                 .WithMessage("DealId must be greater than 0.")
                 .MustAsync(async (cmd, dealId, cToken) => await _dealRepository.FirstOrDefaultAsync(d => d.Id == dealId) != null)
                 .WithMessage(cmd => $"Deal with Id {cmd.DealId} was not found.");
+
+            RuleFor(c => c.ContactPersonId)
+                .MustAsync(async (cmd, contactPersonId, cToken) =>
+                {
+                    if (contactPersonId is null)
+                    {
+                        return true;
+                    }
+                    return await _contactPersonRepository.ExistsAsync(c => c.Id == contactPersonId && c.DealId == cmd.DealId);
+                })
+                .WithMessage(cmd => $"Contact Person with Id {cmd.ContactPersonId} was not found for deal with Id {cmd.DealId}.");
 
             RuleFor(c => c.Date)
                 .NotEmpty()
