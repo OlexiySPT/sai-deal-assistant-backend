@@ -2,30 +2,22 @@ using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Sai.DealAssistant.Application.Common.Exceptions;
-using Sai.DealAssistant.Application.Entities.DealContactReps.Dtos;
+using Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 using System.Net.Mail;
 
-namespace Sai.DealAssistant.Application.Entities.DealContactReps.Commands;
+namespace Sai.DealAssistant.Application.Entities.ContactPersons.Commands;
 
-public class CreateDealContactRepCommand : DealContactRepDto, IRequest<DealContactRepDto>
+public class UpdateContactPersonCommand : ContactPersonDto, IRequest<ContactPersonDto>
 {
-    public int DealId { get; set; }
-
-    public class Validator : AbstractValidator<CreateDealContactRepCommand>
+    public class Validator : AbstractValidator<UpdateContactPersonCommand>
     {
-        private readonly IReadRepository<Deal> _dealRepository;
-
-        public Validator(IReadRepository<Deal> dealRepository)
+        public Validator()
         {
-            _dealRepository = dealRepository;
-
-            RuleFor(c => c.DealId)
+            RuleFor(c => c.Id)
                 .GreaterThan(0)
-                .WithMessage("DealId must be greater than 0.")
-                .MustAsync(async (cmd, dealId, cToken) => await _dealRepository.FirstOrDefaultAsync(d => d.Id == dealId) != null)
-                .WithMessage(cmd => $"Deal with Id {cmd.DealId} was not found.");
+                .WithMessage("Id must be greater than 0.");
 
             RuleFor(c => c.Name)
                 .NotEmpty()
@@ -57,7 +49,7 @@ public class CreateDealContactRepCommand : DealContactRepDto, IRequest<DealConta
         }
     }
 
-    public class Handler : IRequestHandler<CreateDealContactRepCommand, DealContactRepDto>
+    public class Handler : IRequestHandler<UpdateContactPersonCommand, ContactPersonDto>
     {
         private readonly ICrudRepository<ContactPerson> _repository;
         private readonly IMapper _mapper;
@@ -68,24 +60,24 @@ public class CreateDealContactRepCommand : DealContactRepDto, IRequest<DealConta
             _mapper = mapper;
         }
 
-        public async Task<DealContactRepDto> Handle(CreateDealContactRepCommand request, CancellationToken cancellationToken)
+        public async Task<ContactPersonDto> Handle(UpdateContactPersonCommand request, CancellationToken cancellationToken)
         {
-            var newEntity = _mapper.Map<ContactPerson>(request);
-            ContactPerson? created = await _repository.CreateAsync(newEntity);
+            var toUpdate = _mapper.Map<ContactPerson>(request);
+            var updated = await _repository.UpdateAsync(toUpdate);
 
-            if (created == null)
+            if (updated == null)
             {
-                throw new NotFoundExceptionOverride(nameof(ContactPerson), request.DealId);
+                throw new NotFoundExceptionOverride(nameof(ContactPerson), request.Id);
             }
 
-            return _mapper.Map<DealContactRepDto>(created);
+            return _mapper.Map<ContactPersonDto>(updated);
         }
 
         public class MappingProfile : Profile
         {
             public MappingProfile()
             {
-                CreateMap<CreateDealContactRepCommand, ContactPerson>();
+                CreateMap<UpdateContactPersonCommand, ContactPerson>().ReverseMap();
             }
         }
     }

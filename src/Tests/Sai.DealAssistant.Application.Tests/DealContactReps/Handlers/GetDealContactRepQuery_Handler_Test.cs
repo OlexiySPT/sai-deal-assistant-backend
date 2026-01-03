@@ -2,7 +2,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Sai.DealAssistant.Application.Entities.DealContactReps.Dtos;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
@@ -10,7 +9,8 @@ using SAI.DealAssistant.TestUtils.Unit;
 using Xunit;
 using Sai.DealAssistant.Application.Common.Exceptions;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
-using Sai.DealAssistant.Application.Entities.DealContactReps.Queries;
+using Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
+using Sai.DealAssistant.Application.Entities.ContactPersons.Queries;
 
 namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
 {
@@ -27,7 +27,7 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
             // Configure mapper for DealContactRep -> DealContactRepDto
             var cfg = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile<DealContactRepDto.MappingProfile>();
+                cfg.AddProfile<ContactPersonDto.MappingProfile>();
             }, LoggerFactory);
             _mapper = cfg.CreateMapper();
 
@@ -50,9 +50,9 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         public async Task Handler_ReturnsDto_ForExistingId()
         {
             var existing = await DbContext.ContactPersons.FirstAsync();
-            var handler = new GetDealContactRepQuery.Handler(_repo, _mapper);
+            var handler = new GetContactPersonQuery.Handler(_repo, _mapper);
 
-            var result = await handler.Handle(new GetDealContactRepQuery(existing.Id), CancellationToken.None);
+            var result = await handler.Handle(new GetContactPersonQuery(existing.Id), CancellationToken.None);
 
             Assert.Equal(existing.Id, result.Id);
             Assert.Equal(existing.Name, result.Name);
@@ -62,9 +62,9 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         [Fact]
         public async Task Handler_ThrowsNotFound_ForMissingId()
         {
-            var handler = new GetDealContactRepQuery.Handler(_repo, _mapper);
+            var handler = new GetContactPersonQuery.Handler(_repo, _mapper);
 
-            await Assert.ThrowsAsync<NotFoundExceptionOverride>(() => handler.Handle(new GetDealContactRepQuery(9999), CancellationToken.None));
+            await Assert.ThrowsAsync<NotFoundExceptionOverride>(() => handler.Handle(new GetContactPersonQuery(9999), CancellationToken.None));
         }
     }
 }

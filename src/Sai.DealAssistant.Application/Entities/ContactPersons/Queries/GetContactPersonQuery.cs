@@ -1,18 +1,18 @@
 using AutoMapper;
 using MediatR;
 using Sai.DealAssistant.Application.Common.Exceptions;
-using Sai.DealAssistant.Application.Entities.DealContactReps.Dtos;
+using Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 
-namespace Sai.DealAssistant.Application.Entities.DealContactReps.Queries;
+namespace Sai.DealAssistant.Application.Entities.ContactPersons.Queries;
 
-public class GetDealContactRepQuery : IRequest<DealContactRepDto>
+public class GetContactPersonQuery : IRequest<ContactPersonDto>
 {
-    public GetDealContactRepQuery(int id) => Id = id;
+    public GetContactPersonQuery(int id) => Id = id;
     public int Id { get; }
 
-    public class Handler : IRequestHandler<GetDealContactRepQuery, DealContactRepDto>
+    public class Handler : IRequestHandler<GetContactPersonQuery, ContactPersonDto>
     {
         private readonly IReadRepository<ContactPerson> _repository;
         private readonly IMapper _mapper;
@@ -23,7 +23,7 @@ public class GetDealContactRepQuery : IRequest<DealContactRepDto>
             _mapper = mapper;
         }
 
-        public async Task<DealContactRepDto> Handle(GetDealContactRepQuery request, CancellationToken cancellationToken)
+        public async Task<ContactPersonDto> Handle(GetContactPersonQuery request, CancellationToken cancellationToken)
         {
             var entity = await _repository.FirstOrDefaultAsync(p => p.Id == request.Id);
             if (entity == null)
@@ -31,7 +31,7 @@ public class GetDealContactRepQuery : IRequest<DealContactRepDto>
                 throw new NotFoundExceptionOverride(nameof(ContactPerson), request.Id);
             }
 
-            return _mapper.Map<DealContactRepDto>(entity);
+            return _mapper.Map<ContactPersonDto>(entity);
         }
     }
 }

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Sai.DealAssistant.Application.Entities.ContactPersons.Queries;
 using Sai.DealAssistant.Application.Entities.DealContactReps.Dtos;
-using Sai.DealAssistant.Application.Entities.DealContactReps.Queries;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Infrastructure.Persistence;
@@ -49,10 +49,10 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         public async Task Handler_ReturnsOnlyRepsForGivenDeal_OrderedByName()
         {
             // Arrange
-            var handler = new GetDealContactRepsQuery.Handler(_repo);
+            var handler = new GetDealContactPersonsQuery.Handler(_repo);
 
             var deal = DbContext.Deals.Include(d => d.ContactPersons).First();
-            var query = new GetDealContactRepsQuery { DealId = deal.Id };
+            var query = new GetDealContactPersonsQuery { DealId = deal.Id };
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);

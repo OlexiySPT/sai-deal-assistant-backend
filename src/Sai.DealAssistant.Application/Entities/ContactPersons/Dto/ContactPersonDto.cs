@@ -1,9 +1,9 @@
 using AutoMapper;
 using Sai.DealAssistant.Domain.Entities;
 
-namespace Sai.DealAssistant.Application.Entities.DealContactReps.Dtos;
+namespace Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
 
-public class DealContactRepDto
+public class ContactPersonDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -16,7 +16,7 @@ public class DealContactRepDto
     {
         public MappingProfile()
         {
-            CreateMap<ContactPerson, DealContactRepDto>().ReverseMap();
+            CreateMap<ContactPerson, ContactPersonDto>().ReverseMap();
         }
     }
 }

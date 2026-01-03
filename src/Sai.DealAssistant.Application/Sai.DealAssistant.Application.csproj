@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\DealContactReps\Commands\" />
-    <Folder Include="Entities\DealContactReps\Queries\" />
+    <Folder Include="Entities\EventNotes\Commands\" />
+    <Folder Include="Entities\EventNotes\Queries\" />
     <Folder Include="Entities\Events\Dtos\" />
     <Folder Include="Entities\Events\Commands\" />
   </ItemGroup>

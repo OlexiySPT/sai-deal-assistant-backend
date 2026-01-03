@@ -1,18 +1,18 @@
 using AutoMapper;
 using MediatR;
 using Sai.DealAssistant.Application.Common.Exceptions;
-using Sai.DealAssistant.Application.Entities.DealContactReps.Dtos;
+using Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 
-namespace Sai.DealAssistant.Application.Entities.DealContactReps.Commands;
+namespace Sai.DealAssistant.Application.Entities.ContactPersons.Commands;
 
-public class DeleteDealContactRepCommand : IRequest<DealContactRepDto>
+public class DeleteContactPersonCommand : IRequest<ContactPersonDto>
 {
-    public DeleteDealContactRepCommand(int id) => Id = id;
+    public DeleteContactPersonCommand(int id) => Id = id;
     public int Id { get; set; }
 
-    public class Handler : IRequestHandler<DeleteDealContactRepCommand, DealContactRepDto>
+    public class Handler : IRequestHandler<DeleteContactPersonCommand, ContactPersonDto>
     {
         private readonly ICrudRepository<ContactPerson> _repository;
         private readonly IMapper _mapper;
@@ -23,7 +23,7 @@ public class DeleteDealContactRepCommand : IRequest<DealContactRepDto>
             _mapper = mapper;
         }
 
-        public async Task<DealContactRepDto> Handle(DeleteDealContactRepCommand request, CancellationToken cancellationToken)
+        public async Task<ContactPersonDto> Handle(DeleteContactPersonCommand request, CancellationToken cancellationToken)
         {
             ContactPerson? deleted = await _repository.DeleteAsync(request.Id);
 
@@ -32,7 +32,7 @@ public class DeleteDealContactRepCommand : IRequest<DealContactRepDto>
                 throw new NotFoundExceptionOverride(nameof(ContactPerson), request.Id);
             }
 
-            return _mapper.Map<DealContactRepDto>(deleted);
+            return _mapper.Map<ContactPersonDto>(deleted);
         }
     }
 }

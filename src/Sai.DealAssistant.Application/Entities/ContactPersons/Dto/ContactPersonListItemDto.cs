@@ -1,9 +1,9 @@
 using AutoMapper;
 using Sai.DealAssistant.Domain.Entities;
 
-namespace Sai.DealAssistant.Application.Entities.DealContactReps.Dtos;
+namespace Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
 
-public class DealContactRepListItemDto
+public class ContactPersonListItemDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = default!;
@@ -15,7 +15,7 @@ public class DealContactRepListItemDto
     {
         public MappingProfile()
         {
-            CreateMap<ContactPerson, DealContactRepListItemDto>();
+            CreateMap<ContactPerson, ContactPersonListItemDto>();
         }
     }
 }
