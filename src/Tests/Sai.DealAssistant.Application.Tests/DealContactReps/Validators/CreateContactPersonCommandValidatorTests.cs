@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Sai.DealAssistant.Application.Tests.DealContactReps.Validators
 {
-    public class CreateDealContactRepCommandValidatorTests
+    public class CreateContactPersonCommandValidatorTests
     {
         [Fact]
         public async Task Validator_WithValidDeal_PassesValidation()

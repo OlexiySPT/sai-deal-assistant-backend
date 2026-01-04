@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Sai.DealAssistant.Application;
 using Sai.DealAssistant.Application.Entities.Deals.Commands;
+using Sai.DealAssistant.Application.Entities.EventNotes.Dto;
+using Sai.DealAssistant.Application.Entities.EventNotes.Queries;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
 using System.Net.Mime;

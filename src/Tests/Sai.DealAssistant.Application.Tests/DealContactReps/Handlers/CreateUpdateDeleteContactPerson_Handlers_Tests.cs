@@ -11,7 +11,7 @@ using Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
 
 namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
 {
-    public class CreateUpdateDeleteDealContactRep_Handlers_Tests
+    public class CreateUpdateDeleteContactPerson_Handlers_Tests
     {
         [Fact]
         public async Task Create_Handler_ReturnsDto_OnSuccess()

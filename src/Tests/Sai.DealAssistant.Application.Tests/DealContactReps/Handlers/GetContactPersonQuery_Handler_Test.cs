@@ -14,12 +14,12 @@ using Sai.DealAssistant.Application.Entities.ContactPersons.Queries;
 
 namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
 {
-    public class GetDealContactRepQuery_Handler_Test : UnitTestBase
+    public class GetContactPersonQuery_Handler_Test : UnitTestBase
     {
         private readonly ReadRepository<AppDbContext, ContactPerson> _repo;
         private readonly IMapper _mapper;
 
-        public GetDealContactRepQuery_Handler_Test()
+        public GetContactPersonQuery_Handler_Test()
             : base(seedTestData: false)
         {
             _repo = new ReadRepository<AppDbContext, ContactPerson>(DbContext);

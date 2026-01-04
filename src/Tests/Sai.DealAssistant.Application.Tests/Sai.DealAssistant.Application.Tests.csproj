@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DealContactReps\Handlers\" />
-    <Folder Include="DealContactReps\Validators\" />
+    <Folder Include="EventNotes\Handlers\" />
+    <Folder Include="EventNotes\Validators\" />
     <Folder Include="Events\Handlers\" />
   </ItemGroup>
 

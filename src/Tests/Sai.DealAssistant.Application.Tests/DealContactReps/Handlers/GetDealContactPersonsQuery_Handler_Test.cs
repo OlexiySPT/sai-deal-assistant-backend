@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
 using Sai.DealAssistant.Application.Entities.ContactPersons.Queries;
-using Sai.DealAssistant.Application.Entities.DealContactReps.Dtos;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Infrastructure.Persistence;
@@ -13,11 +13,11 @@ using Xunit;
 
 namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
 {
-    public class GetDealContactRepsQuery_Handler_Test : UnitTestBase
+    public class GetDealContactPersonsQuery_Handler_Test : UnitTestBase
     {
         private readonly ReadRepository<AppDbContext, ContactPerson> _repo;
 
-        public GetDealContactRepsQuery_Handler_Test()
+        public GetDealContactPersonsQuery_Handler_Test()
             : base(seedTestData: false)
         {
             _repo = new ReadRepository<AppDbContext, ContactPerson>(DbContext);
@@ -61,7 +61,7 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
             var expected = DbContext.ContactPersons
                 .Where(p => p.DealId == deal.Id)
                 .OrderBy(p => p.Name)
-                .Select(p => new DealContactRepListItemDto
+                .Select(p => new ContactPersonListItemDto
                 {
                     Id = p.Id,
                     Name = p.Name,

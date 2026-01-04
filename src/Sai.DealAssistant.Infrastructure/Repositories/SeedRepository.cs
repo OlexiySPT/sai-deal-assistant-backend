@@ -238,4 +238,45 @@ public class SeedRepository : ISeedRepository
         await _appDbContext.DealTags.AddRangeAsync(tagsToAdd);
         await _appDbContext.SaveChangesAsync();
     }
+    // Added: seed EventNotes for each Event (upsert by Order)
+    public async Task SeedEventNotesAsync(Func<Event, IEnumerable<EventNote>> getNotesForEvent)
+    {
+        if (getNotesForEvent == null) return;
+
+        // Load events so generator has context; use AsNoTracking to avoid EF tracking collisions.
+        var events = await _appDbContext.Events.AsNoTracking().ToListAsync();
+
+        foreach (var ev in events)
+        {
+            var generatedNotes = getNotesForEvent(ev)?.ToArray();
+            if (generatedNotes == null || generatedNotes.Length == 0) continue;
+
+            var existingNotes = await _appDbContext.EventNotes
+                .Where(n => n.EventId == ev.Id)
+                .ToListAsync();
+
+            foreach (var gen in generatedNotes)
+            {
+                // Ensure FK is correct and new entities don't carry an Id that causes conflicts.
+                gen.EventId = ev.Id;
+                gen.Id = 0;
+
+                // Match by Order (positional note)
+                var match = existingNotes.FirstOrDefault(n => n.Order == gen.Order);
+                if (match is null)
+                {
+                    _appDbContext.EventNotes.Add(gen);
+                }
+                else
+                {
+                    match.Order = gen.Order;
+                    match.Text = gen.Text;
+                }
+            }
+        }
+
+        await _appDbContext.SaveChangesAsync();
+
+        _logger.LogInformation("Event notes upsert completed.");
+    }
 }

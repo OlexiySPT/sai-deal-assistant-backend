@@ -103,5 +103,7 @@ public partial class DatabaseSeeder
         // Seed events after deals/contact reps so foreign keys are valid
         await _seedRepository.SeedEventsAsync(GetTestEventsForDeal);
 
+		await _seedRepository.SeedEventNotesAsync(GetTestEventNotesForEvent);
+
     }
 }

@@ -5,6 +5,7 @@ using Sai.DealAssistant.Application;
 using Sai.DealAssistant.Application.Entities.ContactPersons.Commands;
 using Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
 using Sai.DealAssistant.Application.Entities.ContactPersons.Queries;
+using Sai.DealAssistant.Application.Entities.EventNotes.Commands;
 using System.Net.Mime;
 
 namespace Sai.DealAssistant.WebApi.Controllers;

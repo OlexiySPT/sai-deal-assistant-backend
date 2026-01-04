@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Sai.DealAssistant.Application.Common.Exceptions;
+using Sai.DealAssistant.Application.Entities.EventNotes.Queries;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
 using Sai.DealAssistant.Domain.Entities;
