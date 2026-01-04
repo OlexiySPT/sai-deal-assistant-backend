@@ -30,4 +30,4 @@ Notes:
 - Include unit tests for behavior changes and handlers where applicable.
 
 ## Contact
-If you want this preference removed or changed, add a short note in this file describing the new convention.
+If you need assistance with repository access or have questions about these conventions, add a comment to the pull request or contact the repository maintainers.

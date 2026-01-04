@@ -528,6 +528,263 @@
 			]
 		},
 		{
+			"name": "DealTags",
+			"item": [
+				{
+					"name": "GetDealTags",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/dealTags?dealid=25",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"dealTags"
+							],
+							"query": [
+								{
+									"key": "dealid",
+									"value": "25"
+								}
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateDealTag",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tag\": \"Follow-up-New2\",\r\n    \"dealId\": 25\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/dealTags",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"dealTags"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteDealTag",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/DealTags/372",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"DealTags",
+								"372"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'DELETE' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "EventNotes",
+			"item": [
+				{
+					"name": "GetEventNotes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/EventNotes?eventid=2",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"EventNotes"
+							],
+							"query": [
+								{
+									"key": "eventid",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "GetEventNote",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/Eventnotes/1387",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Eventnotes",
+								"1387"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateEventNote",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"order\": 1,\r\n    \"text\": \"Kabanah note\",\r\n    \"eventId\": 68\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/EventNotes",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"EventNotes"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEventNote",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"order\": 1,\r\n    \"text\": \"Kabanah note updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/eventnotes/1387",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"eventnotes",
+								"1387"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'PUT' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteEventNote",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/EventNotes/1387",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"EventNotes",
+								"1387"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'DELETE' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Enums",
 			"item": [
 				{

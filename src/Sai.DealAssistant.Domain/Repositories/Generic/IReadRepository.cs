@@ -47,19 +47,30 @@ public interface IReadRepository<TEntity>
 		IQueryable<TEntity> query,
 		Expression<Func<TEntity, TResult>> columns);
 
-	/// <summary>
-	/// Returns matherialized and mapped according to columns paged query result.
-	/// </summary>
-	/// <typeparam name="TResult">Result Type. Usually it is DTO, which has less columns then entity.</typeparam>
-	/// <param name="query">Source query, with applied wheres.</param>
-	/// <param name="columns">Expression, which maps entity(TEntity) to DTO(TResult).</param>
-	/// <param name="page">Page number for the paged result.</param>
-	/// <param name="pageSize">Page size, default 250.</param>
-	/// <param name="orderBy">Field to Order by, if not provided, uses Id.</param>
-	/// <param name="orderByDescending">default false.</param>
-	/// <param name="orderByColumnsMap">Dictionary, which maps column to OrderBy Expression.</param>
-	/// <returns>Matherialized already mapped dataset.</returns>
-	Task<IReadOnlyCollection<TResult>> SelectPageAsync<TResult>(
+    /// <summary>
+    /// Returns Distinct, matherialized and mapped according to columns param query result.
+    /// </summary>
+    /// <typeparam name="TResult">Result Type.</typeparam>
+    /// <param name="query">Source query, with applied wheres.</param>
+    /// <param name="columns">Expression, which maps entity(TEntity) to DTO(TResult).</param>
+    /// <returns>Matherialized already mapped dataset.</returns>
+    Task<IReadOnlyCollection<TResult>> SelectDistinctAsync<TResult>(
+        IQueryable<TEntity> query,
+        Expression<Func<TEntity, TResult>> columns);
+
+    /// <summary>
+    /// Returns matherialized and mapped according to columns paged query result.
+    /// </summary>
+    /// <typeparam name="TResult">Result Type. Usually it is DTO, which has less columns then entity.</typeparam>
+    /// <param name="query">Source query, with applied wheres.</param>
+    /// <param name="columns">Expression, which maps entity(TEntity) to DTO(TResult).</param>
+    /// <param name="page">Page number for the paged result.</param>
+    /// <param name="pageSize">Page size, default 250.</param>
+    /// <param name="orderBy">Field to Order by, if not provided, uses Id.</param>
+    /// <param name="orderByDescending">default false.</param>
+    /// <param name="orderByColumnsMap">Dictionary, which maps column to OrderBy Expression.</param>
+    /// <returns>Matherialized already mapped dataset.</returns>
+    Task<IReadOnlyCollection<TResult>> SelectPageAsync<TResult>(
 		IQueryable<TEntity> query,
 		Expression<Func<TEntity, TResult>> columns,
 		int page,

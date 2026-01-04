@@ -4,6 +4,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using Sai.DealAssistant.Application.System.Seeding;
 using Sai.DealAssistant.Infrastructure.Persistence;
+using Sai.DealAssistant.Infrastructure.Repositories;
 
 namespace SAI.DealAssistant.TestUtils.Unit
 {
@@ -23,10 +24,9 @@ namespace SAI.DealAssistant.TestUtils.Unit
 		public UnitTestBase(bool seedTestData)
 		{
 			SqliteDbConnection = AppDbContextUtil_SQLiteDb.CreateSqliteConnection();
-			LoggerFactory = new LoggerFactory();
-			if (seedTestData)
+            if (seedTestData)
 			{		
-				SeedData();
+				SeedDataAsync(seedTestData).GetAwaiter().GetResult();
 			}
 
 			DbContext = CreateNewDbContext();
@@ -49,9 +49,9 @@ namespace SAI.DealAssistant.TestUtils.Unit
 
 		protected IMapper Mapper { get; }
 
-		protected ILoggerFactory LoggerFactory { get; }
+		protected ILoggerFactory LoggerFactory { get; } = new LoggerFactory();
 
-		public void Dispose()
+        public void Dispose()
 		{
 			// Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
 			Dispose(disposing: true);
@@ -63,12 +63,19 @@ namespace SAI.DealAssistant.TestUtils.Unit
 			return AppDbContextUtil_SQLiteDb.CreateAppDbContext(SqliteDbConnection);
 		}
 
-		protected void SeedData()
+		protected async Task SeedDataAsync(bool seedTestData)
 		{
-			//using (var seedDbContext = AppDbContextUtil_SQLiteDb.CreateAppDbContext(SqliteDbConnection))
-			//{
-			//	seedDbContext.SaveChanges();
-			//}
+			using (var seedDbContext = AppDbContextUtil_SQLiteDb.CreateAppDbContext(SqliteDbConnection))
+			{
+				var seedRepo = new SeedRepository(LoggerFactory.CreateLogger<SeedRepository>(), seedDbContext);
+				var databaseSeeder = new DatabaseSeeder(seedRepo);
+                await databaseSeeder.SeedAsync();
+				if(seedTestData)
+				{
+					await databaseSeeder.SeedTestDataAsync();
+				}
+                seedDbContext.SaveChanges();
+			}
 		}
 
 		protected virtual void Dispose(bool disposing)

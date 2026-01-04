@@ -57,9 +57,13 @@ public class ReadRepository<TDbContext, TEntity> : IReadRepository<TEntity>
 	public async Task<IReadOnlyCollection<TResult>> SelectAsync<TResult>(IQueryable<TEntity> query, Expression<Func<TEntity, TResult>> columns)
 	{
 		return await query.Select(columns).ToListAsync();
-	}
+    }
+    public async Task<IReadOnlyCollection<TResult>> SelectDistinctAsync<TResult>(IQueryable<TEntity> query, Expression<Func<TEntity, TResult>> columns)
+    {
+        return await query.Select(columns).Distinct().ToListAsync();
+    }
 
-	public async Task<IReadOnlyCollection<TResult>> SelectPageAsync<TResult>(
+    public async Task<IReadOnlyCollection<TResult>> SelectPageAsync<TResult>(
 		IQueryable<TEntity> query,
 		Expression<Func<TEntity, TResult>> columns,
 		int page,

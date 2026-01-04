@@ -11,10 +11,10 @@ public partial class DatabaseSeeder
 
 	public DatabaseSeeder(
 		//ILogger<DatabaseSeeder> logger,
-		ISeedRepository systemConfigRepository)
+		ISeedRepository seedRepository)
 	{
 		//_logger = logger;
-		_seedRepository = systemConfigRepository;
+		_seedRepository = seedRepository;
 	}
 
 	#region System Data
