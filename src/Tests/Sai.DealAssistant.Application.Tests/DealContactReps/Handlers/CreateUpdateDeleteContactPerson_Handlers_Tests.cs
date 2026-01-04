@@ -8,6 +8,7 @@ using Sai.DealAssistant.Application.Common.Exceptions;
 using Xunit;
 using Sai.DealAssistant.Application.Entities.ContactPersons.Commands;
 using Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
+using Sai.DealAssistant.Application.Entities.DealTags.Commands;
 
 namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
 {

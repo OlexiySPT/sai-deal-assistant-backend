@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentValidation.TestHelper;
 using Moq;
 using Sai.DealAssistant.Application.Entities.ContactPersons.Commands;
+using Sai.DealAssistant.Application.Entities.DealTags.Commands;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 using Xunit;
