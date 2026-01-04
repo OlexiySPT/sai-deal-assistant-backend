@@ -4,7 +4,7 @@ using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations.ReadOnly;
 
-public class EventTypeConfiguration : BaseReadOnlyEntityConfiguration<EventType>
+public class EventTypeConfiguration : BaseNonTrackedEntityConfiguration<EventType>
 {
     public override void Configure(EntityTypeBuilder<EventType> builder)
     {

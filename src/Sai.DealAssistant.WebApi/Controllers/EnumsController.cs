@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Sai.DealAssistant.Domain.Entities.ReadOnly;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 using System.Collections;
 using System.Reflection;
 using System.Linq;
+using Sai.DealAssistant.Domain.Entities;
 
 namespace Sai.DealAssistant.WebApi.Controllers;
 
@@ -20,12 +20,12 @@ public class EnumsController : ControllerBase
 		_serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
 		// Discover all concrete types that implement IEnum and derive from BaseReadOnlyEntity
-		var domainAssembly = typeof(BaseReadOnlyEntity).Assembly;
+		var domainAssembly = typeof(BaseNonTrackedEntity).Assembly;
 		_enumTypes = domainAssembly
 			.GetTypes()
 			.Where(t => t.IsClass && !t.IsAbstract
 				&& typeof(IEnum).IsAssignableFrom(t)
-				&& typeof(BaseReadOnlyEntity).IsAssignableFrom(t))
+				&& typeof(BaseNonTrackedEntity).IsAssignableFrom(t))
 			.ToDictionary(t => t.Name.ToLowerInvariant(), t => t);
 	}
 

@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Sai.DealAssistant.Domain.Entities.ReadOnly;
+using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 
 namespace Sai.DealAssistant.Infrastructure.Repositories.Generic;
 
 public class EnumCache<TEntity> : IEnumCache<TEntity>
-    where TEntity : BaseReadOnlyEntity, IEnum, new()
+    where TEntity : BaseNonTrackedEntity, IEnum, new()
 {
     private static readonly MemoryCache s_cache = new(new MemoryCacheOptions());
     private readonly string _cacheKey = typeof(TEntity).FullName ?? typeof(TEntity).Name;

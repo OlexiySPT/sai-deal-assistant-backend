@@ -4,7 +4,7 @@ using Sai.DealAssistant.Domain.Entities;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations;
 
-public class DealTagConfiguration : BaseEntityConfiguration<DealTag>
+public class DealTagConfiguration : BaseNonTrackedEntityConfiguration<DealTag>
 {
     public override void Configure(EntityTypeBuilder<DealTag> builder) {
         base.Configure(builder);

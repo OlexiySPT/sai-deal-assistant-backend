@@ -4,7 +4,7 @@ using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations.ReadOnly;
 
-public class DealTypeConfiguration : BaseReadOnlyEntityConfiguration<DealType>
+public class DealTypeConfiguration : BaseNonTrackedEntityConfiguration<DealType>
 {
     public override void Configure(EntityTypeBuilder<DealType> builder)
     {

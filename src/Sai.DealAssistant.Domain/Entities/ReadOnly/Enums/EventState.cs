@@ -2,7 +2,7 @@
 
 namespace Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 
-public class EventState : BaseReadOnlyEntity, IEnum
+public class EventState : BaseNonTrackedEntity, IEnum
 {
     public string State { get; set; } = string.Empty;
 

@@ -1,8 +1,6 @@
-﻿using Sai.DealAssistant.Domain.Entities.ReadOnly;
+﻿namespace Sai.DealAssistant.Domain.Entities;
 
-namespace Sai.DealAssistant.Domain.Entities;
-
-public abstract class BaseEntity: BaseReadOnlyEntity
+public abstract class BaseEntity: BaseNonTrackedEntity
 {
 	public DateTimeOffset CreatedAt { get; set; } = DateTime.UtcNow;
     public int CreatedBy { get; set; }

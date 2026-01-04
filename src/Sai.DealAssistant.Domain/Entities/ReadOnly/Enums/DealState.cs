@@ -2,7 +2,7 @@
 
 namespace Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 
-public class DealState : BaseReadOnlyEntity, IEnum
+public class DealState : BaseNonTrackedEntity, IEnum
 {
     public string State { get; set; }
 

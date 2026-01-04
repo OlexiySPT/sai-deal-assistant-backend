@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Sai.DealAssistant.Domain.Entities.ReadOnly;
+using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Exceptions;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 using System.Linq.Expressions;
@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 namespace Sai.DealAssistant.Infrastructure.Repositories.Generic;
 
 public class ReadRepository<TDbContext, TEntity> : IReadRepository<TEntity>
-	where TEntity : BaseReadOnlyEntity, new()
+	where TEntity : BaseNonTrackedEntity, new()
 	where TDbContext : DbContext
 {
 	public ReadRepository(TDbContext dbContext)

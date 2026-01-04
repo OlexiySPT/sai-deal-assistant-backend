@@ -1,6 +1,5 @@
-﻿namespace Sai.DealAssistant.Domain.Entities.ReadOnly.Enums
+﻿namespace Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
+
+public interface IEnum
 {
-    public interface IEnum
-    {
-    }
 }

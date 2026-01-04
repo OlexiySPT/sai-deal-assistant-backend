@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 
 namespace Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 
-public class DealType : BaseReadOnlyEntity, IEnum
+public class DealType : BaseNonTrackedEntity, IEnum
 {
     public string Type { get; set; }
 

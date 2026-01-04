@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sai.DealAssistant.Domain.Entities;
-using Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations.ReadOnly;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations;
 
-public abstract class BaseEntityConfiguration<TEntity> : BaseReadOnlyEntityConfiguration<TEntity>
+public abstract class BaseEntityConfiguration<TEntity> : BaseNonTrackedEntityConfiguration<TEntity>
     where TEntity : BaseEntity
 {
 

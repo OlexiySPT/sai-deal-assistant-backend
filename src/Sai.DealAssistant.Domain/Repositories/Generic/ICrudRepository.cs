@@ -3,7 +3,7 @@
 namespace Sai.DealAssistant.Domain.Repositories.Generic;
 
 public interface ICrudRepository<TEntity> : IReadRepository<TEntity>
-	where TEntity : BaseEntity, new()
+	where TEntity : BaseNonTrackedEntity, new()
 {
 	Task<TEntity> CreateAsync(TEntity entity);
 

@@ -5,7 +5,7 @@ using Sai.DealAssistant.Domain.Entities;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations;
 
-public class EventNoteConfiguration : BaseEntityConfiguration<EventNote>
+public class EventNoteConfiguration : BaseNonTrackedEntityConfiguration<EventNote>
 {
     public override void Configure(EntityTypeBuilder<EventNote> builder)
     {
