@@ -23,13 +23,6 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
     public class Handler : IRequestHandler<GetDealListQuery, QueryResult<DealListItemDto>>
 	{
 		private readonly IReadRepository<Deal> _repository;
-		private static readonly Dictionary<string, Expression<Func<Deal, object>>> _sortMapping =
-			new Dictionary<string, Expression<Func<Deal, object>>>
-			{
-				{ nameof(Deal.Name).ToLowerInvariant(), x => x.Name! },
-				{ nameof(Deal.Industry).ToLowerInvariant(), x => x.Industry! },
-				{ nameof(Deal.CreatedAt).ToLowerInvariant(), x=> x.CreatedAt },
-			};
 
 		public Handler(IReadRepository<Deal> repository)
 		{
@@ -78,8 +71,7 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 				request.Page,
 				request.PageSize,
 				string.IsNullOrWhiteSpace(request.SortBy) ? null : request.SortBy.ToLowerInvariant(),
-				request.SortDirection == SortDirections.Desc,
-				_sortMapping
+				request.SortDirection == SortDirections.Desc
 			);
 			return new PagedQueryResult<DealListItemDto>(result, totalItems, request.PageSize, request.Page);
 		}

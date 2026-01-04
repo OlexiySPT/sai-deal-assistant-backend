@@ -6,7 +6,6 @@ using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Common;
 using SAI.DealAssistant.TestUtils.Unit;
 using SAI.DealAssistant.TestUtils.Unit.GenericRepositoryTests.Persistance;
-using System.Linq.Expressions;
 
 namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryTests
 {
@@ -221,13 +220,7 @@ namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryT
 					lastPage,
 					_pageSize,
 					"email",
-					false,
-					new Dictionary<string, Expression<Func<SampleEmployee, object>>>
-					{
-						{ "id", c => c.Id },
-						{ "fullname", c => c.FullName },
-						{ "email", c => c.Email! }
-					});
+					false);
 
 			// Assert
 			CheckSourceDbSetIsNotEmpty();
@@ -259,13 +252,7 @@ namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryT
 					lastPage,
 					_pageSize,
 					"email",
-					true,
-					new Dictionary<string, Expression<Func<SampleEmployee, object>>>
-					{
-						{ "id", c => c.Id },
-						{ "fullname", c => c.FullName },
-						{ "email", c => c.Email! }
-					});
+					true);
 
 			// Assert
 			CheckSourceDbSetIsNotEmpty();
@@ -290,13 +277,7 @@ namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryT
 					lastPage + 2,
 					_pageSize,
 					"email",
-					true,
-					new Dictionary<string, Expression<Func<SampleEmployee, object>>>
-					{
-						{ "id", c => c.Id },
-						{ "fullname", c => c.FullName },
-						{ "email", c => c.Email! }
-					});
+					true);
 
 			// Assert
 			CheckSourceDbSetIsNotEmpty();
@@ -317,13 +298,7 @@ namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryT
 					1,
 					_pageSize,
 					"emqwertyuiop",
-					false,
-					new Dictionary<string, Expression<Func<SampleEmployee, object>>>
-					{
-						{ "id", c => c.Id },
-						{ "fullname", c => c.FullName },
-						{ "email", c => c.Email! }
-					});
+					false);
 			});
 		}
 		#endregion
@@ -378,13 +353,7 @@ namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryT
 			var result = await _repo.ApplySorting(
 				qry,
 				"email",
-				false,
-				new Dictionary<string, Expression<Func<SampleEmployee, object>>>
-				{
-					{ "id", c => c.Id },
-					{ "fullname", c => c.FullName },
-					{ "email", c => c.Email! }
-				})
+				false)
 				.Select(p => p.Id)
 				.ToListAsync();
 
@@ -405,13 +374,7 @@ namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryT
 			var result = await _repo.ApplySorting(
 				qry,
 				"email",
-				true,
-				new Dictionary<string, Expression<Func<SampleEmployee, object>>>
-				{
-					{ "id", c => c.Id },
-					{ "fullname", c => c.FullName },
-					{ "email", c => c.Email! }
-				})
+				true)
 				.Select(p => p.Id)
 				.ToListAsync();
 
@@ -436,13 +399,7 @@ namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryT
 				var result = _repo.ApplySorting(
 					qry,
 					"emailqwert",
-					false,
-					new Dictionary<string, Expression<Func<SampleEmployee, object>>>
-					{
-						{ "id", c => c.Id },
-						{ "fullname", c => c.FullName },
-						{ "email", c => c.Email! }
-					})
+					false)
 					.Select(p => p.Id)
 					.ToListAsync();
 			});
@@ -465,41 +422,12 @@ namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryT
 					var result = _repo.ApplySorting(
 						qry,
 						null,
-						false,
-						new Dictionary<string, Expression<Func<SampleEmployee, object>>>
-						{
-							{ "id", c => c.Id },
-							{ "fullname", c => c.FullName },
-							{ "email", c => c.Email! }
-						})
+						false)
 						.Select(p => p.Id)
 						.ToListAsync();
 				});
 		}
 
-		[Fact]
-		public void ApplySorting_ThrowsArgumentNullException_ForColumnsMap()
-		{
-			// Arrange
-			var src = DbContext.SampleEmployees
-				.OrderBy(p => p.Email).Select(p => p.Id).ToList();
-
-			// Assert
-			Assert.Throws<ArgumentNullException>(
-				"columnsMap",
-				() =>
-				{
-					// Act
-					IQueryable<SampleEmployee> qry = _repo.GetAll();
-					var result = _repo.ApplySorting(
-						qry,
-						"email",
-						false,
-						null)
-						.Select(p => p.Id)
-						.ToListAsync();
-				});
-		}
 		#endregion
 
 		[Fact]

@@ -33,8 +33,7 @@ public interface IReadRepository<TEntity>
 	IQueryable<TEntity> ApplySorting(
 		IQueryable<TEntity> query,
 		string? column,
-		bool descending,
-		Dictionary<string, Expression<Func<TEntity, object>>>? columnsMap);
+		bool descending);
 
 	/// <summary>
 	/// Returns matherialized and mapped according to columns param query result.
@@ -76,8 +75,7 @@ public interface IReadRepository<TEntity>
 		int page,
 		int pageSize,
 		string? orderBy = null,
-		bool orderByDescending = false,
-		Dictionary<string, Expression<Func<TEntity, object>>>? orderByColumnsMap = null);
+		bool orderByDescending = false);
 
 	/// <summary>
 	/// Counts row number in a query.

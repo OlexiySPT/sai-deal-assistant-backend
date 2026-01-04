@@ -3,6 +3,7 @@ using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Exceptions;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Sai.DealAssistant.Infrastructure.Repositories.Generic;
 
@@ -30,23 +31,39 @@ public class ReadRepository<TDbContext, TEntity> : IReadRepository<TEntity>
 	public IQueryable<TEntity> ApplySorting(
 		IQueryable<TEntity> query,
 		string? column,
-		bool descending,
-		Dictionary<string, Expression<Func<TEntity, object>>>? columnsMap)
+		bool descending)
 	{
 		if (column is null) throw new ArgumentNullException(nameof(column));
-		if (columnsMap is null) throw new ArgumentNullException(nameof(columnsMap));
+		if (string.IsNullOrWhiteSpace(column)) throw new ArgumentException("Sort column must be provided.", nameof(column));
 
-		if (!columnsMap!.ContainsKey(column!))
+		// Find top-level property on TEntity using case-insensitive comparison.
+		var prop = typeof(TEntity)
+			.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+			.FirstOrDefault(p => string.Equals(p.Name, column, StringComparison.OrdinalIgnoreCase));
+
+		if (prop is null)
 		{
-			throw new InvalidSortColumnException(column!, columnsMap.Keys);
+			// Provide available property names for the exception (top-level properties)
+			var available = typeof(TEntity)
+				.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+				.Select(p => p.Name)
+				.OrderBy(n => n);
+			throw new InvalidSortColumnException(column, available);
 		}
 
-		if (descending)
-		{
-			return query.OrderByDescending(columnsMap[column!]);
-		}
+		var param = Expression.Parameter(typeof(TEntity), "e");
+		var propertyAccess = Expression.Property(param, prop);
 
-		return query.OrderBy(columnsMap[column!]);
+		// Convert value types to object to match Expression<Func<TEntity, object>>
+		Expression selectorBody = prop.PropertyType.IsValueType
+			? Expression.Convert(propertyAccess, typeof(object))
+			: (Expression)propertyAccess;
+
+		var lambda = Expression.Lambda<Func<TEntity, object>>(selectorBody, param);
+
+		return descending
+			? query.OrderByDescending(lambda)
+			: query.OrderBy(lambda);
 	}
 
 	public async Task<int> CountAsync(IQueryable<TEntity> query)
@@ -69,8 +86,7 @@ public class ReadRepository<TDbContext, TEntity> : IReadRepository<TEntity>
 		int page,
 		int pageSize,
 		string? orderByColumn,
-		bool orderByDescending,
-		Dictionary<string, Expression<Func<TEntity, object>>>? orderByColumnsMap)
+		bool orderByDescending)
 	{
 		if (orderByColumn == null || string.IsNullOrWhiteSpace(orderByColumn))
 		{
@@ -85,7 +101,7 @@ public class ReadRepository<TDbContext, TEntity> : IReadRepository<TEntity>
 		}
 		else
 		{
-			query = ApplySorting(query, orderByColumn, orderByDescending, orderByColumnsMap);
+			query = ApplySorting(query, orderByColumn, orderByDescending);
 		}
 
 		return await query

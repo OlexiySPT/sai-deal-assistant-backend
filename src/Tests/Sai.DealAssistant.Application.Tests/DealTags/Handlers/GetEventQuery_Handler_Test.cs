@@ -16,12 +16,15 @@ namespace Sai.DealAssistant.Application.Tests.DealTags.Handlers
     public class GetCachedTagsQuery_Handler_Test : UnitTestBase
     {
         private readonly ReadRepository<AppDbContext, DealTag> _repo;
-        private readonly Mock<IAppConfiguration> _config = (Mock<IAppConfiguration>)new Mock<IAppConfiguration>().SetupGet<int>(p => p.EnumTablesCacheExpitrationMins).Returns(10);
+        private readonly Mock<IAppConfiguration> _config;
 
 
         public GetCachedTagsQuery_Handler_Test()
             : base(seedTestData: true)
         {
+            _config = new Mock<IAppConfiguration>();
+            _config.SetupGet(p => p.EnumTablesCacheExpitrationMins).Returns(10);
+
             _repo = new ReadRepository<AppDbContext, DealTag>(DbContext);
         }
 
