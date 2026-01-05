@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
+using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 using Sai.DealAssistant.Application.System.Seeding;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories;
@@ -37,7 +38,26 @@ namespace SAI.DealAssistant.TestUtils.Unit
 				.ForEach(b => Fixture.Behaviors.Remove(b));
 			Fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
-			//Mapper = PersistenceMappingProfile.CreateInstance();
+			// Register all AutoMapper profiles from the Application assembly, with a fallback to the known profile.
+			var config = new MapperConfiguration(cfg =>
+			{
+				// Try to load the Application assembly and register any Profile types it contains.
+				try
+				{
+					var appAssembly = typeof(DealDto).Assembly;
+					if (appAssembly != null)
+					{
+						cfg.AddMaps(appAssembly);
+						return;
+					}
+				}
+				catch
+				{
+					// ignore and fallback to explicit registration below
+				}
+			},
+			LoggerFactory);
+			Mapper = config.CreateMapper();
 			// TODO: Add IMediator ptop Init it properly
 		}
 

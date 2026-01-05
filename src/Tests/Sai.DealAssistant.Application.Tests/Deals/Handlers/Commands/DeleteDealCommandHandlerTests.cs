@@ -10,7 +10,7 @@ using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 using Xunit;
 
-namespace Sai.DealAssistant.Application.Tests.Deals;
+namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Commands;
 
 public class DeleteDealCommandHandlerTests
 {
@@ -44,7 +44,7 @@ public class DeleteDealCommandHandlerTests
         var repositoryMock = new Mock<ICrudRepository<Deal>>();
         var mapperMock = new Mock<IMapper>();
 
-        repositoryMock.Setup(r => r.DeleteAsync(13)).ReturnsAsync((Deal?)null);
+        repositoryMock.Setup(r => r.DeleteAsync(13)).ReturnsAsync((Deal)null);
 
         var handler = new DeleteDealCommand.Handler(repositoryMock.Object, mapperMock.Object);
 

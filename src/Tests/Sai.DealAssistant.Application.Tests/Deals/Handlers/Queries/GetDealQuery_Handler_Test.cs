@@ -13,7 +13,7 @@ using System.Linq;
 using System.Threading;
 using Xunit;
 
-namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
+namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 {
 	public class GetDealQuery_Handler_Test : UnitTestBase
 	{

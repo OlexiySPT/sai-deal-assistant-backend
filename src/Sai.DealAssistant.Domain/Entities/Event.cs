@@ -10,7 +10,7 @@ public class Event : BaseEntity
     public string? Agenda { get; set; }
     public string? Result { get; set; }
 
-    public int TypeId { get; set; }
+    public int TypeId { get; set; } = 1;
     public EventType Type { get; set; } = default!;
 
     /// <summary>

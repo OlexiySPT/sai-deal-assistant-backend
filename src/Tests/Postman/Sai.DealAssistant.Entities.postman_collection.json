@@ -106,6 +106,32 @@
 					"response": []
 				},
 				{
+					"name": "GetDealWithDependents",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/Deals/135/with-dependents",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Deals",
+								"135",
+								"with-dependents"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
 					"name": "CreateDeal",
 					"request": {
 						"method": "POST",
@@ -554,6 +580,31 @@
 									"key": "dealid",
 									"value": "25"
 								}
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "GetExistingTags",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/dealTags/existing",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"dealTags",
+								"existing"
 							]
 						},
 						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json'"

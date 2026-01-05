@@ -17,7 +17,7 @@ using System.Threading;
 using System.Xml.Linq;
 using Xunit;
 
-namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
+namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 {
 	public class GetDealListQuery_Handler_Test : UnitTestBase
 	{
@@ -43,7 +43,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers
 					Name = $"Deal {i}",
 					Description = i % 3 == 0 ? $"Special desc {i}" : $"Desc {i}",
 					Industry = i % 2 == 0 ? "Software" : "Finance",
-					StateId = (i % 2 == 0) ? s1.Id : s2.Id,
+					StateId = i % 2 == 0 ? s1.Id : s2.Id,
 					TypeId = t.Id
 				}).ToArray();
 

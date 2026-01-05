@@ -35,6 +35,7 @@ public static class DependencyInjection
     private static IServiceCollection AddSpecificRepositories(this IServiceCollection services, IAppConfiguration configuration)
     {
         // Do not forget to add new specific repos here
+        services.AddScoped<IFullDealRepository, FullDealRepository>();
         services.AddScoped<ISeedRepository, SeedRepository>();
         return services;
     }

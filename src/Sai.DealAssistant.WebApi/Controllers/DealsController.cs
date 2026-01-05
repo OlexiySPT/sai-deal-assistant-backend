@@ -3,8 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Sai.DealAssistant.Application;
 using Sai.DealAssistant.Application.Entities.Deals.Commands;
-using Sai.DealAssistant.Application.Entities.EventNotes.Dto;
-using Sai.DealAssistant.Application.Entities.EventNotes.Queries;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
 using System.Net.Mime;
@@ -44,15 +42,32 @@ namespace Sai.DealAssistant.WebApi.Controllers
 		public async Task<IActionResult> GetDeal(int id)
 		{
 			return Ok(await Mediator.Send(new GetDealQuery(id)));
-		}
+        }
 
-		/// <summary>
-		/// Create Deal.
-		/// </summary>
-		/// <param name="command">Create Deal Request.</param>
-		/// <response code="201">Returns created Deal.</response>
-		/// <response code="400">Returns when conditions are not met.</response>
-		[HttpPost]
+        /// <summary>
+        /// Get a deal including its dependent entities (type, state, contact persons, events, notes, tags).
+        /// </summary>
+        /// <param name="id">Deal id</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Deal with dependents DTO or 404</returns>
+        [HttpGet("{id}/with-dependents")]
+        [ProducesResponseType(typeof(DealWithDependentsDto), 200)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<DealWithDependentsDto>> GetWithDependents(int id, CancellationToken cancellationToken)
+        {
+            var query = new GetDealWithDependentsQuery(id);
+            var result = await Mediator.Send(query, cancellationToken);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Create Deal.
+        /// </summary>
+        /// <param name="command">Create Deal Request.</param>
+        /// <response code="201">Returns created Deal.</response>
+        /// <response code="400">Returns when conditions are not met.</response>
+        [HttpPost]
 		[Consumes(MediaTypeNames.Application.Json)]
 		[Produces(MediaTypeNames.Application.Json)]
 		[ProducesResponseType(typeof(DealDto), 201)]

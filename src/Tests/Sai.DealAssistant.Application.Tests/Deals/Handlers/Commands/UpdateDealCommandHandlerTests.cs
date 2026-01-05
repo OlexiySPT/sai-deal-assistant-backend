@@ -10,7 +10,7 @@ using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 using Xunit;
 
-namespace Sai.DealAssistant.Application.Tests.Deals;
+namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Commands;
 
 public class UpdateDealCommandHandlerTests
 {
@@ -58,7 +58,7 @@ public class UpdateDealCommandHandlerTests
         var mappedDeal = new Deal { Id = 99, Name = "DoesNotExist" };
 
         mapperMock.Setup(m => m.Map<Deal>(It.IsAny<UpdateDealCommand>())).Returns(mappedDeal);
-        repositoryMock.Setup(r => r.UpdateAsync(mappedDeal)).ReturnsAsync((Deal?)null);
+        repositoryMock.Setup(r => r.UpdateAsync(mappedDeal)).ReturnsAsync((Deal)null);
 
         var handler = new UpdateDealCommand.Handler(repositoryMock.Object, mapperMock.Object);
 
