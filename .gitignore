@@ -6,3 +6,5 @@ obj/
 bin/
 .vs/
 *.user
+*.bru
+/src/Tests/Postman/Sai.DealAssistant.Entities/bruno.json
