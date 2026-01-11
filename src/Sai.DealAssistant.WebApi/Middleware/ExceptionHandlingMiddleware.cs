@@ -1,6 +1,5 @@
 using Sai.DealAssistant.Application.Common.Exceptions;
 using System.Text.Json;
-using AppValidationException = Sai.DealAssistant.Application.Common.Exceptions.ValidationExceptionOverride;
 
 namespace Sai.DealAssistant.WebApi.Middleware;
 
@@ -69,7 +68,7 @@ public class ExceptionHandlingMiddleware
 		}
 
 		// Application ValidationException -> 400 with validation details
-		if (exception is AppValidationException appValEx)
+		if (exception is ValidationExceptionOverride appValEx)
 		{
 			_logger.LogWarning(appValEx, "Validation failed: {Message}", appValEx.Message);
 			context.Response.StatusCode = StatusCodes.Status400BadRequest;

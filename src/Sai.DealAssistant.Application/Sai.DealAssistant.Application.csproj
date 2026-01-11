@@ -21,6 +21,5 @@
     <Folder Include="Entities\EventNotes\Commands\" />
     <Folder Include="Entities\EventNotes\Queries\" />
     <Folder Include="Entities\Events\Commands\" />
-    <Folder Include="Enums\Commands\" />
   </ItemGroup>
 </Project>
