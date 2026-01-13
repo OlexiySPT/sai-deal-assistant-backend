@@ -3,11 +3,13 @@
 --List of users:
 select rolname, rolsuper, rolcreatedb, rolcanlogin from pg_roles order by rolname;
 --Migrator
-create user dealassiatant_migrator  with password 'dealassiatant_migrator';
+--drop user dealassiatant_migrator
+create user dealassiatant_migrator  with password 'Kabanah5%';
 alter user dealassiatant_migrator createdb;
 
 --log in onder dealassiatant_migrator you just created
 create database dealassistantdatabase owner dealassiatant_migrator;
+--drop database dealassistantdatabase;
 --You might not need this
 --grant all privileges on database dealassistantdatabase to dealassiatant_migrator;
 --use this simple table creation scripts to make sure
@@ -20,14 +22,17 @@ create table test2(id varchar(256));
 --APPLICATION USER
 --Run this under postgres user 
 --Create user
-create user dealassiatantuser with password 'dealassiatantuser';
+--drop user dealassiatantuser
+create user dealassiatantuser with password 'Kabanah5%';
+
+--Run from the dealassiatant_migrator , cuz he is a database owner
 --Grant minimal rights
 grant connect on database dealassistantdatabase to dealassiatantuser;
 grant usage on schema public to dealassiatantuser;
 --Grant CRUD for existing tables
 grant select, insert, update, delete on all tables in schema public to dealassiatantuser;
 --Grant CRUD for future tables
-alter default privileges for user dealassiatant_migrator 
+alter default privileges for user dealassiatant_migrator in schema public
 grant select, insert, update, delete on tables to dealassiatantuser;
 
 --Test if you can connect and do all crud operation under this user

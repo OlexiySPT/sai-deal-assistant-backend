@@ -1,28 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
+using Sai.DealAssistant.Common.Configuration;
 using Sai.DealAssistant.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Sai.DealAssistant.Infrastructure.DesignTime
+namespace Sai.DealAssistant.Infrastructure.DesignTime;
+
+public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
-    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+    private IAppConfiguration _configuration;
+
+    //To make it possible run for add-migration
+    public DesignTimeDbContextFactory()
     {
-        public AppDbContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
+        _configuration = new AppConfigurationFromConfigJson();
+    }
+    public DesignTimeDbContextFactory(IAppConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+    public AppDbContext CreateDbContext(string[] args)
+    {
+        var builder = new DbContextOptionsBuilder<AppDbContext>();
+        builder.UseNpgsql(_configuration.MigrationConnectionString);
 
-            var builder = new DbContextOptionsBuilder<AppDbContext>();
-            builder.UseNpgsql(configuration.GetConnectionString("MigrationConnection"));
-
-            return new AppDbContext(builder.Options);
-        }
+        return new AppDbContext(builder.Options);
     }
 }
