@@ -1,0 +1,6 @@
+@Sai.DealAssistant.WebApi_HostAddress = http://localhost:5184
+
+GET {{Sai.DealAssistant.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

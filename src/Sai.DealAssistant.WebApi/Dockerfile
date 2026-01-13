@@ -1,0 +1,34 @@
+# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+# This stage is used when running from VS in fast mode (Default for Debug configuration)
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER $APP_UID
+WORKDIR /app
+EXPOSE 8080
+EXPOSE 8081
+
+
+# This stage is used to build the service project
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["Sai.DealAssistant.WebApi/Sai.DealAssistant.WebApi.csproj", "Sai.DealAssistant.WebApi/"]
+COPY ["Sai.DealAssistant.Application/Sai.DealAssistant.Application.csproj", "Sai.DealAssistant.Application/"]
+COPY ["Sai.DealAssistant.Common/Sai.DealAssistant.Common.csproj", "Sai.DealAssistant.Common/"]
+COPY ["Sai.DealAssistant.Domain/Sai.DealAssistant.Domain.csproj", "Sai.DealAssistant.Domain/"]
+COPY ["Sai.DealAssistant.Infrastructure/Sai.DealAssistant.Infrastructure.csproj", "Sai.DealAssistant.Infrastructure/"]
+RUN dotnet restore "./Sai.DealAssistant.WebApi/Sai.DealAssistant.WebApi.csproj"
+COPY . .
+WORKDIR "/src/Sai.DealAssistant.WebApi"
+RUN dotnet build "./Sai.DealAssistant.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# This stage is used to publish the service project to be copied to the final stage
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./Sai.DealAssistant.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Sai.DealAssistant.WebApi.dll"]
