@@ -28,13 +28,13 @@ The workflow is triggered when:
 
 The following secret must be configured in the GitHub repository:
 
-- `DEV_SERVER_PASSWORD`: SSH password for the dev server (value: `gLORY5002@`)
+- `DEV_SERVER_PASSWORD`: SSH password for the dev server
 
 To add this secret:
 1. Go to repository Settings → Secrets and variables → Actions
 2. Click "New repository secret"
 3. Name: `DEV_SERVER_PASSWORD`
-4. Value: `gLORY5002@`
+4. Value: (the SSH password provided by the server administrator)
 
 ### Dev Server Details
 
