@@ -8,3 +8,5 @@ bin/
 user
 
 *.user
+*.bru
+/src/Tests/Postman/Sai.DealAssistant.Entities/bruno.json
