@@ -1,0 +1,59 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - dev
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  ci-cd:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Create PR to Dev branch
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          source_branch: ${{ github.ref_name }}
+          destination_branch: dev
+          pr_title: "${{ github.ref_name }} --> dev"
+          pr_body: "Automated PR created by CI/CD pipeline"
+        continue-on-error: true
+
+      - name: Create PR to Main branch
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          source_branch: ${{ github.ref_name }}
+          destination_branch: main
+          pr_title: "${{ github.ref_name }} --> main"
+          pr_body: "Automated PR created by CI/CD pipeline"
+        continue-on-error: true
+
+      - name: Restore dependencies
+        run: dotnet restore src/Sai.DealAssistant.sln
+
+      - name: Build
+        run: |
+          dotnet build src/Sai.DealAssistant.sln \
+            --no-restore --configuration Release
+
+      - name: Run tests
+        run: |
+          dotnet test src/Sai.DealAssistant.sln \
+            --no-build --configuration Release --verbosity normal
