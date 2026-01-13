@@ -23,14 +23,16 @@ create table test2(id varchar(256));
 --Run this under postgres user 
 --Create user
 --drop user dealassiatantuser
-create user dealassiatantuser with password 'PutStrongPasswordHere';
+create user dealassiatantuser with password 'Kabanah5%';
+
+--Run from the dealassiatant_migrator , cuz he is a database owner
 --Grant minimal rights
 grant connect on database dealassistantdatabase to dealassiatantuser;
 grant usage on schema public to dealassiatantuser;
 --Grant CRUD for existing tables
 grant select, insert, update, delete on all tables in schema public to dealassiatantuser;
 --Grant CRUD for future tables
-alter default privileges for user dealassiatant_migrator 
+alter default privileges for user dealassiatant_migrator in schema public
 grant select, insert, update, delete on tables to dealassiatantuser;
 
 --Test if you can connect and do all crud operation under this user
