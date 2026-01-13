@@ -44,7 +44,7 @@ jobs:
       with:
         name: backend-build
         path: ./publish
-        retention-days: 1
+        retention-days: 7
 
   test:
     name: Run Tests
@@ -110,7 +110,7 @@ jobs:
         rsync -avz -e "ssh -i ~/.ssh/deploy_key" ./publish/ ${DEPLOY_USER}@${DEPLOY_SERVER_IP}:${DEPLOY_PATH}/app/
         
         # Restart the application service
-        ssh -i ~/.ssh/deploy_key ${DEPLOY_USER}@${DEPLOY_SERVER_IP} "sudo systemctl restart sai-deal-assistant-backend || true"
+        ssh -i ~/.ssh/deploy_key ${DEPLOY_USER}@${DEPLOY_SERVER_IP} "sudo systemctl restart sai-deal-assistant-backend && sudo systemctl is-active sai-deal-assistant-backend"
         
     - name: Cleanup SSH key
       if: always()

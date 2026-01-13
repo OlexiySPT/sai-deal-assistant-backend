@@ -28,7 +28,8 @@ echo "Building application..."
 dotnet publish --configuration Release --output ./publish
 
 echo "Testing SSH connection..."
-ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=no "${DEPLOY_USER}@${DEPLOY_SERVER_IP}" "echo 'SSH connection successful'"
+# Note: First-time connection will prompt for host key verification
+ssh -i "${SSH_KEY}" "${DEPLOY_USER}@${DEPLOY_SERVER_IP}" "echo 'SSH connection successful'"
 
 echo "Creating backup of current deployment..."
 ssh -i "${SSH_KEY}" "${DEPLOY_USER}@${DEPLOY_SERVER_IP}" "if [ -d ${DEPLOY_PATH}/app ]; then sudo cp -r ${DEPLOY_PATH}/app ${DEPLOY_PATH}/backup/app-\$(date +%Y%m%d-%H%M%S); fi"

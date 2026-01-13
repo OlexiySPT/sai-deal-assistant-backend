@@ -6,8 +6,8 @@ After=network.target
 Type=notify
 # Update the path below to match your deployment path
 WorkingDirectory=/opt/sai-deal-assistant-backend/app
-# Update the ExecStart path to point to your .dll file
-ExecStart=/usr/bin/dotnet /opt/sai-deal-assistant-backend/app/YourApp.dll
+# Update the ExecStart path to point to your .dll file (e.g., Sai.DealAssistant.Backend.dll)
+ExecStart=/usr/bin/dotnet /opt/sai-deal-assistant-backend/app/Sai.DealAssistant.Backend.dll
 Restart=always
 # Restart service after 10 seconds if the dotnet service crashes
 RestartSec=10

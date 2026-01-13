@@ -11,7 +11,7 @@ echo "=== Sai Deal Assistant Backend - Deployment Setup ==="
 DEPLOY_USER=${DEPLOY_USER:-"www-data"}
 DEPLOY_PATH=${DEPLOY_PATH:-"/opt/sai-deal-assistant-backend"}
 SERVICE_NAME="sai-deal-assistant-backend"
-APP_DLL_NAME=${APP_DLL_NAME:-"YourApp.dll"}  # Update this to match your actual DLL name
+APP_DLL_NAME=${APP_DLL_NAME:-"Sai.DealAssistant.Backend.dll"}  # Update this to match your actual DLL name
 
 # Check if running with sudo
 if [ "$EUID" -ne 0 ]; then
