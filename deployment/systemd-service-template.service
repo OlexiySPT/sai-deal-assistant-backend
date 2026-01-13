@@ -1,0 +1,22 @@
+[Unit]
+Description=Sai Deal Assistant Backend API
+After=network.target
+
+[Service]
+Type=notify
+# Update the path below to match your deployment path
+WorkingDirectory=/opt/sai-deal-assistant-backend/app
+# Update the ExecStart path to point to your .dll file
+ExecStart=/usr/bin/dotnet /opt/sai-deal-assistant-backend/app/YourApp.dll
+Restart=always
+# Restart service after 10 seconds if the dotnet service crashes
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=sai-deal-assistant-backend
+# Update the user below to the user running the application
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+[Install]
+WantedBy=multi-user.target
