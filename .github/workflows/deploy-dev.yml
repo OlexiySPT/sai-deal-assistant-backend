@@ -12,7 +12,7 @@ permissions:
 jobs:
   deploy-dev:
     if: github.event.pull_request.merged == true
-    runs-on: self-hosted  # Changed from ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
@@ -21,10 +21,7 @@ jobs:
           ref: dev
           fetch-depth: 0
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
+      # Removed Setup .NET step - .NET is pre-installed on the runner
 
       - name: Restore dependencies
         run: dotnet restore src/Sai.DealAssistant.sln
@@ -44,44 +41,22 @@ jobs:
           cd src
           docker build -t sai-deal-assistant:dev -f Sai.DealAssistant.WebApi/Dockerfile .
 
-      - name: Save Docker image
+      - name: Deploy locally
         run: |
-          docker save sai-deal-assistant:dev -o sai-deal-assistant-dev.tar
+          # Stop and remove old container
+          docker stop sai-deal-assistant-dev || true
+          docker rm sai-deal-assistant-dev || true
 
-      - name: Deploy to Dev Server
-        env:
-          DEV_SERVER_HOST: 192.168.1.245
-          DEV_SERVER_PORT: 2222
-          DEV_SERVER_USER: sai
-          DEV_SERVER_PASSWORD: ${{ secrets.DEV_SERVER_PASSWORD }}
-        run: |
-          # Copy Docker image to server
-          echo "Copying Docker image to dev server..."
-          sshpass -p "$DEV_SERVER_PASSWORD" scp -P $DEV_SERVER_PORT \
-            -o StrictHostKeyChecking=no \
-            -o UserKnownHostsFile=/dev/null \
-            sai-deal-assistant-dev.tar \
-            $DEV_SERVER_USER@$DEV_SERVER_HOST:/tmp/
-
-          # Copy deployment script to server
-          echo "Copying deployment script to dev server..."
-          sshpass -p "$DEV_SERVER_PASSWORD" scp -P $DEV_SERVER_PORT \
-            -o StrictHostKeyChecking=no \
-            -o UserKnownHostsFile=/dev/null \
-            deploy-dev.sh \
-            $DEV_SERVER_USER@$DEV_SERVER_HOST:/tmp/
-
-          # Execute deployment script on server
-          echo "Executing deployment on dev server..."
-          sshpass -p "$DEV_SERVER_PASSWORD" ssh -p $DEV_SERVER_PORT \
-            -o StrictHostKeyChecking=no \
-            -o UserKnownHostsFile=/dev/null \
-            $DEV_SERVER_USER@$DEV_SERVER_HOST \
-            "chmod +x /tmp/deploy-dev.sh && /tmp/deploy-dev.sh"
+          # Run new container
+          docker run -d \
+            --name sai-deal-assistant-dev \
+            --restart unless-stopped \
+            -p 5000:8080 \
+            -e ASPNETCORE_ENVIRONMENT=Production \
+            sai-deal-assistant:dev
 
       - name: Deployment Summary
         run: |
           echo "✅ Deployment to dev server completed successfully!"
           echo "🌐 Application should be available at: http://192.168.1.245:5000"
           echo "📦 Container name: sai-deal-assistant-dev"
-          echo "🔄 Environment: Production (with dev database)"
