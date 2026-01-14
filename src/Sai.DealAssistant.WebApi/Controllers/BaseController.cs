@@ -14,7 +14,7 @@ namespace Sai.DealAssistant.WebApi.Controllers
 	[Route("api/[controller]")]
 #if DEBUG
 #else
-	[Authorize]
+	//[Authorize]
 #endif
 	public abstract class BaseController : ControllerBase
 	{
