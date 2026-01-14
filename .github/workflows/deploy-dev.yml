@@ -11,9 +11,8 @@ permissions:
 
 jobs:
   deploy-dev:
-    # Only run if PR was merged (not just closed)
     if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
+    runs-on: self-hosted  # Changed from ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -56,10 +55,6 @@ jobs:
           DEV_SERVER_USER: sai
           DEV_SERVER_PASSWORD: ${{ secrets.DEV_SERVER_PASSWORD }}
         run: |
-          # Install sshpass for password authentication
-          sudo apt-get update
-          sudo apt-get install -y sshpass
-
           # Copy Docker image to server
           echo "Copying Docker image to dev server..."
           sshpass -p "$DEV_SERVER_PASSWORD" scp -P $DEV_SERVER_PORT \
