@@ -26,24 +26,33 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Create PR to Dev branch
-        uses: repo-sync/pull-request@v2
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_branch: ${{ github.ref_name }}
-          destination_branch: dev
-          pr_title: "${{ github.ref_name }} --> dev"
-          pr_body: "Automated PR created by CI/CD pipeline"
-        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Check if PR already exists
+          existing_pr=$(gh pr list --head ${{ github.ref_name }} --base dev --json number --jq '.[0].number')
+          if [ -z "$existing_pr" ]; then
+            echo "Creating PR to dev..."
+            gh pr create --base dev --head ${{ github.ref_name }} \
+              --title "${{ github.ref_name }} --> dev" \
+              --body "Automated PR created by CI/CD pipeline"
+          else
+            echo "PR already exists: #$existing_pr"
+          fi
 
       - name: Create PR to Main branch
-        uses: repo-sync/pull-request@v2
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_branch: ${{ github.ref_name }}
-          destination_branch: main
-          pr_title: "${{ github.ref_name }} --> main"
-          pr_body: "Automated PR created by CI/CD pipeline"
-        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          existing_pr=$(gh pr list --head ${{ github.ref_name }} --base main --json number --jq '.[0].number')
+          if [ -z "$existing_pr" ]; then
+            echo "Creating PR to main..."
+            gh pr create --base main --head ${{ github.ref_name }} \
+              --title "${{ github.ref_name }} --> main" \
+              --body "Automated PR created by CI/CD pipeline"
+          else
+            echo "PR already exists: #$existing_pr"
+          fi
 
       - name: Restore dependencies
         run: dotnet restore src/Sai.DealAssistant.sln
