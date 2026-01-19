@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sai.DealAssistant.Common", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sai.DealAssistant.WebApi", "Sai.DealAssistant.WebApi\Sai.DealAssistant.WebApi.csproj", "{215B196C-AB3D-F283-6C43-D005DB756F43}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{4A6AFA13-CF68-4324-AC24-B911B1B88351}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -1,4 +1,4 @@
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.WebApi.Authorizations;
 using Sai.DealAssistant.Application;
@@ -14,6 +14,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add configuration, logging and services
 builder.Services.AddCommon();
 var myConfig = builder.Services.BuildServiceProvider().GetRequiredService<IAppConfiguration>();
+
+// Log the resolved configuration values
+var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
+logger.LogInformation("=== Configuration Loaded ===");
+logger.LogInformation("Environment: {Environment}", builder.Environment.EnvironmentName);
+logger.LogInformation("AppConnection: {AppConnection}", myConfig.AppConnectionString);
+logger.LogInformation("MigrationConnection: {MigrationConnection}", myConfig.MigrationConnectionString);
+logger.LogInformation("AllowedCorsOrigins: {AllowedCorsOrigins}", myConfig.AllowedCorsOrigins);
+logger.LogInformation("============================");
+
 builder.Services.AddInfrastructure(myConfig);
 builder.Services.AddApplication();
 builder.Services.AddAutoMapper(cfg => { },
