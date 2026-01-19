@@ -5,10 +5,15 @@ namespace Sai.DealAssistant.Common.Configuration;
 public class AppConfigurationFromConfigJson : IAppConfiguration
 {
     private readonly IConfigurationRoot _configuration;
+    
     public AppConfigurationFromConfigJson()
     {
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+        
         _configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json") // This requires the Microsoft.Extensions.Configuration.Json package and using directive
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables()
             .Build();
     }
 
