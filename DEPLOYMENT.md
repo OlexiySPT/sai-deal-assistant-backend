@@ -7,6 +7,7 @@ This CI/CD pipeline automatically builds, tests, and deploys the SAI Deal Assist
 ## Workflow Trigger
 
 The workflow is triggered when:
+
 - A Pull Request targeting the `dev` branch is **merged** (not just closed)
 
 ## Pipeline Steps
@@ -17,7 +18,7 @@ The workflow is triggered when:
 4. **Build**: Builds the solution in Release configuration
 5. **Run Tests**: Executes all unit tests
 6. **Build Docker Image**: Creates a Docker image tagged as `sai-deal-assistant:dev`
-7. **Deploy to Dev Server**: 
+7. **Deploy to Dev Server**:
    - Copies the Docker image to the dev server
    - Executes deployment script on the server
    - Starts the container with Production configuration
@@ -31,6 +32,7 @@ The following secret must be configured in the GitHub repository:
 - `DEV_SERVER_PASSWORD`: SSH password for the dev server
 
 To add this secret:
+
 1. Go to repository Settings → Secrets and variables → Actions
 2. Click "New repository secret"
 3. Name: `DEV_SERVER_PASSWORD`
@@ -38,24 +40,8 @@ To add this secret:
 
 ### Dev Server Details
 
-- **Host**: 192.168.1.245
-- **SSH Port**: 2222
-- **SSH User**: sai
-- **Application Port**: 5000
+- **Application Port**: 5000, 5001(for HTTPS)
 - **Container Name**: sai-deal-assistant-dev
-
-### Database Configuration
-
-The application uses the following connection strings (configured in `appsettings.Production.json`):
-
-```json
-{
-  "ConnectionStrings": {
-    "AppConnection": "Host=192.168.1.245;Database=dev_dealassistantdatabase;Username=dealassiatantuser;Password=Kabanah5%",
-    "MigrationConnection": "Host=192.168.1.245;Database=dev_dealassistantdatabase;Username=dealassiatant_migrator;Password=Kabanah5%"
-  }
-}
-```
 
 ## Deployment Process
 
@@ -73,6 +59,7 @@ When the deployment script runs on the dev server, it:
 ## Accessing the Application
 
 After successful deployment, the application is available at:
+
 - **URL**: http://192.168.1.245:5000
 
 ## Monitoring
@@ -81,7 +68,7 @@ To check the deployment status on the dev server:
 
 ```bash
 # SSH into the dev server
-ssh -p2222 sai@192.168.1.245
+ssh -pYourSshPort yourSshUser@YourDevServer
 
 # Check container status
 docker ps | grep sai-deal-assistant-dev

@@ -8,3 +8,6 @@ bin/
 *.user
 *.bru
 /src/Tests/Postman/Sai.DealAssistant.Entities/bruno.json
+# Environment variables
+.env
+.env.local
