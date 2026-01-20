@@ -13,7 +13,7 @@ jobs:
   deploy-dev:
     if: github.event.pull_request.merged == true
     runs-on: self-hosted
-    environment: Dev  # 👈 Reference the GitHub environment named "Dev"
+    environment: Dev  # <-- Reference the GitHub environment named "Dev"
 
     steps:
       - name: Checkout code
@@ -52,7 +52,7 @@ jobs:
             -p 5001:8081 \
             -e ASPNETCORE_ENVIRONMENT=Production \
             -e ASPNETCORE_URLS="https://+:8081;http://+:8080" \
-            -e ASPNETCORE_Kestrel__Certificates__Default__Password="YourSecurePassword" \
+            -e ASPNETCORE_Kestrel__Certificates__Default__Password="${{ secrets.KESTREL_CERTIFICATE_PASSWORD }}" \
             -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx \
             -e ConnectionStrings__AppConnection="Host=${{ vars.DB_HOST }};Database=${{ vars.DB_NAME }};Username=${{ vars.DB_USER }};Password=${{ secrets.DB_PASSWORD }}" \
             -e ConnectionStrings__MigrationConnection="Host=${{ vars.DB_HOST }};Database=${{ vars.DB_NAME }};Username=${{ vars.DB_MIGRATOR_USER }};Password=${{ secrets.DB_MIGRATOR_PASSWORD }}" \
