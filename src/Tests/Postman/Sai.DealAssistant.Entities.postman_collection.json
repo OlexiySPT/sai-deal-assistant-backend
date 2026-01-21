@@ -1,0 +1,998 @@
+{
+	"info": {
+		"_postman_id": "c6753fd3-f544-4763-adad-ab3a8ee7afd3",
+		"name": "Sai.DealAssistant.Entities",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34440002",
+		"_collection_link": "https://sai555-4774.postman.co/workspace/Sai.DealAssistant~748b4d17-b469-4279-807f-20aa99c0fcb0/collection/34440002-c6753fd3-f544-4763-adad-ab3a8ee7afd3?action=share&source=collection_link&creator=34440002"
+	},
+	"item": [
+		{
+			"name": "Deals",
+			"item": [
+				{
+					"name": "GetDealsList",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/Deals?page=1&pageSize=10&SortBy=industry&SortDirection=Desc",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Deals"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Sereda",
+									"disabled": true
+								},
+								{
+									"key": "Description",
+									"value": "ship",
+									"disabled": true
+								},
+								{
+									"key": "industry",
+									"value": "tems",
+									"disabled": true
+								},
+								{
+									"key": "stateid",
+									"value": "1",
+									"description": "1--3",
+									"disabled": true
+								},
+								{
+									"key": "typeid",
+									"value": "1",
+									"description": "1--6",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "SortBy",
+									"value": "industry"
+								},
+								{
+									"key": "SortDirection",
+									"value": "Desc",
+									"description": "Asc/Desc"
+								}
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "GetDeal",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/Deals/146",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Deals",
+								"146"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "GetDealWithDependents",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/Deals/135/with-dependents",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Deals",
+								"135",
+								"with-dependents"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateDeal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Osereda etail test 2222\",\r\n    \"description\": \"Osereda 2222\",\r\n    \"url\": \"https://checkoutkiosk.example.com/2222\",\r\n    \"aiSearchInfo\": \"kiosk, retail 2222\",\r\n    \"aiBriefDescription\": \"Rabanah 2222\",\r\n    \"industry\": \"Retail 2222\",\r\n    \"status\": \"in progress 2222\",\r\n    \"typeId\": 1,\r\n    \"stateId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/Deals",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Deals"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateDeal",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Osereda RRRRRetail test\",\r\n    \"description\": \"Osereda\",\r\n    \"url\": \"https://checkoutkiosk.example.com\",\r\n    \"aiSearchInfo\": \"kiosk, retail\",\r\n    \"aiBriefDescription\": \"KKKKKKabanah\",\r\n    \"industry\": \"Retail\",\r\n    \"status\": \"in progress2\",\r\n    \"typeId\": 3,\r\n    \"stateId\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/Deals/146",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Deals",
+								"146"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'PUT' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteDeal",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/Deals/146",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Deals",
+								"146"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'DELETE' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "GetDealEvents",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/events?dealid=2",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"events"
+							],
+							"query": [
+								{
+									"key": "dealid",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "GetDealEvent",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/events/692",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"692"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateDealEvent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"DealId\": 2,\r\n    \"date\": \"2026-01-03\",\r\n    \"agenda\": \"Kabanah call 32\",\r\n    \"result\": \"Very good too3\",\r\n    \"contactPersonId\": 5,\r\n    \"typeId\": 2,\r\n    \"stateId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/events",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"events"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEvent",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"DealId\": 2,\r\n    \"date\": \"2026-01-03\",\r\n    \"agenda\": \"Kabanah call 326\",\r\n    \"result\": \"Very good too36\",\r\n    \"contactPersonId\": 6,\r\n    \"typeId\": 2,\r\n    \"stateId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/events/692",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"692"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'PUT' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteEvent",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/events/692",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"events",
+								"692"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'DELETE' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ContactPersons",
+			"item": [
+				{
+					"name": "GetContactPersons",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/ContactPersons?dealid=2",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"ContactPersons"
+							],
+							"query": [
+								{
+									"key": "dealid",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "GetContactPerson",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/ContactPersons/83",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"ContactPersons",
+								"83"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateContactPerson",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"DealId\": 2,\r\n    \"name\": \"Kabanah Wilson\",\r\n    \"position\": \"Head of Kabanahs\",\r\n    \"phone\": \"+1-555-777-2332\",\r\n    \"email\": \"kabanah.wilson770@acme.example.com\",\r\n    \"description\": \"Technical contact responsible for Kabanah\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/ContactPersons",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"ContactPersons"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateContactPerson",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Kabanah Wilson updated\",\r\n    \"position\": \"Head of Kabanahs updated\",\r\n    \"phone\": \"+1-555-111-2332\",\r\n    \"email\": \"kabanah.updated.wilson770@acme.example.com\",\r\n    \"description\": \"Technical contact responsible for Kabanah updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/ContactPersons/834",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"ContactPersons",
+								"834"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'PUT' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteContactPerson",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/ContactPersons/83453",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"ContactPersons",
+								"83453"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'DELETE' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DealTags",
+			"item": [
+				{
+					"name": "GetDealTags",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/dealTags?dealid=25",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"dealTags"
+							],
+							"query": [
+								{
+									"key": "dealid",
+									"value": "25"
+								}
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "GetExistingTags",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/dealTags/existing",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"dealTags",
+								"existing"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateDealTag",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tag\": \"Follow-up-New2\",\r\n    \"dealId\": 25\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/dealTags",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"dealTags"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteDealTag",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/DealTags/372",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"DealTags",
+								"372"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'DELETE' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "EventNotes",
+			"item": [
+				{
+					"name": "GetEventNotes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/EventNotes?eventid=2",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"EventNotes"
+							],
+							"query": [
+								{
+									"key": "eventid",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "GetEventNote",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/Eventnotes/1387",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Eventnotes",
+								"1387"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json'"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateEventNote",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"order\": 1,\r\n    \"text\": \"Kabanah note\",\r\n    \"eventId\": 68\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/EventNotes",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"EventNotes"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://localhost:7196/api/Deals' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEventNote",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"order\": 1,\r\n    \"text\": \"Kabanah note updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/eventnotes/1387",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"eventnotes",
+								"1387"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'PUT' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"id\": 0,\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"url\": \"string\",\r\n  \"aiSearchInfo\": \"string\",\r\n  \"aiBriefDescription\": \"string\",\r\n  \"industry\": \"string\",\r\n  \"status\": \"string\",\r\n  \"stateId\": 0,\r\n  \"typeId\": 0\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteEventNote",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/EventNotes/1387",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"EventNotes",
+								"1387"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'DELETE' \\\r\n  'https://localhost:7196/api/Deals/1' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Enums",
+			"item": [
+				{
+					"name": "GetEnums",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/Enums",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Enums"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Enums' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				},
+				{
+					"name": "Get DealState Enum",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/Enums/dealstate",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Enums",
+								"dealstate"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Enums/dealstate' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				},
+				{
+					"name": "Get DealType Enum",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/Enums/dealType",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Enums",
+								"dealType"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Enums/dealstate' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				},
+				{
+					"name": "Get EventState Enum",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/Enums/EventState",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Enums",
+								"EventState"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Enums/dealstate' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				},
+				{
+					"name": "Get EventType Enum",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/api/Enums/eventtype",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"Enums",
+								"eventtype"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://localhost:7196/api/Enums/dealstate' \\\r\n  -H 'accept: */*'"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BaseUrl",
+			"value": ""
+		}
+	]
+}

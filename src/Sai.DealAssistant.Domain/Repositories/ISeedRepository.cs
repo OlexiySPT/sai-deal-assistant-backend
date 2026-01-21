@@ -1,0 +1,27 @@
+﻿using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
+
+namespace Sai.DealAssistant.Domain.Repositories;
+
+public interface ISeedRepository
+{
+	Task SeedEventTypesAsync(Func<IEnumerable<EventType>> getEventTypes);
+
+	Task SeedEventStatusesAsync(Func<IEnumerable<EventState>> getEventStates);
+
+	Task SeedDealStatesAsync(Func<IEnumerable<DealState>> getDealStates);
+
+	Task SeedDealTypesAsync(Func<IEnumerable<DealType>> getDealTypes);
+
+	Task SeedUsersAsync(Func<IEnumerable<User>> getUsers);
+
+	Task SeedDealsAsync(Func<IEnumerable<Deal>> getDeals);
+
+	Task SeedEventsAsync(Func<Deal, IEnumerable<Event>> getEventsForDeal);
+
+	Task SeedDealContactPersonsAsync(Func<Deal, IEnumerable<ContactPerson>> getRepsForDeal);
+
+	Task SeedDealTagsAsync(Func<int, IEnumerable<DealTag>> getTagsForDeal);
+
+	Task SeedEventNotesAsync(Func<Event, IEnumerable<EventNote>> getNotesForEvent);
+}
