@@ -22,6 +22,18 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sai.DealAssistant.WebApi", "Sai.DealAssistant.WebApi\Sai.DealAssistant.WebApi.csproj", "{215B196C-AB3D-F283-6C43-D005DB756F43}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{F38DF100-3AE3-4277-927C-A90E2B14A383}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\branch-push.yml = ..\.github\workflows\branch-push.yml
+		..\.github\workflows\deploy-dev.yml = ..\.github\workflows\deploy-dev.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RootItems", "RootItems", "{28B9B857-7724-4A73-8084-8BD1695A7749}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitattributes = ..\.gitattributes
+		..\.gitignore = ..\.gitignore
+		..\deploy-dev.sh = ..\deploy-dev.sh
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -137,7 +149,6 @@ Global
 		{6E2D04FA-8524-9680-B461-9ABA25E7A759} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{D7B318D1-FB3D-46FE-BDB0-39F1B0485AF9} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{B6AA7A42-437A-4815-9D25-DE3B4D7939BD} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{F38DF100-3AE3-4277-927C-A90E2B14A383} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6FA7DC5E-C300-4366-BE0E-59A7411B27C8}
