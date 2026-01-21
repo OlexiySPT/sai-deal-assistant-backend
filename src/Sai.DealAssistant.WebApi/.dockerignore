@@ -1,0 +1,11 @@
+**/. vs
+**/.vscode
+**/bin
+**/obj
+**/. git
+**/. gitignore
+**/*.md
+**/docker-compose*
+**/.dockerignore
+**/. env
+**/secrets. json

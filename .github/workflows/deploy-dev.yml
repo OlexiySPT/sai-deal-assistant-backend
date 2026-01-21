@@ -1,0 +1,68 @@
+name: Deploy to Dev Server
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - dev
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-dev:
+    if: github.event.pull_request.merged == true
+    runs-on: self-hosted
+    environment: Dev  # <-- Reference the GitHub environment named "Dev"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - name: Restore dependencies
+        run: dotnet restore src/Sai.DealAssistant.sln
+
+      - name: Build
+        run: |
+          dotnet build src/Sai.DealAssistant.sln \
+            --no-restore --configuration Release
+
+      - name: Run tests
+        run: |
+          dotnet test src/Sai.DealAssistant.sln \
+            --no-build --configuration Release --verbosity normal
+
+      - name: Build Docker image
+        run: |
+          cd src
+          docker build -t sai-deal-assistant:dev -f Sai.DealAssistant.WebApi/Dockerfile .
+
+      - name: Deploy locally
+        run: |
+          docker stop sai-deal-assistant-dev || true
+          docker rm sai-deal-assistant-dev || true
+
+          docker run -d \
+            --name sai-deal-assistant-dev \
+            --restart unless-stopped \
+            -p 5000:8080 \
+            -p 5001:8081 \
+            -e ASPNETCORE_ENVIRONMENT=Production \
+            -e ASPNETCORE_URLS="https://+:8081;http://+:8080" \
+            -e ASPNETCORE_Kestrel__Certificates__Default__Password="${{ secrets.KESTREL_CERTIFICATE_PASSWORD }}" \
+            -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx \
+            -e ConnectionStrings__AppConnection="Host=${{ vars.DB_HOST }};Database=${{ vars.DB_NAME }};Username=${{ vars.DB_USER }};Password=${{ secrets.DB_PASSWORD }}" \
+            -e ConnectionStrings__MigrationConnection="Host=${{ vars.DB_HOST }};Database=${{ vars.DB_NAME }};Username=${{ vars.DB_MIGRATOR_USER }};Password=${{ secrets.DB_MIGRATOR_PASSWORD }}" \
+            -e AllowedCorsOrigins="${{ vars.ALLOWED_CORS_ORIGINS }}" \
+            -v /home/sai/aspnetapp.pfx:/https/aspnetapp.pfx:ro \
+            sai-deal-assistant:dev
+
+      - name: Deployment Summary
+        run: |
+          echo "✅ Deployment to dev server completed successfully!"
+          echo "🌐 HTTP:  http://192.168.1.245:5000"
+          echo "🔒 HTTPS: https://192.168.1.245:5001"
+          echo "📦 Container name: sai-deal-assistant-dev"
