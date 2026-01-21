@@ -1,7 +1,4 @@
-﻿Here's the improved `README.md` file, incorporating the new content while maintaining the existing structure and information:
-
-
-# Deal Assistant
+﻿# Deal Assistant
 
 A **sales management CRM** designed to help sales managers work with potential clients, track deals, and close opportunities to generate revenue. This is a **pet project** demonstrating modern .NET development practices and architectural patterns.
 
@@ -33,7 +30,7 @@ The project follows **Clean Architecture** with clear separation of concerns acr
 
 ### Layers
 
-
+```
 ┌─────────────────────────────────────────┐
 │         WebApi (Presentation)           │  ← Controllers, Middleware, Program.cs
 ├─────────────────────────────────────────┤
@@ -45,7 +42,7 @@ The project follows **Clean Architecture** with clear separation of concerns acr
 └─────────────────────────────────────────┘
 │            Common (Shared)              │  ← Configuration, Extensions
 └─────────────────────────────────────────┘
-
+```
 
 #### **1. Domain Layer**
 - Core business entities: `Deal`, `Event`, `ContactPerson`, `DealTag`, `EventNote`
@@ -261,14 +258,6 @@ This project is under active development. Upcoming features include:
 
 ---
 
-## 📝 Contributing
-
-This is a personal pet project demonstrating my development style and knowledge. Feedback and suggestions are welcome!
-
-Please refer to [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on file access conventions and project standards.
-
----
-
 ## 📄 License
 
 This project is for educational and portfolio purposes.
@@ -284,6 +273,3 @@ This project is for educational and portfolio purposes.
 ## 🙏 Acknowledgments
 
 Built with modern .NET practices and inspired by Clean Architecture principles from Robert C. Martin and Jason Taylor's reference implementations.
-
-
-This revised README maintains the original structure while enhancing clarity and coherence, ensuring that all relevant information is presented in a logical flow.
