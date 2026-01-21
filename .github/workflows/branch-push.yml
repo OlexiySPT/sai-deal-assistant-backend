@@ -1,0 +1,68 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - dev
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  ci-cd:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Create PR to Dev branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Check if PR already exists
+          existing_pr=$(gh pr list --head ${{ github.ref_name }} --base dev --json number --jq '.[0].number')
+          if [ -z "$existing_pr" ]; then
+            echo "Creating PR to dev..."
+            gh pr create --base dev --head ${{ github.ref_name }} \
+              --title "${{ github.ref_name }} --> dev" \
+              --body "Automated PR created by CI/CD pipeline"
+          else
+            echo "PR already exists: #$existing_pr"
+          fi
+
+      - name: Create PR to Main branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          existing_pr=$(gh pr list --head ${{ github.ref_name }} --base main --json number --jq '.[0].number')
+          if [ -z "$existing_pr" ]; then
+            echo "Creating PR to main..."
+            gh pr create --base main --head ${{ github.ref_name }} \
+              --title "${{ github.ref_name }} --> main" \
+              --body "Automated PR created by CI/CD pipeline"
+          else
+            echo "PR already exists: #$existing_pr"
+          fi
+
+      - name: Restore dependencies
+        run: dotnet restore src/Sai.DealAssistant.sln
+
+      - name: Build
+        run: |
+          dotnet build src/Sai.DealAssistant.sln \
+            --no-restore --configuration Release
+
+      - name: Run tests
+        run: |
+          dotnet test src/Sai.DealAssistant.sln \
+            --no-build --configuration Release --verbosity normal
