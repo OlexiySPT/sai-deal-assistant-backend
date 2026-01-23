@@ -208,7 +208,7 @@ All commands and queries are handled by **MediatR** handlers in the Application 
 
 ## 📂 Project Structure
 
-
+```
 Sai.DealAssistant.Backend/
 ├── Sai.DealAssistant.Domain/
 │   ├── Entities/
@@ -230,7 +230,7 @@ Sai.DealAssistant.Backend/
 │   └── Program.cs
 └── Sai.DealAssistant.Common/
     └── Configuration/
-
+```
 
 ---
 
