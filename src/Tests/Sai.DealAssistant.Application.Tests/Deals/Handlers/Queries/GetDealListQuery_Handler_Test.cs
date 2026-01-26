@@ -1,20 +1,16 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Sai.DealAssistant.Application.Entities.EventNotes.Queries;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
 using Sai.DealAssistant.Common.Enums;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
-using Sai.DealAssistant.Domain.Repositories.Generic;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Unit;
 using System;
 using System.Linq;
 using System.Threading;
-using System.Xml.Linq;
 using Xunit;
 
 namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
@@ -34,8 +30,9 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 			{
 				var s1 = new DealState { State = "Open" };
 				var s2 = new DealState { State = "Closed" };
-				var t = new DealType { Type = "Standard" };
-				db.AddRange(s1, s2, t);
+				var t1 = new DealType { Type = "Standard" };
+				var t2 = new DealType { Type = "Premium" };
+				db.AddRange(s1, s2, t1, t2);
 				db.SaveChanges();
 
 				var deals = Enumerable.Range(1, 30).Select(i => new Deal
@@ -44,7 +41,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 					Description = i % 3 == 0 ? $"Special desc {i}" : $"Desc {i}",
 					Industry = i % 2 == 0 ? "Software" : "Finance",
 					StateId = i % 2 == 0 ? s1.Id : s2.Id,
-					TypeId = t.Id
+					TypeId = i % 3 == 0 ? t2.Id : t1.Id
 				}).ToArray();
 
 				db.Deals.AddRange(deals);
@@ -274,14 +271,14 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 		}
 
 		[Fact]
-		public async void Handler_FiltersByStateId()
+		public async void Handler_FiltersByStateIds()
 		{
 			// Arrange
 			var handler = new GetDealListQuery.Handler(_dealRepository);
 
-			var state = DbContext.DealStates.First();
-			int pageSize = 100;
-            var query = new GetDealListQuery{ StateId = state.Id, Page = 1, PageSize = pageSize };
+            var states = DbContext.DealStates.Take(2).Select(p=>p.Id).ToArray();
+            int pageSize = 100;
+            var query = new GetDealListQuery{ StateIds = states, Page = 1, PageSize = pageSize };
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
@@ -289,7 +286,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 			// Assert
 			var expected = DbContext.Deals
 				.Include(d => d.State)
-				.Where(d => d.StateId == state.Id)
+				.Where(d => states.Contains(d.StateId))
 				.Select(p => new DealListItemDto
                 {
                     Id = p.Id,

@@ -17,8 +17,8 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 	public string? Name { get; set; }
 	public string? Description { get; set; }
 	public string? Industry { get; set; }
-	public int? StateId { get; set; }
-    public int? TypeId { get; set; }
+	public int[]? StateIds { get; set; }
+    public int[]? TypeIds { get; set; }
 
     public class Handler : IRequestHandler<GetDealListQuery, QueryResult<DealListItemDto>>
 	{
@@ -45,13 +45,13 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 			{
 				qry = qry.Where(StringSearchExpressions.CaseInsensitiveContains<Deal>(x => x.Industry!, request.Industry));
 			}
-			if (request.StateId is not null)
+			if (request.StateIds is not null && request.StateIds.Any())
 			{
-				qry = qry.Where(x => x.StateId == request.StateId);
-            }
-            if (request.TypeId is not null)
+				qry = qry.Where(x => request.StateIds.Contains(x.StateId));
+			}
+            if (request.TypeIds is not null && request.TypeIds.Any())
             {
-                qry = qry.Where(x => x.TypeId == request.TypeId);
+                qry = qry.Where(x => request.TypeIds.Contains(x.TypeId));
             }
 
             var totalItems = await _repository.CountAsync(qry);
