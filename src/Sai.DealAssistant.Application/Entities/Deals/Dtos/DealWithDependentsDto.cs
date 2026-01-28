@@ -11,7 +11,7 @@ namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 public class DealWithDependentsDto
 {
     public int Id { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
     public string? Description { get; set; }
     public string? Url { get; set; }
     public string? AiSearchInfo { get; set; }
@@ -19,8 +19,8 @@ public class DealWithDependentsDto
     public string? Industry { get; set; }
     public string? Status { get; set; }
 
-    public string Type { get; set; }
-    public string State { get; set; }
+    public string Type { get; set; } = null!;
+    public string State { get; set; } = null!;
 
     public ICollection<ContactPersonListItemDto> ContactPersons { get; set; }
         = new Collection<ContactPersonListItemDto>();

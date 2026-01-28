@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sai.DealAssistant.Common.Configuration;
+using Sai.DealAssistant.Domain;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Domain.Repositories;
@@ -25,6 +26,7 @@ public static class DependencyInjection
                 .LogTo(msg => Debug.WriteLine(msg), LogLevel.Information)
 #endif
             );
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddGenericRepositories(configuration);
         services.AddSpecificRepositories(configuration);

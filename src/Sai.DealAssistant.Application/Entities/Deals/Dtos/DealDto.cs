@@ -8,7 +8,7 @@ namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 public class DealDto
 {
     public int Id { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
     public string? Description { get; set; }
     public string? Url { get; set; }
     public string? AiSearchInfo { get; set; }

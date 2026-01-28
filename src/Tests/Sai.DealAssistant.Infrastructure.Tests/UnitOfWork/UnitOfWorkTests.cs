@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Domain.Entities.Samples;
-using Sai.DealAssistant.Infrastructure.UnitOfWork;
 using SAI.DealAssistant.TestUtils.Unit;
+using Sai.DealAssistant.Infrastructure;
+using Sai.DealAssistant.Domain;
 
 namespace Sai.DealAssistant.Infrastructure.Tests.UnitOfWork
 {
-	public class BaseUnitOfWorkTests : GenericRepoTestUnitTestBase
+	public class UnitOfWorkTests : GenericRepoTestUnitTestBase
 	{
-		public BaseUnitOfWorkTests()
+		public UnitOfWorkTests()
 			: base(true)
 		{
 		}
@@ -15,8 +16,8 @@ namespace Sai.DealAssistant.Infrastructure.Tests.UnitOfWork
 		[Fact]
 		public async Task ExecuteResilientTransactionAsync_InputActionCompletesSuccessfully_BeginsAndCommitsTransaction()
 		{
-			// Arrange
-			BaseUnitOfWork unitOfWork = new TestUnitOfWork(DbContext);
+            // Arrange
+            IUnitOfWork unitOfWork = new Infrastructure.UnitOfWork(DbContext);
 			SampleCustomer testCustomer1 = new SampleCustomer { Code = "1234", Name = "Test 1" };
 			SampleCustomer testCustomer2 = new SampleCustomer { Code = "1111", Name = "Test 2" };
 			Func<Task> action = async () =>
