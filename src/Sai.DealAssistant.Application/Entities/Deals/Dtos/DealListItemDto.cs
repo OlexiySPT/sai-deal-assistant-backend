@@ -13,11 +13,7 @@ public class DealListItemDto
     public string? Industry { get; set; } = string.Empty;
     public DateTimeOffset CreatedAt { get; set; }
     public decimal? ProposalAmount { get; set; }
-    public decimal? MinClientAmount { get; set; }
-    public decimal? MaxClientAmount { get; set; }
     public string? CurrencyCode { get; set; }
-    public decimal? ExchangeRate { get; set; }
-    public int? AmountTypeId { get; set; }
     public string? AmountType { get; set; }
 
     public class MappingProfile : Profile
