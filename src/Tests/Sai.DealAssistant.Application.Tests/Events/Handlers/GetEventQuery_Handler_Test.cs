@@ -36,8 +36,9 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
 			{
 				var dt = db.DealTypes.Add(new DealType { Type = "Standard" });
 				var ds = db.DealStates.Add(new DealState { State = "Open" });
-				db.SaveChanges();
-                var deal = new Deal { Name = "Test Deal", TypeId = dt.Entity.Id, StateId = ds.Entity.Id };
+                var at = db.AmountTypes.Add(new AmountType { Type = "Per Month" });
+                db.SaveChanges();
+                var deal = new Deal { Name = "Test Deal", TypeId = dt.Entity.Id, StateId = ds.Entity.Id, AmountTypeId = at.Entity.Id };
 				db.Deals.Add(deal);
 				db.SaveChanges();
 

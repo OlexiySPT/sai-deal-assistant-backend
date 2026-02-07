@@ -31,13 +31,22 @@ public class DealWithDependentsDto
     public ICollection<DealTagDto> Tags { get; set; }
         = new Collection<DealTagDto>();
 
+    public decimal? ProposalAmount { get; set; }
+    public decimal? MinClientAmount { get; set; }
+    public decimal? MaxClientAmount { get; set; }
+    public string? CurrencyCode { get; set; }
+    public decimal? ExchangeRate { get; set; }
+    public int? AmountTypeId { get; set; }
+    public string? AmountType { get; set; }
+
     public class MappingProfile : Profile
 	{
 		public MappingProfile()
 		{
 			CreateMap<Deal, DealWithDependentsDto>()
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type!.Type))
-                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State!.State)); ;
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State!.State))
+                .ForMember(dest => dest.AmountType, opt => opt.MapFrom(src => src.AmountType != null ? src.AmountType.Type : null));
 		}
 	}
 }

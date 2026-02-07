@@ -29,7 +29,11 @@ public static class DependencyInjection
 
         services.AddGenericRepositories(configuration);
         services.AddSpecificRepositories(configuration);
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>(sp =>
+        {
+            var dbContext = sp.GetRequiredService<AppDbContext>();
+            return new UnitOfWork(dbContext);
+        });
 
         return services;
     }

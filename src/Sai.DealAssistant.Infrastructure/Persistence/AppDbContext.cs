@@ -19,6 +19,7 @@ public class AppDbContext : DbContext
     public virtual DbSet<EventState> EventStates => Set<EventState>();
     public virtual DbSet<DealState> DealStates => Set<DealState>();
     public virtual DbSet<DealType> DealTypes => Set<DealType>();
+    public virtual DbSet<AmountType> AmountTypes => Set<AmountType>();
     #endregion
 
     public AppDbContext(DbContextOptions<AppDbContext> options)

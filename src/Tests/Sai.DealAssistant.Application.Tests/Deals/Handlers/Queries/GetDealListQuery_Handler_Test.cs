@@ -32,7 +32,9 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				var s2 = new DealState { State = "Closed" };
 				var t1 = new DealType { Type = "Standard" };
 				var t2 = new DealType { Type = "Premium" };
-				db.AddRange(s1, s2, t1, t2);
+                var at1 = new AmountType { Type = "Per Month" };
+                var at2 = new AmountType { Type = "Per Day" };
+                db.AddRange(s1, s2, t1, t2, at1, at2);
 				db.SaveChanges();
 
 				var deals = Enumerable.Range(1, 30).Select(i => new Deal
@@ -41,7 +43,8 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 					Description = i % 3 == 0 ? $"Special desc {i}" : $"Desc {i}",
 					Industry = i % 2 == 0 ? "Software" : "Finance",
 					StateId = i % 2 == 0 ? s1.Id : s2.Id,
-					TypeId = i % 3 == 0 ? t2.Id : t1.Id
+					TypeId = i % 3 == 0 ? t2.Id : t1.Id,
+					AmountTypeId = i % 2 == 0 ? at1.Id : at2.Id
 				}).ToArray();
 
 				db.Deals.AddRange(deals);

@@ -6,12 +6,12 @@ namespace Sai.DealAssistant.Infrastructure;
 
 public class UnitOfWork : IUnitOfWork
 {
-	public UnitOfWork(AppDbContext dbContext)
+	public UnitOfWork(DbContext dbContext)
 	{
 		DbContext = dbContext;
 	}
 
-	protected AppDbContext DbContext { get; }
+	protected DbContext DbContext { get; }
 
 	public async Task ExecuteResilientTransactionAsync(Func<Task> action, CancellationToken cancellationToken)
 	{

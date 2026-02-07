@@ -17,12 +17,21 @@ public class DealDto
     public string? Status { get; set; }
     public int TypeId { get; set; }
     public int StateId { get; set; }
+    public decimal? ProposalAmount { get; set; }
+    public decimal? MinClientAmount { get; set; }
+    public decimal? MaxClientAmount { get; set; }
+    public string? CurrencyCode { get; set; }
+    public decimal? ExchangeRate { get; set; }
+    public int? AmountTypeId { get; set; }
+    public string? AmountType { get; set; }
 
     public class MappingProfile : Profile
 	{
 		public MappingProfile()
 		{
-			CreateMap<Deal, DealDto>().ReverseMap();
+			CreateMap<Deal, DealDto>()
+                .ForMember(dest => dest.AmountTypeId, opt => opt.MapFrom(src => src.AmountTypeId))
+                .ReverseMap();
 		}
 	}
 }

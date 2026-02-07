@@ -28,11 +28,12 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
             {
                 var dealtype = db.DealTypes.Add(new DealType { Type = "Standard" });
                 var dealstate = db.DealStates.Add(new DealState { State = "Open" });
+                var at1 = db.AmountTypes.Add(new AmountType { Type = "Per Month" });
                 var eventtype = db.EventTypes.Add(new EventType { Name = "Meeting" });
                 var eventstate = db.EventStates.Add(new EventState { State = "Planned" });
                 db.SaveChanges();
 
-                var deal1 = new Deal { Name = "Deal A" , TypeId = dealtype.Entity.Id, StateId = dealstate.Entity.Id};
+                var deal1 = new Deal { Name = "Deal A" , TypeId = dealtype.Entity.Id, StateId = dealstate.Entity.Id, AmountTypeId = at1.Entity.Id};
                 var deal2 = new Deal { Name = "Deal B", TypeId = dealtype.Entity.Id, StateId = dealstate.Entity.Id };
                 db.AddRange(deal1, deal2);
                 deal1.ContactPersons.Add(new ContactPerson { Name = "Kurt Tank" });
@@ -76,6 +77,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
                     State = p.State != null ? p.State.State : null!,
                     Type = p.Type != null ? p.Type.Name : null!,
                     ContactPerson = p.ContactPerson != null ? $"{p.ContactPerson.Name}, {p.ContactPerson.Position}" : null
+
                 })
                 .ToList();
 
