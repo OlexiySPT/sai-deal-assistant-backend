@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Sai.DealAssistant.Application;
 using Sai.DealAssistant.Application.Entities.Deals.Commands;
+using Sai.DealAssistant.Application.Entities.Deals.Queries;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
 using System.Net.Mime;
@@ -116,5 +117,18 @@ namespace Sai.DealAssistant.WebApi.Controllers
 			DealDto result = await Mediator.Send(new DeleteDealCommand(id));
 			return Ok(result);
 		}
+
+        /// <summary>
+        /// Get cached list of deal statuses.
+        /// </summary>
+        /// <response code="200">Returns cached list of deal statuses.</response>
+        [HttpGet("statuses/cached")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IEnumerable<string>), 200)]
+        public async Task<IActionResult> GetCachedDealStatuses(CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(new GetCachedDealStatusesQuery(), cancellationToken);
+            return Ok(result);
+        }
 	}
 }

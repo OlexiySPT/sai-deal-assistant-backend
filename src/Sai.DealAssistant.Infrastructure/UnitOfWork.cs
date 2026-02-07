@@ -1,16 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Domain;
+using Sai.DealAssistant.Infrastructure.Persistence;
 
 namespace Sai.DealAssistant.Infrastructure;
 
 public class UnitOfWork : IUnitOfWork
 {
-	public UnitOfWork(DbContext dbContext)
+	public UnitOfWork(AppDbContext dbContext)
 	{
 		DbContext = dbContext;
 	}
 
-	protected DbContext DbContext { get; }
+	protected AppDbContext DbContext { get; }
 
 	public async Task ExecuteResilientTransactionAsync(Func<Task> action, CancellationToken cancellationToken)
 	{

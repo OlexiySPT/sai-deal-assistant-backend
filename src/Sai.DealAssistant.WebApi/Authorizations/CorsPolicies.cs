@@ -8,17 +8,13 @@ namespace Sai.DealAssistant.WebApi.Authorizations
 
 		public static CorsPolicy AllowFrontendCorsPolicy(string origins)
 		{
-			string[] originsArr = origins.Split(";", StringSplitOptions.RemoveEmptyEntries);
-			List<string> preparedOrigins = new List<string>();
-			foreach (string origin in originsArr)
-			{
-				preparedOrigins.Add(origin.Trim());
-			}
+			var originsArr = origins.Split(";", StringSplitOptions.RemoveEmptyEntries);
 
 			return new CorsPolicyBuilder()
-				.WithOrigins(preparedOrigins.ToArray())
+				.WithOrigins(originsArr.ToArray())
 				.AllowAnyHeader()
 				.AllowAnyMethod()
+				.AllowCredentials()
 				.Build();
 		}
 	}

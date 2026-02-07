@@ -26,10 +26,10 @@ public static class DependencyInjection
                 .LogTo(msg => Debug.WriteLine(msg), LogLevel.Information)
 #endif
             );
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddGenericRepositories(configuration);
         services.AddSpecificRepositories(configuration);
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
