@@ -7,6 +7,8 @@ using Sai.DealAssistant.Common.Configuration;
 using Sai.DealAssistant.Infrastructure;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.WebApi.Extensions;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +32,12 @@ builder.Services.AddAutoMapper(cfg => { },
     typeof(ApplicationMappingProfile).Assembly,
     typeof(InfrastructureMappingProfile).Assembly
 );
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase; // optional, for camelCase
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

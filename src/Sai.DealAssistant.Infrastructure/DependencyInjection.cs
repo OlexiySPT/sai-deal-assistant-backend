@@ -28,6 +28,7 @@ public static class DependencyInjection
             );
 
         services.AddGenericRepositories(configuration);
+        services.AddFieldUpdateRepositories(configuration);
         services.AddSpecificRepositories(configuration);
         services.AddScoped<IUnitOfWork, UnitOfWork>(sp =>
         {
@@ -70,7 +71,15 @@ public static class DependencyInjection
                 );
             }
         }
+        
+        return services;
+    }
 
+    private static IServiceCollection AddFieldUpdateRepositories(this IServiceCollection services, IAppConfiguration configuration)
+    {
+        services.AddScoped<IFieldUpdateRepository<string>>(sp => new FieldUpdateRepository<AppDbContext, string>(sp.GetRequiredService<AppDbContext>()));
+        services.AddScoped<IFieldUpdateRepository<decimal?>>(sp => new FieldUpdateRepository<AppDbContext, decimal?>(sp.GetRequiredService<AppDbContext>()));
+        services.AddScoped<IFieldUpdateRepository<DateTimeOffset?>>(sp => new FieldUpdateRepository<AppDbContext, DateTimeOffset?>(sp.GetRequiredService<AppDbContext>()));
         return services;
     }
 }
