@@ -97,7 +97,7 @@ namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryT
         [Fact]
         public async Task UpdateFieldAsync_IdNotExists_Throws()
         {
-            await Assert.ThrowsAsync<InvalidOperationException>(
+            await Assert.ThrowsAsync<EntityNotFoundException>(
                 () => _stringRepo.UpdateFieldAsync("SampleEmployee", "FirstName", -999, "Test"));
         }
     }
