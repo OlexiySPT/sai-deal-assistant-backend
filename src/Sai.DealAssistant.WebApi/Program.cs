@@ -44,7 +44,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(CorsPolicies.AllowFrontend, CorsPolicies.AllowFrontendCorsPolicy(myConfig.AllowedCorsOrigins));
-}); 
+});
+
+builder.Services.AddHealthChecks();
 #endregion
 
 var app = builder.Build();
@@ -85,7 +87,8 @@ app.UseRouting();
 
 app.UseCors(CorsPolicies.AllowFrontend);
 
-app.MapControllers();
+app.MapControllers(); 
+app.MapHealthChecks("/health");
 #endregion
 
 app.Run();
