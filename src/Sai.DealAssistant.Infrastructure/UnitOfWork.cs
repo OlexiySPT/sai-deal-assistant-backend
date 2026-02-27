@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Sai.DealAssistant.Domain.DataAccess;
+using Sai.DealAssistant.Domain;
+using Sai.DealAssistant.Infrastructure.Persistence;
 
-namespace Sai.DealAssistant.Infrastructure.UnitOfWork;
+namespace Sai.DealAssistant.Infrastructure;
 
-public abstract class BaseUnitOfWork : IUnitOfWork
+public class UnitOfWork : IUnitOfWork
 {
-	public BaseUnitOfWork(DbContext dbContext)
+	public UnitOfWork(DbContext dbContext)
 	{
 		DbContext = dbContext;
 	}

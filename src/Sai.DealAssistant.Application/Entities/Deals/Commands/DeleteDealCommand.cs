@@ -31,14 +31,14 @@ namespace Sai.DealAssistant.Application.Entities.Deals.Commands
 
 			public async Task<DealDto> Handle(DeleteDealCommand request, CancellationToken cancellationToken)
 			{
-				Deal? deletedEmployee = await _repository.DeleteAsync(request.Id);
+                Deal? deletedEntity = await _repository.DeleteAsync(request.Id);
 
-				if (deletedEmployee == null)
+				if (deletedEntity == null)
 				{
 					throw new NotFoundExceptionOverride(nameof(Deal), request.Id);
 				}
 
-				return _mapper.Map<DealDto>(deletedEmployee);
+				return _mapper.Map<DealDto>(deletedEntity);
 			}
 		}
 	}

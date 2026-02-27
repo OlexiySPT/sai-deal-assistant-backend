@@ -1,4 +1,4 @@
-﻿namespace Sai.DealAssistant.Domain.DataAccess;
+﻿namespace Sai.DealAssistant.Domain;
 
 public interface IUnitOfWork
 {

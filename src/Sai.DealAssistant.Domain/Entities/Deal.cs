@@ -1,5 +1,4 @@
 ﻿using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
-using System;
 using System.Collections.ObjectModel;
 
 namespace Sai.DealAssistant.Domain.Entities;
@@ -17,9 +16,19 @@ public class Deal : BaseEntity
     public int TypeId { get; set; } = 1;
     public int StateId { get; set; } = 1;
 
+
+    public decimal? ProposalAmount { get; set; }
+    public decimal? MinClientAmount { get; set; }
+    public decimal? MaxClientAmount { get; set; }
+    public string? CurrencyCode { get; set; }
+    public decimal? ExchangeRateToEur { get; set; }
+    public int? AmountTypeId { get; set; } = 1;
+
+
     #region Navigation
     public DealType Type { get; set; } = default!;
     public DealState State { get; set; } = default!;
+    public AmountType AmountType { get; set; } = default!;
 
     public ICollection<ContactPerson> ContactPersons { get; set; }
         = new Collection<ContactPerson>();

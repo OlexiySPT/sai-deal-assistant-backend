@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations;
 
@@ -38,9 +39,32 @@ public class DealConfiguration : BaseEntityConfiguration<Deal>
             .HasColumnType("varchar")
             .HasMaxLength(50);
 
-        // Create expression indexes for lower(left(...,90)) on Name and Industry.
-        // This uses the Npgsql EF Core provider index-expression annotation which the Npgsql migrations
-        // codegen understands and will emit as a PostgreSQL expression index.
+        // New fields
+        builder.Property(c => c.ProposalAmount)
+            .HasColumnType("numeric(18,2)");
+
+        builder.Property(c => c.MinClientAmount)
+            .HasColumnType("numeric(18,2)");
+
+        builder.Property(c => c.MaxClientAmount)
+            .HasColumnType("numeric(18,2)");
+
+        builder.Property(c => c.CurrencyCode)
+            .HasColumnType("varchar")
+            .HasMaxLength(10);
+
+        builder.Property(c => c.ExchangeRateToEur)
+            .HasColumnType("numeric(18,6)");
+
+        builder.Property(c => c.AmountTypeId)
+            .IsRequired(false);
+
+        builder.HasOne(c => c.AmountType)
+            .WithMany(a => a.Deals)
+            .HasForeignKey(c => c.AmountTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Indexes
         builder.HasIndex(b => b.Name)
             .HasDatabaseName("IX_Deals_Lower90_Name")
             .HasAnnotation("Npgsql:IndexExpression", "lower(left(\"Name\", 90))");

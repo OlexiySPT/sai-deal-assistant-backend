@@ -13,6 +13,8 @@ public interface ISeedRepository
 
 	Task SeedDealTypesAsync(Func<IEnumerable<DealType>> getDealTypes);
 
+	Task SeedAmountTypesAsync(Func<IEnumerable<AmountType>> getAmountTypes); // <-- Added
+
 	Task SeedUsersAsync(Func<IEnumerable<User>> getUsers);
 
 	Task SeedDealsAsync(Func<IEnumerable<Deal>> getDeals);

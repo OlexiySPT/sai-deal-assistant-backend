@@ -36,12 +36,21 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
             {
                 var state = db.DealStates.Add(new DealState { State = "Open" });
                 var type = db.DealTypes.Add(new DealType { Type = "Standard" });
-                db.SaveChanges();
-                var deal = new Deal { Name = "Test Deal223322", StateId = state.Entity.Id, TypeId = type.Entity.Id };
-                var added = db.Deals.Add(deal);
+                var amountType = db.AmountTypes.Add(new AmountType { Type = "Per Month" });
                 db.SaveChanges();
 
-                db.ContactPersons.Add(new ContactPerson { Name = "John Doe", Email = "john@example.com", DealId = added.Entity.Id });
+                var deal = new Deal { Name = "Test Deal223322", StateId = state.Entity.Id, TypeId = type.Entity.Id , AmountTypeId = amountType.Entity.Id };
+                var addedDeal = db.Deals.Add(deal);
+                db.SaveChanges();
+
+                var contactPerson = new ContactPerson
+                {
+                    Name = "John Doe",
+                    Email = "john@example.com",
+                    DealId = addedDeal.Entity.Id,
+                    Deal = addedDeal.Entity,
+                };
+                db.ContactPersons.Add(contactPerson);
                 db.SaveChanges();
             }
         }

@@ -95,23 +95,42 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasMaxLength(4095)
                         .HasColumnType("varchar");
 
+                    b.Property<int?>("AmountTypeId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("integer");
 
+                    b.Property<string>("CurrencyCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar");
+
                     b.Property<string>("Description")
                         .HasColumnType("citext");
+
+                    b.Property<decimal?>("ExchangeRateToEur")
+                        .HasColumnType("numeric(18,6)");
 
                     b.Property<string>("Industry")
                         .HasMaxLength(100)
                         .HasColumnType("varchar");
 
+                    b.Property<decimal?>("MaxClientAmount")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<decimal?>("MinClientAmount")
+                        .HasColumnType("numeric(18,2)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar");
+
+                    b.Property<decimal?>("ProposalAmount")
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<int>("StateId")
                         .HasColumnType("integer");
@@ -141,6 +160,8 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnName("xmin");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AmountTypeId");
 
                     b.HasIndex("Industry")
                         .HasDatabaseName("IX_Deals_Lower90_Industry")
@@ -271,6 +292,24 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.HasIndex("EventId");
 
                     b.ToTable("EventNotes");
+                });
+
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.AmountType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AmountTypes");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.DealState", b =>
@@ -405,6 +444,11 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Deal", b =>
                 {
+                    b.HasOne("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.AmountType", "AmountType")
+                        .WithMany("Deals")
+                        .HasForeignKey("AmountTypeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.DealState", "State")
                         .WithMany("Deals")
                         .HasForeignKey("StateId")
@@ -416,6 +460,8 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("AmountType");
 
                     b.Navigation("State");
 
@@ -489,6 +535,11 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Event", b =>
                 {
                     b.Navigation("Notes");
+                });
+
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.AmountType", b =>
+                {
+                    b.Navigation("Deals");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.DealState", b =>

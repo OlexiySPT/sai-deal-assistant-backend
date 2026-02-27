@@ -91,11 +91,26 @@ public class SeedRepository : ISeedRepository
 	public async Task SeedDealsAsync(Func<IEnumerable<Deal>> getDeals)
 	{
 		List<Deal> existing = await _appDbContext.Deals.ToListAsync();
+		var amountTypes = await _appDbContext.AmountTypes.ToListAsync();
 
 		foreach (Deal d in getDeals())
 		{
 			if (!existing.Exists(e => string.Equals(e.Name, d.Name, StringComparison.OrdinalIgnoreCase)))
 			{
+				// Set new fields with sample/default data if not already set
+				if (d.AmountTypeId == null && amountTypes.Count > 0)
+					d.AmountTypeId = amountTypes.First().Id;
+				if (string.IsNullOrEmpty(d.CurrencyCode))
+					d.CurrencyCode = "EUR";
+				if (d.ExchangeRateToEur == null)
+					d.ExchangeRateToEur = 1.0m;
+				if (d.MaxClientAmount == null)
+					d.MaxClientAmount = 100000m;
+				if (d.MinClientAmount == null)
+					d.MinClientAmount = 1000m;
+				if (d.ProposalAmount == null)
+					d.ProposalAmount = 50000m;
+
 				_appDbContext.Deals.Add(d);
 			}
 		}
@@ -279,4 +294,21 @@ public class SeedRepository : ISeedRepository
 
         _logger.LogInformation("Event notes upsert completed.");
     }
+
+	public async Task SeedAmountTypesAsync(Func<IEnumerable<AmountType>> getAmountTypes)
+	{
+		var existing = await _appDbContext.Set<AmountType>().ToListAsync();
+
+		foreach (var at in getAmountTypes())
+		{
+			if (!existing.Exists(e => string.Equals(e.Type, at.Type, StringComparison.OrdinalIgnoreCase)))
+			{
+				_appDbContext.Set<AmountType>().Add(at);
+			}
+		}
+
+		await _appDbContext.SaveChangesAsync();
+
+		_logger.LogInformation("Amount Types Enum table filled.");
+	}
 }

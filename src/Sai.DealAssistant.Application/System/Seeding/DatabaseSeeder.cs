@@ -67,6 +67,18 @@ public partial class DatabaseSeeder
 			new DealType { Id = 3, Type = "Long-time Collaboration" }
 		};
 	}
+
+	public static IEnumerable<AmountType> GetAmountTypes()
+	{
+		return new List<AmountType>
+		{
+			new AmountType { Id = 1, Type = "Per Month" },
+			new AmountType { Id = 2, Type = "Per Year" },
+			new AmountType { Id = 3, Type = "Per Hour" },
+			new AmountType { Id = 4, Type = "Per Day" },
+			new AmountType { Id = 5, Type = "Fixed Price" }
+		};
+	}
 	#endregion
 
 	public static IEnumerable<User> GetUsers()
@@ -87,6 +99,7 @@ public partial class DatabaseSeeder
 		await _seedRepository.SeedEventStatusesAsync(GetEventStates);
 		await _seedRepository.SeedDealStatesAsync(GetDealStates);
 		await _seedRepository.SeedDealTypesAsync(GetDealTypes);
+		await _seedRepository.SeedAmountTypesAsync(GetAmountTypes);
 		await _seedRepository.SeedUsersAsync(GetUsers);
 	}
 

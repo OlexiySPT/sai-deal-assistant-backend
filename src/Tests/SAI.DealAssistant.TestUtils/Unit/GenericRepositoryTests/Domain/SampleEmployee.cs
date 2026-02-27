@@ -10,8 +10,12 @@ public class SampleEmployee : BaseEntity
 
 	public string? Email { get; set; }
 
-	#region Navigational Props
-	public SampleCustomer Customer { get; set; } = null!;
+	public decimal? Salary { get; set; }
+
+	public DateTime? HireDate { get; set; }
+
+    #region Navigational Props
+    public SampleCustomer Customer { get; set; } = null!;
 	#endregion
 
 	// This is server computed field, needed for creating index for search
