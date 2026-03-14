@@ -27,7 +27,7 @@ public class DeleteDealTagCommand : IRequest<DealTagDto>
         {
             var entity = await _repository.FirstOrDefaultAsync(x => x.DealId == request.DealId && x.Tag == request.Tag);
             if (entity?.Id is null) {
-                throw new NotFoundExceptionOverride(nameof(DealTag), entity?.Id);
+                throw new NotFoundExceptionOverride($"No DealTag \"{request.Tag}\" for deal {request.DealId}");
             }
 
             DealTag? deleted = await _repository.DeleteAsync(entity.Id);
