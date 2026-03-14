@@ -51,7 +51,7 @@ public class DealTagsController : BaseController
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(DealTagDto), 200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> DeleteDealTag([FromBody] DeleteDealTagCommand command)
+    public async Task<IActionResult> DeleteDealTag([FromQuery] DeleteDealTagCommand command)
     {
         DealTagDto result = await Mediator.Send(command);
         return Ok(result);
