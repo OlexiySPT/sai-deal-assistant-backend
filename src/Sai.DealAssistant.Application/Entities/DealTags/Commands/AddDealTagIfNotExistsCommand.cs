@@ -8,8 +8,10 @@ using Sai.DealAssistant.Domain.Repositories.Generic;
 
 namespace Sai.DealAssistant.Application.Entities.DealTags.Commands;
 
-public class AddDealTagIfNotExistsCommand : DealTagDto, IRequest<DealTagDto>
+public class AddDealTagIfNotExistsCommand : IRequest<DealTagDto>
 {
+    public string Tag { get; set; }
+    public int DealId { get; set; }
 
     public class Validator : AbstractValidator<AddDealTagIfNotExistsCommand>
     {

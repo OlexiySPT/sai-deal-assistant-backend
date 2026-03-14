@@ -9,8 +9,8 @@ namespace Sai.DealAssistant.Application.Entities.ContactPersons.Commands;
 
 public class DeleteDealTagCommand : IRequest<DealTagDto>
 {
-    public DeleteDealTagCommand(int id) => Id = id;
-    public int Id { get; set; }
+    public int DealId { get; set; }
+    public string Tag { get; set; }
 
     public class Handler : IRequestHandler<DeleteDealTagCommand, DealTagDto>
     {
@@ -25,11 +25,15 @@ public class DeleteDealTagCommand : IRequest<DealTagDto>
 
         public async Task<DealTagDto> Handle(DeleteDealTagCommand request, CancellationToken cancellationToken)
         {
-            DealTag? deleted = await _repository.DeleteAsync(request.Id);
+            var entity = await _repository.FirstOrDefaultAsync(x => x.DealId == request.DealId && x.Tag == request.Tag);
+            if (entity?.Id is null) {
+                throw new NotFoundExceptionOverride(nameof(DealTag), entity?.Id);
+            }
 
-            if (deleted == null)
+            DealTag? deleted = await _repository.DeleteAsync(entity.Id);
+            if (deleted is null)
             {
-                throw new NotFoundExceptionOverride(nameof(DealTag), request.Id);
+                throw new NotFoundExceptionOverride(nameof(DealTag), entity.Id);
             }
 
             return _mapper.Map<DealTagDto>(deleted);
