@@ -86,10 +86,13 @@ namespace Sai.DealAssistant.Infrastructure.Repositories.Generic
             if (entityObj == null)
                 throw new EntityNotFoundException($"No record found in table '{entity}' with id '{id}'.");
 
+            var targetType = property.PropertyType;
+            var underlyingType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+
             object? convertedValue = newValue;
-            if (newValue != null && newValue.GetType() != property.PropertyType)
+            if (newValue != null && newValue.GetType() != targetType)
             {
-                convertedValue = Convert.ChangeType(newValue, property.PropertyType);
+                convertedValue = Convert.ChangeType(newValue, underlyingType);
             }
             property.SetValue(entityObj, convertedValue);
 
