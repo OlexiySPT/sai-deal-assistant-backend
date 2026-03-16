@@ -18,9 +18,8 @@ public class DealWithDependentsDto
     public string? AiBriefDescription { get; set; }
     public string? Industry { get; set; }
     public string? Status { get; set; }
-
-    public string Type { get; set; } = null!;
-    public string State { get; set; } = null!;
+    public int TypeId { get; set; } 
+    public int StateId { get; set; }
 
     public ICollection<ContactPersonListItemDto> ContactPersons { get; set; }
         = new Collection<ContactPersonListItemDto>();
@@ -44,8 +43,8 @@ public class DealWithDependentsDto
 		public MappingProfile()
 		{
 			CreateMap<Deal, DealWithDependentsDto>()
-                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type!.Type))
-                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State!.State))
+                .ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.Type!.Id))
+                .ForMember(dest => dest.StateId, opt => opt.MapFrom(src => src.State!.Id))
                 .ForMember(dest => dest.AmountType, opt => opt.MapFrom(src => src.AmountType != null ? src.AmountType.Type : null));
 		}
 	}

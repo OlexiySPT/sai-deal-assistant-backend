@@ -36,6 +36,7 @@ public class GetDealWithDependentsQuery : IRequest<DealWithDependentsDto>
             {
                 throw new NotFoundExceptionOverride(nameof(Deal), request.Id);
             }
+            entity.Tags = [.. entity.Tags.OrderBy(p => p.Id)];
 
             return _mapper.Map<DealWithDependentsDto>(entity);
         }

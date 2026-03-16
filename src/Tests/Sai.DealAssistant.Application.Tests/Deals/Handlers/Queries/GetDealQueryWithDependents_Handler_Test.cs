@@ -53,11 +53,11 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 			Assert.Equal(expectedEntity.Industry, result.Industry);
 
 			// Assert: navigation DTOs exist and match counts/ids
-			Assert.NotNull(result.Type);
-			Assert.Equal(expectedEntity.Type?.Type, result.Type);
+			Assert.NotNull(result.TypeId);
+			Assert.Equal(expectedEntity.TypeId, result.TypeId);
 
-			Assert.NotNull(result.State);
-			Assert.Equal(expectedEntity.State?.State, result.State);
+			Assert.NotNull(result.StateId);
+			Assert.Equal(expectedEntity.StateId, result.StateId);
 
 			Assert.Equal(expectedEntity.ContactPersons?.Count ?? 0, result.ContactPersons?.Count ?? 0);
 			Assert.Equal(expectedEntity.Events?.Count ?? 0, result.Events?.Count ?? 0);
