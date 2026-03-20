@@ -64,6 +64,12 @@ public class DealConfiguration : BaseEntityConfiguration<Deal>
             .HasForeignKey(c => c.AmountTypeId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        // New Company field
+        builder.Property(c => c.Company)
+            .HasColumnType("varchar")
+            .HasMaxLength(64)
+            .IsRequired();
+
         // Indexes
         builder.HasIndex(b => b.Name)
             .HasDatabaseName("IX_Deals_Lower90_Name")

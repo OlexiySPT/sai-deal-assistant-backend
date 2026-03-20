@@ -30,6 +30,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         var command = new CreateDealCommand
         {
             Name = "Test Deal " + Guid.NewGuid().ToString(),
+            Company = "Test Company", // <-- Add this line
             Description = "Test deal description",
             TypeId = 1,
             StateId = 1,
@@ -44,6 +45,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         result.Should().NotBeNull();
         result.Id.Should().BeGreaterThan(0);
         result.Name.Should().Be(command.Name);
+        result.Company.Should().Be(command.Company); // <-- Add this assertion
         result.Description.Should().Be(command.Description);
         result.TypeId.Should().Be(command.TypeId);
         result.StateId.Should().Be(command.StateId);
@@ -54,6 +56,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         var createdDeal = await DbContext.Deals.FirstOrDefaultAsync(d => d.Id == result.Id);
         createdDeal.Should().NotBeNull();
         createdDeal!.Name.Should().Be(command.Name);
+        createdDeal.Company.Should().Be(command.Company); // <-- Add this assertion
         createdDeal.Description.Should().Be(command.Description);
     }
 

@@ -6,6 +6,7 @@ namespace Sai.DealAssistant.Domain.Entities;
 public class Deal : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
+    public string Company { get; set; } = string.Empty; // <-- Add this line
     public string? Description { get; set; } = string.Empty;
     public string? Url { get; set; } = string.Empty;
     public string? AiSearchInfo { get; set; } = string.Empty;

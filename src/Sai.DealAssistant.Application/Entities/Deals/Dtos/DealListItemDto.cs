@@ -7,6 +7,7 @@ public class DealListItemDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
+    public string Company { get; set; } = string.Empty;
     public string Type { get; set; } = default!;
     public string State { get; set; } = default!;
     public string? Description { get; set; } = string.Empty;
@@ -23,7 +24,8 @@ public class DealListItemDto
 			CreateMap<Deal, DealListItemDto>()
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type!.Type))
                 .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State!.State))
-                .ForMember(dest => dest.AmountType, opt => opt.MapFrom(src => src.AmountType != null ? src.AmountType.Type : null));
+                .ForMember(dest => dest.AmountType, opt => opt.MapFrom(src => src.AmountType != null ? src.AmountType.Type : null))
+                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Company));
 		}
 	}
 }

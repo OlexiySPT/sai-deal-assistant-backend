@@ -11,6 +11,7 @@ namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 public class DealWithDependentsDto
 {
     public int Id { get; set; }
+    public string Company { get; set; } = null!;
     public string Name { get; set; } = null!;
     public string? Description { get; set; }
     public string? Url { get; set; }
