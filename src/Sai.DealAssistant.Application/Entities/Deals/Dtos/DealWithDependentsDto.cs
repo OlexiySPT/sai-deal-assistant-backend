@@ -3,7 +3,6 @@ using Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
 using Sai.DealAssistant.Application.Entities.DealTags.Dto;
 using Sai.DealAssistant.Application.Entities.Events.Dtos;
 using Sai.DealAssistant.Domain.Entities;
-using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using System.Collections.ObjectModel;
 
 namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
@@ -11,6 +10,7 @@ namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 public class DealWithDependentsDto
 {
     public int Id { get; set; }
+    public string Company { get; set; } = null!;
     public string Name { get; set; } = null!;
     public string? Description { get; set; }
     public string? Url { get; set; }

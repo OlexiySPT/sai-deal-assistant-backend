@@ -9,6 +9,7 @@ public class DealDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = null!;
+    public string Company { get; set; } = null!;
     public string? Description { get; set; }
     public string? Url { get; set; }
     public string? AiSearchInfo { get; set; }
@@ -30,6 +31,7 @@ public class DealDto
 		public MappingProfile()
 		{
 			CreateMap<Deal, DealDto>()
+                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Company))
                 .ForMember(dest => dest.AmountTypeId, opt => opt.MapFrom(src => src.AmountTypeId))
                 .ReverseMap();
 		}

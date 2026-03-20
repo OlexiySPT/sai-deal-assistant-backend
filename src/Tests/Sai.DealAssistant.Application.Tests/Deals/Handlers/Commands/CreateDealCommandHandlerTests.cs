@@ -30,6 +30,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         var command = new CreateDealCommand
         {
             Name = "Test Deal " + Guid.NewGuid().ToString(),
+            Company = "Test Company", // <-- Add this line
             Description = "Test deal description",
             TypeId = 1,
             StateId = 1,
@@ -44,6 +45,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         result.Should().NotBeNull();
         result.Id.Should().BeGreaterThan(0);
         result.Name.Should().Be(command.Name);
+        result.Company.Should().Be(command.Company); // <-- Add this assertion
         result.Description.Should().Be(command.Description);
         result.TypeId.Should().Be(command.TypeId);
         result.StateId.Should().Be(command.StateId);
@@ -54,6 +56,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         var createdDeal = await DbContext.Deals.FirstOrDefaultAsync(d => d.Id == result.Id);
         createdDeal.Should().NotBeNull();
         createdDeal!.Name.Should().Be(command.Name);
+        createdDeal.Company.Should().Be(command.Company); // <-- Add this assertion
         createdDeal.Description.Should().Be(command.Description);
     }
 
@@ -64,6 +67,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         var command = new CreateDealCommand
         {
             Name = "Test Deal with URL " + Guid.NewGuid().ToString(),
+            Company = "Test Company", // <-- Add this line
             Description = "Test deal with URL",
             Url = "https://example.com/deal",
             TypeId = 1,
@@ -91,6 +95,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         var command = new CreateDealCommand
         {
             Name = "Comprehensive Test Deal " + Guid.NewGuid().ToString(),
+            Company = "Comprehensive Test Company",
             Description = "Comprehensive test deal",
             Url = "https://example.com/comprehensive-deal",
             AiSearchInfo = "AI search information",
@@ -131,6 +136,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         var command = new CreateDealCommand
         {
             Name = "Minimal Deal " + Guid.NewGuid().ToString(),
+            Company = "Minimal Test Company",
             TypeId = 1,
             StateId = 1
         };
