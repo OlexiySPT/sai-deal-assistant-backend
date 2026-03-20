@@ -67,6 +67,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         var command = new CreateDealCommand
         {
             Name = "Test Deal with URL " + Guid.NewGuid().ToString(),
+            Company = "Test Company", // <-- Add this line
             Description = "Test deal with URL",
             Url = "https://example.com/deal",
             TypeId = 1,
@@ -94,6 +95,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         var command = new CreateDealCommand
         {
             Name = "Comprehensive Test Deal " + Guid.NewGuid().ToString(),
+            Company = "Comprehensive Test Company",
             Description = "Comprehensive test deal",
             Url = "https://example.com/comprehensive-deal",
             AiSearchInfo = "AI search information",
@@ -134,6 +136,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         var command = new CreateDealCommand
         {
             Name = "Minimal Deal " + Guid.NewGuid().ToString(),
+            Company = "Minimal Test Company",
             TypeId = 1,
             StateId = 1
         };

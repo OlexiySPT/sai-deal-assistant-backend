@@ -3,7 +3,6 @@ using Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
 using Sai.DealAssistant.Application.Entities.DealTags.Dto;
 using Sai.DealAssistant.Application.Entities.Events.Dtos;
 using Sai.DealAssistant.Domain.Entities;
-using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using System.Collections.ObjectModel;
 
 namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;

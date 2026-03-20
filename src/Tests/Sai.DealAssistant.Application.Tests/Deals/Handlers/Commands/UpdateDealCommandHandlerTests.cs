@@ -36,6 +36,7 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         var command = new UpdateDealCommand
         {
             Id = dealId,
+            Company = "test company",
             Name = "Updated Deal Name",
             Description = "Updated description",
             TypeId = 1,
@@ -95,6 +96,7 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         var command = new UpdateDealCommand
         {
             Id = dealId,
+            Company = "test company",
             Name = "New Name",
             Description = "Original Description", // Keep original
             TypeId = 1,
@@ -132,6 +134,7 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         var command = new UpdateDealCommand
         {
             Id = dealId,
+            Company = "test company",
             Name = "Deal with URL",
             Url = "https://example.com/updated-deal",
             TypeId = 1,
@@ -163,6 +166,7 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         var command = new UpdateDealCommand
         {
             Id = dealId,
+            Company = "Updated Test Company",
             Name = "Fully Updated Deal",
             Description = "Fully updated description",
             Url = "https://example.com/fully-updated",
@@ -211,6 +215,7 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         var command = new UpdateDealCommand
         {
             Id = dealId,
+            Company="test company",
             Name = "Deal Name",
             Description = null, // Clear description
             Industry = null,    // Clear industry
