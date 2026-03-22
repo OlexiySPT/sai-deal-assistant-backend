@@ -29,6 +29,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         // Arrange
         var command = new CreateDealCommand
         {
+            StartDate = new DateOnly(2024, 1, 1),
             Name = "Test Deal " + Guid.NewGuid().ToString(),
             Company = "Test Company", // <-- Add this line
             Description = "Test deal description",
@@ -66,6 +67,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         // Arrange
         var command = new CreateDealCommand
         {
+            StartDate = new DateOnly(2024, 1, 1),
             Name = "Test Deal with URL " + Guid.NewGuid().ToString(),
             Company = "Test Company", // <-- Add this line
             Description = "Test deal with URL",
@@ -94,6 +96,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         // Arrange
         var command = new CreateDealCommand
         {
+            StartDate = new DateOnly(2024, 1, 1),
             Name = "Comprehensive Test Deal " + Guid.NewGuid().ToString(),
             Company = "Comprehensive Test Company",
             Description = "Comprehensive test deal",
@@ -135,6 +138,7 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         // Arrange
         var command = new CreateDealCommand
         {
+            StartDate = new DateOnly(2024, 1, 1),
             Name = "Minimal Deal " + Guid.NewGuid().ToString(),
             Company = "Minimal Test Company",
             TypeId = 1,

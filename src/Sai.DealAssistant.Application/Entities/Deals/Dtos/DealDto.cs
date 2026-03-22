@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using Sai.DealAssistant.Domain.Entities;
-using Sai.DealAssistant.Domain.Entities.ReadOnly;
-using System.Collections.ObjectModel;
 
 namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 
 public class DealDto
 {
+    public DateOnly? StartDate { get; set; }
     public int Id { get; set; }
     public string Name { get; set; } = null!;
     public string Company { get; set; } = null!;

@@ -16,6 +16,7 @@ public class DealListItemDto
     public decimal? ProposalAmount { get; set; }
     public string? CurrencyCode { get; set; }
     public string? AmountType { get; set; }
+    public DateOnly? StartDate { get; set; } // <-- Add this line
 
     public class MappingProfile : Profile
 	{
@@ -24,8 +25,7 @@ public class DealListItemDto
 			CreateMap<Deal, DealListItemDto>()
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type!.Type))
                 .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State!.State))
-                .ForMember(dest => dest.AmountType, opt => opt.MapFrom(src => src.AmountType != null ? src.AmountType.Type : null))
-                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Company));
+                .ForMember(dest => dest.AmountType, opt => opt.MapFrom(src => src.AmountType != null ? src.AmountType.Type : null));
 		}
 	}
 }

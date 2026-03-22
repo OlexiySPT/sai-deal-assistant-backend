@@ -30,6 +30,10 @@ namespace Sai.DealAssistant.Application.Entities.Deals.Commands;
                 .NotEmpty()
                 .NotNull();
 
+            RuleFor(c => c.Company)
+                .NotEmpty()
+                .NotNull();
+
             RuleFor(c => c.StateId)
                 .MustAsync(async (cmd, stateId, cToken) => (await _dealStateCache.GetAllAsync()).Any(p => p.Id == stateId))
                 .WithMessage($"Incorrect State Id. It must be one of [{string.Join(", ", _dealStateCache.GetAllAsync().Result.Select(p => p.Id.ToString()))}]");

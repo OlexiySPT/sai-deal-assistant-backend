@@ -9,6 +9,7 @@ namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 
 public class DealWithDependentsDto
 {
+    public DateOnly StartDate { get; set; }
     public int Id { get; set; }
     public string Company { get; set; } = null!;
     public string Name { get; set; } = null!;
@@ -20,6 +21,8 @@ public class DealWithDependentsDto
     public string? Status { get; set; }
     public int TypeId { get; set; } 
     public int StateId { get; set; }
+
+    public DateOnly? DenormDenormLastActionDate { get; set; }
 
     public ICollection<ContactPersonListItemDto> ContactPersons { get; set; }
         = new Collection<ContactPersonListItemDto>();

@@ -1,6 +1,4 @@
 ﻿using Sai.DealAssistant.Domain.Entities;
-using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
-using Sai.DealAssistant.Domain.Repositories;
 
 namespace Sai.DealAssistant.Application.System.Seeding;
 
@@ -8,10 +6,43 @@ public partial class DatabaseSeeder
 {
     public static IEnumerable<Deal> GetTestDeals()
     {
+        var random = new Random(42); // Seed for deterministic results
+        DateOnly RandomStartDate()
+        {
+            var daysAgo = random.Next(0, 3 * 365); // up to 3 years ago
+            return DateOnly.FromDateTime(DateTime.Today.AddDays(-daysAgo));
+        }
+
         List<Deal> result = new List<Deal>
         {
-            new Deal { Name = "Acme Website Revamp", Company = "Acme", Description = "One-time website redesign and optimization", Url = "https://acme.example.com", AiSearchInfo = "website, redesign, SEO", AiBriefDescription = "Redesign front-end, improve conversion", Industry = "Marketing", Status = "Open", TypeId = 1, StateId = 1 },
-            new Deal { Name = "Contoso Monthly Support", Company = "Contoso", Description = "Ongoing monthly support subscription", Url = "https://contoso.example.com/support", AiSearchInfo = "support, subscription, SLA", AiBriefDescription = "Monthly support and maintenance", Industry = "IT Services", Status = "Active", TypeId = 2, StateId = 2 },
+            new Deal
+            {
+                Name = "Acme Website Revamp",
+                Company = "Acme",
+                Description = "One-time website redesign and optimization",
+                Url = "https://acme.example.com",
+                AiSearchInfo = "website, redesign, SEO",
+                AiBriefDescription = "Redesign front-end, improve conversion",
+                Industry = "Marketing",
+                Status = "Open",
+                TypeId = 1,
+                StateId = 1,
+                StartDate = RandomStartDate()
+            },
+            new Deal
+            {
+                Name = "Contoso Monthly Support",
+                Company = "Contoso",
+                Description = "Ongoing monthly support subscription",
+                Url = "https://contoso.example.com/support",
+                AiSearchInfo = "support, subscription, SLA",
+                AiBriefDescription = "Monthly support and maintenance",
+                Industry = "IT Services",
+                Status = "Active",
+                TypeId = 2,
+                StateId = 2,
+                StartDate = RandomStartDate()
+            },
             new Deal { Name = "Globex Research Collaboration", Company = "Globex", Description = "Long-term R&D partnership", Url = "https://globex.example.com", AiSearchInfo = "research, collaboration, R&D", AiBriefDescription = "Multi-year collaboration on new products", Industry = "Manufacturing", Status = "Negotiation", TypeId = 3, StateId = 4 },
             new Deal { Name = "Initech Prototype", Company = "Initech", Description = "Prototype development engagement", Url = "https://initech.example.com", AiSearchInfo = "prototype, MVP", AiBriefDescription = "Build MVP for product validation", Industry = "Software", Status = "Closed - Won", TypeId = 1, StateId = 5 },
             new Deal { Name = "Umbrella Maintenance", Company = "Umbrella", Description = "Periodic maintenance for legacy systems", Url = "https://umbrella.example.com", AiSearchInfo = "maintenance, legacy", AiBriefDescription = "Scheduled maintenance and updates", Industry = "Healthcare", Status = "Closed - Lost", TypeId = 2, StateId = 6 },

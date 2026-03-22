@@ -36,6 +36,7 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         var command = new UpdateDealCommand
         {
             Id = dealId,
+            StartDate = new DateOnly(2024, 1, 1),
             Company = "test company",
             Name = "Updated Deal Name",
             Description = "Updated description",
@@ -73,6 +74,8 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         int nonExistentDealId = 999999;
         var command = new UpdateDealCommand
         {
+            StartDate = new DateOnly(2024, 1, 1),
+            Company = "test company",
             Id = nonExistentDealId,
             Name = "DoesNotExist",
             TypeId = 1,
@@ -96,6 +99,7 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         var command = new UpdateDealCommand
         {
             Id = dealId,
+            StartDate = new DateOnly(2024, 1, 1),
             Company = "test company",
             Name = "New Name",
             Description = "Original Description", // Keep original
@@ -134,6 +138,7 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         var command = new UpdateDealCommand
         {
             Id = dealId,
+            StartDate = new DateOnly(2024, 1, 1),
             Company = "test company",
             Name = "Deal with URL",
             Url = "https://example.com/updated-deal",
@@ -166,6 +171,7 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         var command = new UpdateDealCommand
         {
             Id = dealId,
+            StartDate = new DateOnly(2024, 1, 1),
             Company = "Updated Test Company",
             Name = "Fully Updated Deal",
             Description = "Fully updated description",
@@ -215,7 +221,8 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         var command = new UpdateDealCommand
         {
             Id = dealId,
-            Company="test company",
+            StartDate = new DateOnly(2024, 1, 1),
+            Company ="test company",
             Name = "Deal Name",
             Description = null, // Clear description
             Industry = null,    // Clear industry
@@ -250,6 +257,7 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
 
         var deal = new Deal
         {
+            StartDate = new DateOnly(2024, 1, 1),
             Name = name ?? "Test Deal " + dealGuid,
             Description = description ?? "Test deal for update",
             Industry = industry ?? "Technology",

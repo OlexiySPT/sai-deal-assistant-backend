@@ -5,8 +5,9 @@ namespace Sai.DealAssistant.Domain.Entities;
 
 public class Deal : BaseEntity
 {
+    public DateOnly StartDate { get; set; }
     public string Name { get; set; } = string.Empty;
-    public string Company { get; set; } = string.Empty; // <-- Add this line
+    public string Company { get; set; } = string.Empty;
     public string? Description { get; set; } = string.Empty;
     public string? Url { get; set; } = string.Empty;
     public string? AiSearchInfo { get; set; } = string.Empty;
@@ -24,6 +25,8 @@ public class Deal : BaseEntity
     public string? CurrencyCode { get; set; }
     public decimal? ExchangeRateToEur { get; set; }
     public int? AmountTypeId { get; set; } = 1;
+
+    public DateTime? DenormLastActionDate { get; set; }
 
 
     #region Navigation

@@ -59,7 +59,23 @@ namespace Sai.DealAssistant.WebApi.Controllers
         [ProducesResponseType(typeof(DateTimeOffset?), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateDateField([FromBody] UpdateDateFieldCommand command)
+        public async Task<IActionResult> UpdateDateField([FromBody] UpdateDateOnlyFieldCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Updates a date field of an entity.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns>The updated value.</returns>
+        [HttpPut("date-time")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(DateTimeOffset?), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateDateTimeOffsetField([FromBody] UpdateDateTimeOffsetFieldCommand command)
         {
             var result = await _mediator.Send(command);
             return Ok(result);

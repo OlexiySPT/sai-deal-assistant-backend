@@ -11,6 +11,16 @@ public class DealConfiguration : BaseEntityConfiguration<Deal>
     {
         base.Configure(builder);
 
+
+        builder.Property(d => d.StartDate)
+            .HasColumnType("date")
+            .IsRequired();
+
+        builder.Property(c => c.Company)
+            .HasColumnType("varchar")
+            .HasMaxLength(64)
+            .IsRequired();
+
         builder.Property(c => c.Name)
             .HasColumnType("varchar")
             .HasMaxLength(255)
@@ -63,12 +73,6 @@ public class DealConfiguration : BaseEntityConfiguration<Deal>
             .WithMany(a => a.Deals)
             .HasForeignKey(c => c.AmountTypeId)
             .OnDelete(DeleteBehavior.Restrict);
-
-        // New Company field
-        builder.Property(c => c.Company)
-            .HasColumnType("varchar")
-            .HasMaxLength(64)
-            .IsRequired();
 
         // Indexes
         builder.HasIndex(b => b.Name)
