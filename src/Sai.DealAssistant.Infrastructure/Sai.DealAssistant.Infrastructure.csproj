@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Sai.DealAssistant.Common\Sai.DealAssistant.Common.csproj" />
     <ProjectReference Include="..\Sai.DealAssistant.Domain\Sai.DealAssistant.Domain.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
 </Project>

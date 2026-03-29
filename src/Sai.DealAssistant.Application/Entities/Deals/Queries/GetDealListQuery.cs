@@ -67,11 +67,9 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 				{
 					Id = p.Id,
 					Name = p.Name,
-					Description = p.Description,
-					Industry = p.Industry,
+					Company = p.Company,
 					State = p.State.State,
-					Type = p.Type.Type,
-					CreatedAt = p.CreatedAt,
+					Status = p.Status
                 },
 				request.Page,
 				request.PageSize,
