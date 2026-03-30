@@ -47,7 +47,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
 				db.AddRange(et, es);
 				db.SaveChanges();
 
-				db.Events.Add(new Event { Date = DateTimeOffset.UtcNow, Agenda = "Meet", DealId = deal.Id, TypeId = et.Id, StateId = es.Id });
+				db.Events.Add(new Event { Topic = "Test Event", Date = DateTimeOffset.UtcNow, Agenda = "Meet", DealId = deal.Id, TypeId = et.Id, StateId = es.Id });
 				db.SaveChanges();
 			}
 		}

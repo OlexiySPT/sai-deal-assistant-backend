@@ -41,6 +41,7 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
             DealId = dealId,
             Date = DateTimeOffset.UtcNow,
             Pos = 1,
+            Topic = "Initial contact and discovery",
             Agenda = "Test event agenda",
             Result = "Test result",
             TypeId = 1,
@@ -79,6 +80,7 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
             DealId = dealId,
             Date = DateTimeOffset.UtcNow,
             Pos = 1,
+            Topic = "Requirements gathering",
             Agenda = "Event without contact person",
             TypeId = 1,
             StateId = 1,
@@ -108,6 +110,7 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
         var cmd1 = new CreateEventCommand
         {
             DealId = dealId,
+            Topic = "Event 1",
             Date = DateTimeOffset.UtcNow.AddDays(-5),
             Pos = 1,
             Agenda = "First event",
@@ -118,6 +121,7 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
         var cmd2 = new CreateEventCommand
         {
             DealId = dealId,
+            Topic = "Event 2",
             Date = DateTimeOffset.UtcNow.AddDays(-3),
             Pos = 2,
             Agenda = "Second event",
@@ -159,6 +163,7 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
         {
             Id = eventId,
             Date = DateTimeOffset.UtcNow,
+            Topic = "Updated topic",
             Pos = 1,
             Agenda = "Updated agenda",
             Result = "Updated result",
@@ -219,6 +224,7 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
         {
             Id = eventId,
             Date = DateTimeOffset.UtcNow,
+            Topic = "Updated topic only",
             Pos = 1,
             Agenda = "Updated agenda only",
             Result = "Original result", // Keep original
@@ -256,6 +262,7 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
         {
             Id = eventId,
             Date = DateTimeOffset.UtcNow,
+            Topic = "Event with cleared contact person",
             Pos = 1,
             Agenda = "Event agenda",
             TypeId = 1,
@@ -411,6 +418,7 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
             DealId = dealId,
             Date = DateTimeOffset.UtcNow,
             Pos = 1,
+            Topic = Guid.NewGuid().ToString("N")[..12],
             Agenda = agenda,
             Result = result,
             TypeId = 1,
@@ -435,6 +443,7 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
             ContactPersonId = contactPersonId,
             Date = DateTimeOffset.UtcNow,
             Pos = 1,
+            Topic = Guid.NewGuid().ToString("N")[..12],
             Agenda = "Event with contact person",
             Result = "Result",
             TypeId = 1,

@@ -12,7 +12,7 @@ public class FullDealRepository : IFullDealRepository
 
 	public FullDealRepository(AppDbContext appDbContext)
 	{
-		_appDbContext = appDbContext is not null? appDbContext: throw new ArgumentNullException(nameof(appDbContext));
+		_appDbContext = appDbContext is not null ? appDbContext : throw new ArgumentNullException(nameof(appDbContext));
 	}
 
     public Task<Deal?> FirstOrDefaultAsync(Expression<Func<Deal, bool>> predicate)
@@ -38,6 +38,7 @@ public class FullDealRepository : IFullDealRepository
 				.Include(e => e.Type)
 				.Include(e => e.State)
             .Include(d => d.Tags)
+			.Include(d => d.Firm)
 			.AsNoTracking()
 			.AsQueryable();
     }

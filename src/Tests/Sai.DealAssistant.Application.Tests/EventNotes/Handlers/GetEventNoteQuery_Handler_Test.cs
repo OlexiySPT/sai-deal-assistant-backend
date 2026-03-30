@@ -45,7 +45,7 @@ namespace Tests.Sai.DealAssistant.Application.Tests.EventNotes.Handlers
                 db.Add(deal);
                 db.SaveChanges();
 
-                var ev = new Event { Agenda = "Event A", DealId = deal.Id, TypeId = eventtype.Entity.Id, StateId = eventstate.Entity.Id };
+                var ev = new Event { Topic = "Test Event", Agenda = "Event A", DealId = deal.Id, TypeId = eventtype.Entity.Id, StateId = eventstate.Entity.Id };
                 db.Add(ev);
                 db.SaveChanges();
 

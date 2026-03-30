@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
 using Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
@@ -18,7 +17,6 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 	public class GetDealListQuery_Handler_Test : UnitTestBase
 	{
 		private readonly ReadRepository<AppDbContext, Deal> _dealRepository;
-		private readonly IMapper _mapper;
 
 		public GetDealListQuery_Handler_Test()
 			: base(seedTestData: false)
@@ -73,6 +71,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                     Id = p.Id,
                     Name = p.Name,
                     State = p.State.State,
+					Status = p.Status,
                 })
 				.Take(pageSize)
 				.ToList();
@@ -103,6 +102,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                     Id = p.Id,
                     Name = p.Name,
                     State = p.State.State,
+					Status = p.Status,
                 })
 				.Take(pageSize)
                 .ToList();
@@ -133,6 +133,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                     Id = p.Id,
                     Name = p.Name,
                     State = p.State.State,
+					Status =p.Status,
                 })
 				.ToList();
 
@@ -160,6 +161,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                     Id = p.Id,
                     Name = p.Name,
                     State = p.State.State,
+					Status = p.Status,
                 })
 				.ToList();
 
@@ -186,6 +188,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                     Id = p.Id,
                     Name = p.Name,
                     State = p.State.State,
+					Status = p.Status,
                 })
 				.ToList();
 
@@ -212,6 +215,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                     Id = p.Id,
                     Name = p.Name,
                     State = p.State.State,
+					Status = p.Status,
                 })
 				.ToList();
 
@@ -238,6 +242,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                     Id = p.Id,
                     Name = p.Name,
                     State = p.State.State,
+					Status = p.Status,
                 })
 				.ToList();
 
@@ -267,6 +272,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                     Id = p.Id,
                     Name = p.Name,
                     State = p.State.State,
+                    Status = p.Status,
                 })
 				.Take(pageSize)
                 .ToList();

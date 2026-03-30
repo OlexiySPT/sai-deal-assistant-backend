@@ -8,6 +8,7 @@ public class AppDbContext : DbContext
 {
     public virtual DbSet<User> Users => Set<User>();
 
+    public virtual DbSet<Firm> Firms => Set<Firm>();
     public virtual DbSet<Deal> Deals => Set<Deal>();
     public virtual DbSet<ContactPerson> ContactPersons => Set<ContactPerson>();
     public virtual DbSet<DealTag> DealTags => Set<DealTag>();

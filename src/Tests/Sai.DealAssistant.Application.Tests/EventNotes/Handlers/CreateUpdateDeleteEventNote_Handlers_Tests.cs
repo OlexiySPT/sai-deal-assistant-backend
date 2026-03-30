@@ -341,6 +341,7 @@ public class CreateUpdateDeleteEventNote_Handlers_Tests : UnitTestBase
         {
             DealId = dealId,
             Date = DateTimeOffset.UtcNow,
+            Topic = "Test event topic",
             Pos = 1,
             Agenda = "Test event",
             Result = "Test result",

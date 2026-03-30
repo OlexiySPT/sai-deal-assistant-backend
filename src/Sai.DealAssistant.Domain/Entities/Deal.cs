@@ -15,6 +15,7 @@ public class Deal : BaseEntity
     public string? Industry { get; set; } = string.Empty;
     public string? Status { get; set; } = string.Empty;
 
+    public int? FirmId { get; set; }
     public int TypeId { get; set; } = 1;
     public int StateId { get; set; } = 1;
 
@@ -33,6 +34,7 @@ public class Deal : BaseEntity
     public DealType Type { get; set; } = default!;
     public DealState State { get; set; } = default!;
     public AmountType AmountType { get; set; } = default!;
+    public Firm? Firm { get; set; } = default!;
 
     public ICollection<ContactPerson> ContactPersons { get; set; }
         = new Collection<ContactPerson>();

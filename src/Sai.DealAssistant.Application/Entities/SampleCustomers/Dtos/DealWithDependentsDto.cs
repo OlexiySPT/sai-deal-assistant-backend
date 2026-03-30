@@ -1,18 +1,15 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
 using Sai.DealAssistant.Application.Entities.DealTags.Dto;
 using Sai.DealAssistant.Application.Entities.Events.Dtos;
 using Sai.DealAssistant.Domain.Entities;
 using System.Collections.ObjectModel;
 
-namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
-
 public class DealWithDependentsDto
 {
     public DateOnly StartDate { get; set; }
     public int Id { get; set; }
     public string Company { get; set; } = null!;
-    public string? Firm { get; set; } = null!;
     public string Name { get; set; } = null!;
     public string? Description { get; set; }
     public string? Url { get; set; }
@@ -20,7 +17,7 @@ public class DealWithDependentsDto
     public string? AiBriefDescription { get; set; }
     public string? Industry { get; set; }
     public string? Status { get; set; }
-    public int TypeId { get; set; } 
+    public int TypeId { get; set; }
     public int StateId { get; set; }
 
     public DateOnly? DenormDenormLastActionDate { get; set; }
@@ -41,16 +38,17 @@ public class DealWithDependentsDto
     public decimal? ExchangeRate { get; set; }
     public int? AmountTypeId { get; set; }
     public string? AmountType { get; set; }
+    public string? FirmName { get; set; }
 
     public class MappingProfile : Profile
-	{
-		public MappingProfile()
-		{
+    {
+        public MappingProfile()
+        {
             CreateMap<Deal, DealWithDependentsDto>()
                 .ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.Type!.Id))
                 .ForMember(dest => dest.StateId, opt => opt.MapFrom(src => src.State!.Id))
-                .ForMember(dest => dest.Firm, opt => opt.MapFrom(src => src.Firm != null ? src.Firm.Name : null))
-                .ForMember(dest => dest.AmountType, opt => opt.MapFrom(src => src.AmountType != null ? src.AmountType.Type : null));
-		}
-	}
+                .ForMember(dest => dest.AmountType, opt => opt.MapFrom(src => src.AmountType != null ? src.AmountType.Type : null))
+                .ForMember(dest => dest.FirmName, opt => opt.MapFrom(src => src.Firm != null ? src.Firm.Name : null));
+        }
+    }
 }

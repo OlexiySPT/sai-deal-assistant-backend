@@ -293,6 +293,7 @@ public class CreateUpdateDeleteContactPerson_Handlers_Tests : UnitTestBase
         var evt = new Event
         {
             DealId = dealId,
+            Topic ="Test Event for Contact Person",
             ContactPersonId = contactPersonId,
             Date = DateTimeOffset.UtcNow,
             Pos = 1,

@@ -42,9 +42,9 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
 
                 var events = new []
                 {
-                    new Event { Date = DateTimeOffset.UtcNow.AddDays(-1), Agenda = "A1", DealId = deal1.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id, ContactPersonId = deal1.ContactPersons.First().Id },
-                    new Event { Date = DateTimeOffset.UtcNow.AddDays(-2), Agenda = "A2", DealId = deal1.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id, ContactPersonId = deal1.ContactPersons.First().Id },
-                    new Event { Date = DateTimeOffset.UtcNow, Agenda = "B1", DealId = deal2.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id, ContactPersonId = deal2.ContactPersons.First().Id }
+                    new Event { Topic = "Event 1", Date = DateTimeOffset.UtcNow.AddDays(-1), Agenda = "A1", DealId = deal1.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id, ContactPersonId = deal1.ContactPersons.First().Id },
+                    new Event { Topic = "Event 2", Date = DateTimeOffset.UtcNow.AddDays(-2), Agenda = "A2", DealId = deal1.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id, ContactPersonId = deal1.ContactPersons.First().Id },
+                    new Event { Topic = "Event 3", Date = DateTimeOffset.UtcNow, Agenda = "B1", DealId = deal2.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id, ContactPersonId = deal2.ContactPersons.First().Id }
                 };
 
                 db.Events.AddRange(events);
@@ -70,6 +70,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
                 .Select(p => new EventListItemDto
                 {
                     Id = p.Id,
+                    Topic = p.Topic,
                     Date = p.Date,
                     Pos = p.Pos,
                     Agenda = p.Agenda,

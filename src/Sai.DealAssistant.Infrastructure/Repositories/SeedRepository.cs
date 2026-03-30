@@ -88,10 +88,17 @@ public class SeedRepository : ISeedRepository
 		_logger.LogInformation("Deal Types Enum table filled.");
 	}
 
-	public async Task SeedDealsAsync(Func<IEnumerable<Deal>> getDeals)
+	public async Task SeedDealsAsync(
+		Func<IEnumerable<Deal>> getDeals,
+		Func<Deal, IReadOnlyList<Firm>, int?>? assignFirmId = null)
 	{
 		List<Deal> existing = await _appDbContext.Deals.ToListAsync();
 		var amountTypes = await _appDbContext.AmountTypes.ToListAsync();
+
+		// Load seeded firms once so the assignment delegate can use them for every new deal
+		IReadOnlyList<Firm> seededFirms = assignFirmId is not null
+			? await _appDbContext.Firms.AsNoTracking().ToListAsync()
+			: Array.Empty<Firm>();
 
 		foreach (Deal d in getDeals())
 		{
@@ -110,6 +117,10 @@ public class SeedRepository : ISeedRepository
 					d.MinClientAmount = 1000m;
 				if (d.ProposalAmount == null)
 					d.ProposalAmount = 50000m;
+
+				// Assign firm at creation time if a delegate was provided
+				if (assignFirmId is not null)
+					d.FirmId = assignFirmId(d, seededFirms);
 
 				_appDbContext.Deals.Add(d);
 			}
@@ -139,15 +150,12 @@ public class SeedRepository : ISeedRepository
 
 	public async Task SeedEventsAsync(Func<Deal, IEnumerable<Event>> getEvents)
 	{
-		// Iterate all deals, generate deterministic events for each and upsert them.
-		var deals = await _appDbContext.Deals.Include(p=>p.ContactPersons).AsNoTracking().ToListAsync();
+		var deals = await _appDbContext.Deals.Include(p => p.ContactPersons).AsNoTracking().ToListAsync();
 
 		foreach (var deal in deals)
 		{
-			// Generate events for this deal using application-level generator
 			var generatedEvents = getEvents(deal).ToArray();
 
-			// Load existing events for the deal into memory so we can compare and update
 			var existingEvents = await _appDbContext.Events
 				.Where(e => e.DealId == deal.Id)
 				.Include(e => e.Notes)
@@ -155,21 +163,20 @@ public class SeedRepository : ISeedRepository
 
 			foreach (var gen in generatedEvents)
 			{
-				// Match by Pos
 				var match = existingEvents.FirstOrDefault(e => e.Pos == gen.Pos);
 				if (match is null)
 				{
-					// New event — ensure EF will treat this as an insert
 					_appDbContext.Events.Add(gen);
 				}
 				else
 				{
 					match.Pos = gen.Pos;
 					match.Date = gen.Date;
+					match.Topic = gen.Topic;
 					match.Agenda = gen.Agenda;
 					match.Result = gen.Result;
 					match.TypeId = gen.TypeId;
-					match.StateId = gen.StateId;					
+					match.StateId = gen.StateId;
 				}
 			}
 		}
@@ -253,6 +260,7 @@ public class SeedRepository : ISeedRepository
         await _appDbContext.DealTags.AddRangeAsync(tagsToAdd);
         await _appDbContext.SaveChangesAsync();
     }
+
     // Added: seed EventNotes for each Event (upsert by Order)
     public async Task SeedEventNotesAsync(Func<Event, IEnumerable<EventNote>> getNotesForEvent)
     {
@@ -311,4 +319,23 @@ public class SeedRepository : ISeedRepository
 
 		_logger.LogInformation("Amount Types Enum table filled.");
 	}
+
+    public async Task<IReadOnlyList<Firm>> SeedFirmsAsync(Func<IEnumerable<Firm>> getFirms)
+    {
+        var existing = await _appDbContext.Firms.ToListAsync();
+
+        foreach (var firm in getFirms())
+        {
+            if (!existing.Exists(f => string.Equals(f.Name, firm.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                _appDbContext.Firms.Add(firm);
+            }
+        }
+
+        await _appDbContext.SaveChangesAsync();
+
+        _logger.LogInformation("Firms upsert completed.");
+
+        return await _appDbContext.Firms.AsNoTracking().ToListAsync();
+    }
 }

@@ -53,8 +53,8 @@ public partial class DatabaseSeeder
 			new DealState { Id = 2, State = "Contacted" },
 			new DealState { Id = 3, State = "Tech Qualified" },
 			new DealState { Id = 4, State = "Management Qualified" },
-            new DealState { Id = 5, State = "Final Qualified" },
-            new DealState { Id = 6, State = "Won" },
+			new DealState { Id = 5, State = "Final Qualified" },
+			new DealState { Id = 6, State = "Won" },
 			new DealState { Id = 7, State = "Lost" }
 		};
 	}
@@ -92,9 +92,9 @@ public partial class DatabaseSeeder
 		};
 	}
 
-    #endregion
+	#endregion
 
-    public async Task SeedAsync()
+	public async Task SeedAsync()
 	{
 		await _seedRepository.SeedEventTypesAsync(GetEventTypes);
 		await _seedRepository.SeedEventStatusesAsync(GetEventStates);
@@ -106,18 +106,20 @@ public partial class DatabaseSeeder
 
 	public async Task SeedTestDataAsync()
 	{
-		await _seedRepository.SeedDealsAsync(GetTestDeals);
+		// Seed firms first so their IDs are available for deal assignment
+		await _seedRepository.SeedFirmsAsync(GetTestFirms);
+
+		// Seed deals and assign firms to new deals in one pass
+		await _seedRepository.SeedDealsAsync(GetTestDeals, AssignFirmToDeal);
 
 		// Seed contact reps for each deal so foreign keys are valid
 		await _seedRepository.SeedDealContactPersonsAsync(GetTestContactPersonsForDeal);
 
-        
-        await _seedRepository.SeedDealTagsAsync(GetTestDealTags);
+		await _seedRepository.SeedDealTagsAsync(GetTestDealTags);
 
-        // Seed events after deals/contact reps so foreign keys are valid
-        await _seedRepository.SeedEventsAsync(GetTestEventsForDeal);
+		// Seed events after deals/contact reps so foreign keys are valid
+		await _seedRepository.SeedEventsAsync(GetTestEventsForDeal);
 
 		await _seedRepository.SeedEventNotesAsync(GetTestEventNotesForEvent);
-
-    }
+	}
 }

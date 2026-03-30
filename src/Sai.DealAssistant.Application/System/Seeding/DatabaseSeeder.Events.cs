@@ -7,94 +7,97 @@ namespace Sai.DealAssistant.Application.System.Seeding;
 public partial class DatabaseSeeder
 {
 	public static IEnumerable<Event> GetTestEventsForDeal(Deal deal)
-	{
-		if (deal is null) throw new ArgumentNullException(nameof(deal));
+    {
+        if (deal is null) throw new ArgumentNullException(nameof(deal));
 
-		// Deterministic seed derived from deal.Name + Id to keep events stable and uniquely dependent on the deal.
-		var seed = GetDeterministicSeed($"{deal.Name}-{deal.Id}");
-		var rnd = new Random(seed);
+        var seed = GetDeterministicSeed($"{deal.Name}-{deal.Id}");
+        var rnd = new Random(seed);
 
-		// Realistic event templates (typical sales lifecycle)
-		var agendas = new[]
-		{
-			"Kickoff / Intro call",
-			"Qualification call",
-			"Product demo",
-			"Proposal presentation",
-			"Negotiation",
-			"Contract review",
-			"Onboarding discussion",
-			"Follow-up"
-		};
+        // Realistic event templates (typical sales lifecycle)
+        var agendas = new[]
+        {
+            "Kickoff / Intro call",
+            "Qualification call",
+            "Product demo",
+            "Proposal presentation",
+            "Negotiation",
+            "Contract review",
+            "Onboarding discussion",
+            "Follow-up"
+        };
 
-		var results = new[]
-		{
-			"No decision yet",
-			"Interested — follow up",
-			"Proposal sent",
-			"Negotiation started",
-			"Won — contract signed",
-			"Lost — not a fit"
-		};
+        var topics = new[]
+        {
+            "Initial contact and discovery",
+            "Requirements gathering",
+            "Solution walkthrough",
+            "Commercial terms discussion",
+            "Scope and timeline alignment",
+            "Technical deep-dive",
+            "Contract and legal review",
+            "Post-sales handover"
+        };
 
-		// number of events: 2..7 (deterministic)
-		var count = 2 + (seed % 6);
+        var results = new[]
+        {
+            "No decision yet",
+            "Interested — follow up",
+            "Proposal sent",
+            "Negotiation started",
+            "Won — contract signed",
+            "Lost — not a fit"
+        };
 
-		// Spread events over the last 12 months for realism
-		var end = deal.CreatedAt.AddMonths(3);
-		var start = end.AddYears(-1);
+        var count = 2 + (seed % 6);
 
-		// Get contact persons that the contact-person seeder would create for this deal,
-		// so we can deterministically assign one (or none) to each generated event.
-		var contactPersons = deal.ContactPersons?.ToArray();
+        var end = deal.CreatedAt.AddMonths(3);
+        var start = end.AddYears(-1);
 
-		var events = new List<Event>(count);
+        var contactPersons = deal.ContactPersons?.ToArray();
 
-		for (var i = 0; i < count; i++)
-		{
-			// pick a date between start and now, biased so earlier events come first
-			var proportion = (double)i / Math.Max(1, count - 1);
-			var jitterDays = rnd.NextDouble() * 30.0 - 15.0; // ±15 days jitter
-			var daysSpan = (end - start).TotalDays * proportion + jitterDays;
-			var date = start.AddDays(Math.Clamp(daysSpan, 0, (end - start).TotalDays))
-			                .AddMinutes(rnd.Next(0, 24 * 60));
+        var events = new List<Event>(count);
 
-			var agendaTemplate = agendas[rnd.Next(agendas.Length)];
-			var resultTemplate = results[rnd.Next(results.Length)];
+        for (var i = 0; i < count; i++)
+        {
+            var proportion = (double)i / Math.Max(1, count - 1);
+            var jitterDays = rnd.NextDouble() * 30.0 - 15.0;
+            var daysSpan = (end - start).TotalDays * proportion + jitterDays;
+            var date = start.AddDays(Math.Clamp(daysSpan, 0, (end - start).TotalDays))
+                            .AddMinutes(rnd.Next(0, 24 * 60));
 
-			// Make agenda/result reference the deal for clarity
-			var agenda = $"{agendaTemplate} — {deal.Name}";
-			var result = $"{resultTemplate}{(resultTemplate.Contains("Proposal") || resultTemplate.Contains("contract", StringComparison.OrdinalIgnoreCase) ? $" ({deal.Name})" : string.Empty)}";
+            var agendaTemplate = agendas[rnd.Next(agendas.Length)];
+            var topicTemplate = topics[rnd.Next(topics.Length)];
+            var resultTemplate = results[rnd.Next(results.Length)];
 
-			// realistic type/state selection (ids seeded elsewhere: types 1..6, states 1..5)
-			var typeId = 1 + rnd.Next(0, 6);   // 1..6
-			var stateId = 1 + rnd.Next(0, 5);  // 1..5
+            var agenda = $"{agendaTemplate} — {deal.Name}";
+            var topic = $"{topicTemplate} — {deal.Name}";
+            var result = $"{resultTemplate}{(resultTemplate.Contains("Proposal") || resultTemplate.Contains("contract", StringComparison.OrdinalIgnoreCase) ? $" ({deal.Name})" : string.Empty)}";
 
-			// Deterministically pick a contact person for this event if any exist for the deal.
-			// Using the same rnd (seeded by deal) keeps assignment repeatable.
-			ContactPerson? chosenContact = null;
-			if (contactPersons?.Length > 0)
-			{
-				chosenContact = contactPersons[rnd.Next(contactPersons.Length)];
-			}
+            var typeId = 1 + rnd.Next(0, 6);
+            var stateId = 1 + rnd.Next(0, 5);
 
-			events.Add(new Event
-			{
-				Pos = i,
-				Date = date,
-				Agenda = agenda,
-				Result = result,
-				TypeId = typeId,
-				StateId = stateId,
-				DealId = deal.Id,
-				// Assign ContactPersonId when available; leave null otherwise.
-				ContactPersonId = chosenContact?.Id
-			});
-		}
+            ContactPerson? chosenContact = null;
+            if (contactPersons?.Length > 0)
+            {
+                chosenContact = contactPersons[rnd.Next(contactPersons.Length)];
+            }
 
-		// Return events ordered by date to make upserts predictable
-		return events.OrderBy(e => e.Date).ToArray();
-	}
+            events.Add(new Event
+            {
+                Pos = i,
+                Date = date,
+                Topic = topic,
+                Agenda = agenda,
+                Result = result,
+                TypeId = typeId,
+                StateId = stateId,
+                DealId = deal.Id,
+                ContactPersonId = chosenContact?.Id
+            });
+        }
+
+        return events.OrderBy(e => e.Date).ToArray();
+    }
 
 	private static int GetDeterministicSeed(string key)
 	{
@@ -108,3 +111,5 @@ public partial class DatabaseSeeder
 		return Math.Abs(BitConverter.ToInt32(hash, 0));
 	}
 }
+
+
