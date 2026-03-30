@@ -2,13 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.WebApi.Authorizations;
 using Sai.DealAssistant.Application;
-using Sai.DealAssistant.Application.System.Commands;
 using Sai.DealAssistant.Common.Configuration;
 using Sai.DealAssistant.Infrastructure;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.WebApi.Extensions;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Sai.DealAssistant.Application.System.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,8 +63,12 @@ using (var scope = app.Services.CreateScope())
         var db = services.GetRequiredService<AppDbContext>();
         db.Database.SetConnectionString(myConfig.MigrationConnectionString);
         db.Database.Migrate();
-        IMediator mediator = services.GetRequiredService<IMediator>();
-        mediator.Send(new SeedDatabaseCommand(app.Environment.IsDevelopment()), CancellationToken.None).Wait();
+        var seeder = services.GetRequiredService<DatabaseSeeder>();
+        await seeder.SeedAsync();
+        if (myConfig.SeedTestData)
+        {
+            await seeder.SeedTestDataAsync();
+        }
     }
     catch (Exception ex)
     {

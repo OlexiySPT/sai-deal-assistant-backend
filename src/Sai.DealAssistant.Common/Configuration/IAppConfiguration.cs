@@ -6,5 +6,7 @@
         string MigrationConnectionString { get; }
         string AllowedCorsOrigins { get; }
         int EnumTablesCacheExpitrationMins { get; }
+        int DefaultResultPageSize { get; }
+        bool SeedTestData { get; }
     }
 }

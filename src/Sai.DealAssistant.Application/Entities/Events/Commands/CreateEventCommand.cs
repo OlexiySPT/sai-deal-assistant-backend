@@ -89,7 +89,8 @@ public class CreateEventCommand : EventDto, IRequest<EventDto>
         {
             public MappingProfile()
             {
-                CreateMap<CreateEventCommand, Event>();
+                CreateMap<CreateEventCommand, Event>()
+                    .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date!.ToUniversalTime()));
             }
         }
     }
