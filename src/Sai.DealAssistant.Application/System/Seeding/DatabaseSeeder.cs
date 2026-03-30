@@ -51,10 +51,11 @@ public partial class DatabaseSeeder
 		{
 			new DealState { Id = 1, State = "New" },
 			new DealState { Id = 2, State = "Contacted" },
-			new DealState { Id = 3, State = "Qualified" },
-			new DealState { Id = 4, State = "Proposal" },
-			new DealState { Id = 5, State = "Won" },
-			new DealState { Id = 6, State = "Lost" }
+			new DealState { Id = 3, State = "Tech Qualified" },
+			new DealState { Id = 4, State = "Management Qualified" },
+            new DealState { Id = 5, State = "Final Qualified" },
+            new DealState { Id = 6, State = "Won" },
+			new DealState { Id = 7, State = "Lost" }
 		};
 	}
 
@@ -63,7 +64,7 @@ public partial class DatabaseSeeder
 		return new List<DealType>
 		{
 			new DealType { Id = 1, Type = "One-time Service" },
-			new DealType { Id = 2, Type = "Series" },
+			new DealType { Id = 2, Type = "Short-term Contract" },
 			new DealType { Id = 3, Type = "Long-time Collaboration" }
 		};
 	}

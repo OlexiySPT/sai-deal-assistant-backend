@@ -45,7 +45,7 @@ public class DealWithDependentsDto
 	{
 		public MappingProfile()
 		{
-			CreateMap<Deal, DealWithDependentsDto>()
+            CreateMap<Deal, DealWithDependentsDto>()
                 .ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.Type!.Id))
                 .ForMember(dest => dest.StateId, opt => opt.MapFrom(src => src.State!.Id))
                 .ForMember(dest => dest.AmountType, opt => opt.MapFrom(src => src.AmountType != null ? src.AmountType.Type : null));
