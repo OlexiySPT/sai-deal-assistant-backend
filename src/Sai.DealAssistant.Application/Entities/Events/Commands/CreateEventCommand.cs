@@ -58,6 +58,10 @@ public class CreateEventCommand : EventDto, IRequest<EventDto>
             RuleFor(c => c.Date)
                 .NotEmpty()
                 .WithMessage("Date must be provided.");
+
+            RuleFor(c => c.Topic)
+                .NotEmpty()
+                .WithMessage("Topic must be provided.");
         }
     }
 

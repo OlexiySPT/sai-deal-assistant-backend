@@ -9,7 +9,7 @@ namespace Sai.DealAssistant.Application.Tests.General.Commands.Validators
         [Fact]
         public void Validator_NotNull_Fails()
         {
-            var command = new UpdateDateFieldCommand
+            var command = new UpdateDateTimeOffsetFieldCommand
             {
                 Entity = "Deal",
                 Field = "CreatedAt",
@@ -18,7 +18,7 @@ namespace Sai.DealAssistant.Application.Tests.General.Commands.Validators
                 NotNull = true
             };
 
-            var validator = new UpdateDateFieldCommand.Validator();
+            var validator = new UpdateDateTimeOffsetFieldCommand.Validator();
             var validationResult = validator.Validate(command);
             Assert.False(validationResult.IsValid);
             Assert.Contains(validationResult.Errors, e => e.ErrorMessage.Contains("Value must not be null."));
@@ -27,7 +27,7 @@ namespace Sai.DealAssistant.Application.Tests.General.Commands.Validators
         [Fact]
         public void Validator_Valid_Passes()
         {
-            var command = new UpdateDateFieldCommand
+            var command = new UpdateDateTimeOffsetFieldCommand
             {
                 Entity = "Deal",
                 Field = "CreatedAt",
@@ -36,7 +36,7 @@ namespace Sai.DealAssistant.Application.Tests.General.Commands.Validators
                 NotNull = true
             };
 
-            var validator = new UpdateDateFieldCommand.Validator();
+            var validator = new UpdateDateTimeOffsetFieldCommand.Validator();
             var validationResult = validator.Validate(command);
             Assert.True(validationResult.IsValid);
         }

@@ -72,11 +72,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
                     State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
                 })
 				.Take(pageSize)
 				.ToList();
@@ -106,11 +102,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
                     State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
                 })
 				.Take(pageSize)
                 .ToList();
@@ -140,11 +132,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
                     State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
                 })
 				.ToList();
 
@@ -171,11 +159,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
                     State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
                 })
 				.ToList();
 
@@ -201,11 +185,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
                     State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
                 })
 				.ToList();
 
@@ -231,11 +211,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
                     State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
                 })
 				.ToList();
 
@@ -261,11 +237,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
                     State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
                 })
 				.ToList();
 
@@ -294,11 +266,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
                     State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
                 })
 				.Take(pageSize)
                 .ToList();

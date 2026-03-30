@@ -29,7 +29,7 @@ namespace Sai.DealAssistant.Application.Tests.General.Commands.Handlers
         {
             var deal = DbContext.Deals.First();
             var newDate = DateTimeOffset.UtcNow;
-            var command = new UpdateDateFieldCommand
+            var command = new UpdateDateTimeOffsetFieldCommand
             {
                 Entity = "Deal",
                 Field = "CreatedAt",
@@ -38,7 +38,7 @@ namespace Sai.DealAssistant.Application.Tests.General.Commands.Handlers
                 NotNull = true
             };
 
-            var handler = new UpdateDateFieldCommand.Handler(_repo);
+            var handler = new UpdateDateTimeOffsetFieldCommand.Handler(_repo);
             var result = await handler.Handle(command, CancellationToken.None);
 
             Assert.Equal(newDate, result);
@@ -49,7 +49,7 @@ namespace Sai.DealAssistant.Application.Tests.General.Commands.Handlers
         [Fact]
         public async Task Handler_TableNotExists_Throws()
         {
-            var command = new UpdateDateFieldCommand
+            var command = new UpdateDateTimeOffsetFieldCommand
             {
                 Entity = "NonExistingEntity",
                 Field = "CreatedAt",
@@ -58,7 +58,7 @@ namespace Sai.DealAssistant.Application.Tests.General.Commands.Handlers
                 NotNull = false
             };
 
-            var handler = new UpdateDateFieldCommand.Handler(_repo);
+            var handler = new UpdateDateTimeOffsetFieldCommand.Handler(_repo);
             await Assert.ThrowsAsync<TableNotExistsException>(
                 () => handler.Handle(command, CancellationToken.None));
         }
@@ -67,7 +67,7 @@ namespace Sai.DealAssistant.Application.Tests.General.Commands.Handlers
         public async Task Handler_ColumnNotExists_Throws()
         {
             var deal = DbContext.Deals.First();
-            var command = new UpdateDateFieldCommand
+            var command = new UpdateDateTimeOffsetFieldCommand
             {
                 Entity = "Deal",
                 Field = "NonExistingField",
@@ -76,7 +76,7 @@ namespace Sai.DealAssistant.Application.Tests.General.Commands.Handlers
                 NotNull = false
             };
 
-            var handler = new UpdateDateFieldCommand.Handler(_repo);
+            var handler = new UpdateDateTimeOffsetFieldCommand.Handler(_repo);
             await Assert.ThrowsAsync<ColumnNotExistsException>(
                 () => handler.Handle(command, CancellationToken.None));
         }
@@ -84,7 +84,7 @@ namespace Sai.DealAssistant.Application.Tests.General.Commands.Handlers
         [Fact]
         public async Task Handler_EntityNotFound_ThrowsNotFoundExceptionOverride()
         {
-            var command = new UpdateDateFieldCommand
+            var command = new UpdateDateTimeOffsetFieldCommand
             {
                 Entity = "Deal",
                 Field = "CreatedAt",
@@ -93,7 +93,7 @@ namespace Sai.DealAssistant.Application.Tests.General.Commands.Handlers
                 NotNull = false
             };
 
-            var handler = new UpdateDateFieldCommand.Handler(_repo);
+            var handler = new UpdateDateTimeOffsetFieldCommand.Handler(_repo);
             await Assert.ThrowsAsync<NotFoundExceptionOverride>(
                 () => handler.Handle(command, CancellationToken.None));
         }

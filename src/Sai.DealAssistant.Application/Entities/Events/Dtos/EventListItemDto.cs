@@ -7,6 +7,7 @@ public class EventListItemDto
 {
     public int Id { get; set; }
     public DateTimeOffset Date { get; set; }
+    public string Topic { get; set; }
     public string Type { get; set; } = default!;
     public string? ContactPerson { get; set; }
     public string State { get; set; } = default!;
