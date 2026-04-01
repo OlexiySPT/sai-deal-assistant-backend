@@ -33,11 +33,11 @@ public class CreateUpdateDeleteContactPerson_Handlers_Tests : UnitTestBase
     public async Task Create_Handler_ReturnsDto_OnSuccess()
     {
         // Arrange
-        var dealId = CreateTestDeal();
+        var firmId = CreateTestFirm();
 
         var cmd = new CreateContactPersonCommand
         {
-            DealId = dealId,
+            FirmId = firmId,
             Name = "New Rep",
             Email = "new@example.com",
             Phone = "+1-555-0100",
@@ -62,18 +62,18 @@ public class CreateUpdateDeleteContactPerson_Handlers_Tests : UnitTestBase
         createdContactPerson.Should().NotBeNull();
         createdContactPerson!.Name.Should().Be("New Rep");
         createdContactPerson.Email.Should().Be("new@example.com");
-        createdContactPerson.DealId.Should().Be(dealId);
+        createdContactPerson.FirmId.Should().Be(firmId);
     }
 
     [Fact]
     public async Task Create_Handler_CreatesMinimalContactPerson_OnSuccess()
     {
         // Arrange
-        var dealId = CreateTestDeal();
+        var firmId = CreateTestFirm();
 
         var cmd = new CreateContactPersonCommand
         {
-            DealId = dealId,
+            FirmId = firmId,
             Name = "Minimal Contact"
         };
 
@@ -89,15 +89,15 @@ public class CreateUpdateDeleteContactPerson_Handlers_Tests : UnitTestBase
         var createdContactPerson = await DbContext.ContactPersons.FirstOrDefaultAsync(cp => cp.Id == result.Id);
         createdContactPerson.Should().NotBeNull();
         createdContactPerson!.Name.Should().Be("Minimal Contact");
-        createdContactPerson.DealId.Should().Be(dealId);
+        createdContactPerson.FirmId.Should().Be(firmId);
     }
 
     [Fact]
     public async Task Update_Handler_ReturnsDto_OnSuccess()
     {
         // Arrange
-        var dealId = CreateTestDeal();
-        var contactPersonId = CreateTestContactPerson(dealId, "Original Name", "original@example.com");
+        var firmId = CreateTestFirm();
+        var contactPersonId = CreateTestContactPerson(firmId, "Original Name", "original@example.com");
 
         // Clear change tracker to avoid tracking conflicts
         DbContext.ChangeTracker.Clear();
@@ -135,7 +135,6 @@ public class CreateUpdateDeleteContactPerson_Handlers_Tests : UnitTestBase
     public async Task Update_Handler_ThrowsNotFound_WhenUpdateReturnsNull()
     {
         // Arrange
-        var dealId = CreateTestDeal();
         int nonExistentContactPersonId = 999999;
 
         var cmd = new UpdateContactPersonCommand
@@ -153,8 +152,8 @@ public class CreateUpdateDeleteContactPerson_Handlers_Tests : UnitTestBase
     public async Task Update_Handler_UpdatesPartialProperties_OnSuccess()
     {
         // Arrange
-        var dealId = CreateTestDeal();
-        var contactPersonId = CreateTestContactPerson(dealId, "Original Name", "original@example.com");
+        var firmId = CreateTestFirm();
+        var contactPersonId = CreateTestContactPerson(firmId, "Original Name", "original@example.com");
 
         // Clear change tracker to avoid tracking conflicts
         DbContext.ChangeTracker.Clear();
@@ -187,8 +186,8 @@ public class CreateUpdateDeleteContactPerson_Handlers_Tests : UnitTestBase
     public async Task Delete_Handler_ReturnsDto_OnSuccess()
     {
         // Arrange
-        var dealId = CreateTestDeal();
-        var contactPersonId = CreateTestContactPerson(dealId, "To Delete", "delete@example.com");
+        var firmId = CreateTestFirm();
+        var contactPersonId = CreateTestContactPerson(firmId, "To Delete", "delete@example.com");
 
         // Act
         var result = await _deleteHandler.Handle(new DeleteContactPersonCommand(contactPersonId), CancellationToken.None);
@@ -219,9 +218,10 @@ public class CreateUpdateDeleteContactPerson_Handlers_Tests : UnitTestBase
     public async Task Delete_Handler_DeletesContactPersonWithEvents_Successfully()
     {
         // Arrange
+        var firmId = CreateTestFirm();
+        var contactPersonId = CreateTestContactPerson(firmId, "Contact with Events", "events@example.com");
         var dealId = CreateTestDeal();
-        var contactPersonId = CreateTestContactPerson(dealId, "Contact with Events", "events@example.com");
-        
+
         // Create an event associated with this contact person
         CreateTestEventForContactPerson(dealId, contactPersonId);
 
@@ -243,6 +243,25 @@ public class CreateUpdateDeleteContactPerson_Handlers_Tests : UnitTestBase
     }
 
     #region Helpers
+    private int CreateTestFirm()
+    {
+        var now = DateTime.UtcNow;
+        var firmGuid = Guid.NewGuid().ToString();
+
+        var firm = new Firm
+        {
+            Name = "Test Firm " + firmGuid,
+            Description = "Test firm for contact person tests",
+            CreatedAt = now,
+            UpdatedAt = now
+        };
+
+        DbContext.Firms.Add(firm);
+        DbContext.SaveChanges();
+
+        return firm.Id;
+    }
+
     private int CreateTestDeal()
     {
         var now = DateTime.UtcNow;
@@ -264,13 +283,13 @@ public class CreateUpdateDeleteContactPerson_Handlers_Tests : UnitTestBase
         return deal.Id;
     }
 
-    private int CreateTestContactPerson(int dealId, string name, string email)
+    private int CreateTestContactPerson(int firmId, string name, string email)
     {
         var now = DateTime.UtcNow;
 
         var contactPerson = new ContactPerson
         {
-            DealId = dealId,
+            FirmId = firmId,
             Name = name,
             Email = email,
             Phone = "+1-555-0100",
@@ -293,7 +312,7 @@ public class CreateUpdateDeleteContactPerson_Handlers_Tests : UnitTestBase
         var evt = new Event
         {
             DealId = dealId,
-            Topic ="Test Event for Contact Person",
+            Topic = "Test Event for Contact Person",
             ContactPersonId = contactPersonId,
             Date = DateTimeOffset.UtcNow,
             Pos = 1,

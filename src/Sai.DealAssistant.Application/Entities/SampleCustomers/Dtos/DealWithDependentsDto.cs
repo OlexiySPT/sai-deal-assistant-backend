@@ -45,10 +45,15 @@ public class DealWithDependentsDto
         public MappingProfile()
         {
             CreateMap<Deal, DealWithDependentsDto>()
-                .ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.Type!.Id))
-                .ForMember(dest => dest.StateId, opt => opt.MapFrom(src => src.State!.Id))
-                .ForMember(dest => dest.AmountType, opt => opt.MapFrom(src => src.AmountType != null ? src.AmountType.Type : null))
-                .ForMember(dest => dest.FirmName, opt => opt.MapFrom(src => src.Firm != null ? src.Firm.Name : null));
+                .ForMember(dest => dest.TypeId,       opt => opt.MapFrom(src => src.Type!.Id))
+                .ForMember(dest => dest.StateId,      opt => opt.MapFrom(src => src.State!.Id))
+                .ForMember(dest => dest.AmountType,   opt => opt.MapFrom(src => src.AmountType != null ? src.AmountType.Type : null))
+                .ForMember(dest => dest.FirmName,     opt => opt.MapFrom(src => src.Firm != null ? src.Firm.Name : null))
+                // ContactPersons live on the Firm, not directly on Deal — map them explicitly
+                .ForMember(dest => dest.ContactPersons, opt => opt.MapFrom(src =>
+                    src.Firm != null && src.Firm.ContactPersons != null
+                        ? src.Firm.ContactPersons
+                        : new List<ContactPerson>()));
         }
     }
 }

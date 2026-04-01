@@ -33,8 +33,10 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
     public async Task Create_Handler_ReturnsDto_OnSuccess()
     {
         // Arrange
-        var dealId = CreateTestDeal();
-        var contactPersonId = CreateTestContactPerson(dealId);
+        // Deal and ContactPerson must share the same Firm for the event link to be valid
+        var firmId = CreateTestFirm();
+        var dealId = CreateTestDealWithFirm(firmId);
+        var contactPersonId = CreateTestContactPerson(firmId);
 
         var cmd = new CreateEventCommand
         {
@@ -152,8 +154,10 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
     public async Task Update_Handler_ReturnsDto_OnSuccess()
     {
         // Arrange
-        var dealId = CreateTestDeal();
-        var contactPersonId = CreateTestContactPerson(dealId);
+        // Deal and ContactPerson must share the same Firm for the event link to be valid
+        var firmId = CreateTestFirm();
+        var dealId = CreateTestDealWithFirm(firmId);
+        var contactPersonId = CreateTestContactPerson(firmId);
         var eventId = CreateTestEvent(dealId, "Original agenda", "Original result");
 
         // Clear change tracker to avoid tracking conflicts
@@ -194,7 +198,6 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
     public async Task Update_Handler_ThrowsNotFound_WhenUpdateReturnsNull()
     {
         // Arrange
-        var dealId = CreateTestDeal();
         int nonExistentEventId = 999999;
 
         var cmd = new UpdateEventCommand
@@ -251,8 +254,10 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
     public async Task Update_Handler_ClearsContactPerson_OnSuccess()
     {
         // Arrange
-        var dealId = CreateTestDeal();
-        var contactPersonId = CreateTestContactPerson(dealId);
+        // Deal and ContactPerson must share the same Firm for the initial event link to be valid
+        var firmId = CreateTestFirm();
+        var dealId = CreateTestDealWithFirm(firmId);
+        var contactPersonId = CreateTestContactPerson(firmId);
         var eventId = CreateTestEventWithContactPerson(dealId, contactPersonId);
 
         // Clear change tracker to avoid tracking conflicts
@@ -369,14 +374,34 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
     }
 
     #region Helpers
+
+    /// <summary>Creates a firm and returns its Id.</summary>
+    private int CreateTestFirm()
+    {
+        var now = DateTime.UtcNow;
+
+        var firm = new Firm
+        {
+            Name = "Test Firm " + Guid.NewGuid(),
+            Country = "USA",
+            CreatedAt = now,
+            UpdatedAt = now
+        };
+
+        DbContext.Firms.Add(firm);
+        DbContext.SaveChanges();
+
+        return firm.Id;
+    }
+
+    /// <summary>Creates a deal with no firm assigned.</summary>
     private int CreateTestDeal()
     {
         var now = DateTime.UtcNow;
-        var dealGuid = Guid.NewGuid().ToString();
 
         var deal = new Deal
         {
-            Name = "Test Deal " + dealGuid,
+            Name = "Test Deal " + Guid.NewGuid(),
             Description = "Test deal for event tests",
             TypeId = 1,
             StateId = 1,
@@ -390,13 +415,43 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
         return deal.Id;
     }
 
-    private int CreateTestContactPerson(int dealId)
+    /// <summary>
+    /// Creates a deal assigned to the given firm.
+    /// Required when an event on this deal must reference a ContactPerson,
+    /// because ContactPerson.FirmId must match Deal.FirmId.
+    /// </summary>
+    private int CreateTestDealWithFirm(int firmId)
+    {
+        var now = DateTime.UtcNow;
+
+        var deal = new Deal
+        {
+            Name = "Test Deal " + Guid.NewGuid(),
+            Description = "Test deal for event tests",
+            TypeId = 1,
+            StateId = 1,
+            FirmId = firmId,
+            CreatedAt = now,
+            UpdatedAt = now
+        };
+
+        DbContext.Deals.Add(deal);
+        DbContext.SaveChanges();
+
+        return deal.Id;
+    }
+
+    /// <summary>
+    /// Creates a contact person linked to the given firm.
+    /// Use together with CreateTestDealWithFirm(firmId) so the same firmId is shared.
+    /// </summary>
+    private int CreateTestContactPerson(int firmId)
     {
         var now = DateTime.UtcNow;
 
         var contactPerson = new ContactPerson
         {
-            DealId = dealId,
+            FirmId = firmId,
             Name = "Test Contact",
             Email = "test@example.com",
             CreatedAt = now,

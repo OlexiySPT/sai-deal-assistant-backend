@@ -11,21 +11,21 @@ namespace Sai.DealAssistant.Application.Entities.ContactPersons.Commands;
 
 public class CreateContactPersonCommand : ContactPersonDto, IRequest<ContactPersonDto>
 {
-    public int DealId { get; set; }
+    public int FirmId { get; set; }
 
     public class Validator : AbstractValidator<CreateContactPersonCommand>
     {
-        private readonly IReadRepository<Deal> _dealRepository;
+        private readonly IReadRepository<Firm> _firmRepository;
 
-        public Validator(IReadRepository<Deal> dealRepository)
+        public Validator(IReadRepository<Firm> firmRepository)
         {
-            _dealRepository = dealRepository;
+            _firmRepository = firmRepository;
 
-            RuleFor(c => c.DealId)
+            RuleFor(c => c.FirmId)
                 .GreaterThan(0)
-                .WithMessage("DealId must be greater than 0.")
-                .MustAsync(async (cmd, dealId, cToken) => await _dealRepository.FirstOrDefaultAsync(d => d.Id == dealId) != null)
-                .WithMessage(cmd => $"Deal with Id {cmd.DealId} was not found.");
+                .WithMessage("FirmId must be greater than 0.")
+                .MustAsync(async (cmd, firmId, cToken) => await _firmRepository.FirstOrDefaultAsync(f => f.Id == firmId) != null)
+                .WithMessage(cmd => $"Firm with Id {cmd.FirmId} was not found.");
 
             RuleFor(c => c.Name)
                 .NotEmpty()
@@ -75,7 +75,7 @@ public class CreateContactPersonCommand : ContactPersonDto, IRequest<ContactPers
 
             if (created == null)
             {
-                throw new NotFoundExceptionOverride(nameof(ContactPerson), request.DealId);
+                throw new NotFoundExceptionOverride(nameof(ContactPerson), request.FirmId);
             }
 
             return _mapper.Map<ContactPersonDto>(created);

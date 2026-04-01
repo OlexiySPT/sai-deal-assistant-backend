@@ -11,5 +11,8 @@ public class Firm : BaseEntity
     #region Navigation
     public ICollection<Deal> Deals { get; set; }
         = new Collection<Deal>();
+
+    public ICollection<ContactPerson> ContactPersons { get; set; }
+        = new Collection<ContactPerson>();
     #endregion
 }

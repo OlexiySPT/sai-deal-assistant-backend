@@ -19,7 +19,6 @@ public class Deal : BaseEntity
     public int TypeId { get; set; } = 1;
     public int StateId { get; set; } = 1;
 
-
     public decimal? ProposalAmount { get; set; }
     public decimal? MinClientAmount { get; set; }
     public decimal? MaxClientAmount { get; set; }
@@ -29,21 +28,16 @@ public class Deal : BaseEntity
 
     public DateTime? DenormLastActionDate { get; set; }
 
-
     #region Navigation
     public DealType Type { get; set; } = default!;
     public DealState State { get; set; } = default!;
     public AmountType AmountType { get; set; } = default!;
     public Firm? Firm { get; set; } = default!;
 
-    public ICollection<ContactPerson> ContactPersons { get; set; }
-        = new Collection<ContactPerson>();
-
     public ICollection<Event> Events { get; set; }
         = new Collection<Event>();
 
     public ICollection<DealTag> Tags { get; set; }
         = new Collection<DealTag>();
-
     #endregion
 }

@@ -32,12 +32,13 @@ public class FullDealRepository : IFullDealRepository
 		return _appDbContext.Deals
 			.Include(d => d.Type)
 			.Include(d => d.State)
-			.Include(d => d.ContactPersons)
+			.Include(d => d.Firm)
+				.ThenInclude(f => f.ContactPersons)
 			.Include(d => d.Events)
-                .ThenInclude(e => e.Notes)
+				.ThenInclude(e => e.Notes)
 				.Include(e => e.Type)
 				.Include(e => e.State)
-            .Include(d => d.Tags)
+			.Include(d => d.Tags)
 			.Include(d => d.Firm)
 			.AsNoTracking()
 			.AsQueryable();

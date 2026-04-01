@@ -38,7 +38,6 @@ public class GetDealWithDependentsQuery : IRequest<DealWithDependentsDto>
             }
             entity.Tags = [.. entity.Tags.OrderBy(p => p.Id)];
             entity.Events = [.. entity.Events.OrderByDescending(p => p.Date)];
-            entity.ContactPersons = [.. entity.ContactPersons.OrderBy(p => p.Name)];
 
             return _mapper.Map<DealWithDependentsDto>(entity);
         }

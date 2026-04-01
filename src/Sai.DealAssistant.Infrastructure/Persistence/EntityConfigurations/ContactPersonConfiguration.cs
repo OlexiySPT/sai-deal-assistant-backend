@@ -30,14 +30,14 @@ public class ContactPersonConfiguration : BaseEntityConfiguration<ContactPerson>
         builder.Property(c => c.Description)
             .HasColumnType("text");
 
-        builder.HasOne(c => c.Deal)
-            .WithMany(co => co.ContactPersons)
-            .HasForeignKey(c => c.DealId);
+        builder.HasOne(c => c.Firm)
+            .WithMany(f => f.ContactPersons)
+            .HasForeignKey(c => c.FirmId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        // Prevent reassigning Event to another Deal after insert.
-        // This will cause EF Core to ignore if code attempts to change DealId and call SaveChanges.
-        var dealIdProp = builder.Property(e => e.DealId);
-        dealIdProp.ValueGeneratedNever(); // explicit: not DB-generated
-        dealIdProp.Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+        // Prevent reassigning ContactPerson to another Firm after insert.
+        var firmIdProp = builder.Property(e => e.FirmId);
+        firmIdProp.ValueGeneratedNever(); // explicit: not DB-generated
+        firmIdProp.Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
     }
 }

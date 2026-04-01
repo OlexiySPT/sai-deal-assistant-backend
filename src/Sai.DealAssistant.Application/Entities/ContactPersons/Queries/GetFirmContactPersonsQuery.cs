@@ -6,15 +6,16 @@ using Sai.DealAssistant.Domain.Repositories.Generic;
 namespace Sai.DealAssistant.Application.Entities.ContactPersons.Queries;
 
 /// <summary>
-/// We assume this queries all contact reps for the deal
-/// Sorting and filtering will be done on the FE
-public class GetDealContactPersonsQuery : IRequest<QueryResult<ContactPersonListItemDto>>
+/// Returns all contact persons for the given firm.
+/// Sorting and filtering will be done on the FE.
+/// </summary>
+public class GetFirmContactPersonsQuery : IRequest<QueryResult<ContactPersonListItemDto>>
 {
-    public GetDealContactPersonsQuery() { }
+    public GetFirmContactPersonsQuery() { }
 
-    public int DealId { get; set; }
+    public int FirmId { get; set; }
 
-    public class Handler : IRequestHandler<GetDealContactPersonsQuery, QueryResult<ContactPersonListItemDto>>
+    public class Handler : IRequestHandler<GetFirmContactPersonsQuery, QueryResult<ContactPersonListItemDto>>
     {
         private readonly IReadRepository<ContactPerson> _repository;
 
@@ -23,9 +24,9 @@ public class GetDealContactPersonsQuery : IRequest<QueryResult<ContactPersonList
             _repository = repository;
         }
 
-        public async Task<QueryResult<ContactPersonListItemDto>> Handle(GetDealContactPersonsQuery request, CancellationToken cancellationToken)
+        public async Task<QueryResult<ContactPersonListItemDto>> Handle(GetFirmContactPersonsQuery request, CancellationToken cancellationToken)
         {
-            var qry = _repository.GetAll().Where(p => p.DealId == request.DealId).OrderBy(p => p.Name);
+            var qry = _repository.GetAll().Where(p => p.FirmId == request.FirmId).OrderBy(p => p.Name);
 
             var totalItems = await _repository.CountAsync(qry);
 

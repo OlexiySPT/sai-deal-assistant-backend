@@ -64,18 +64,15 @@ public class DeleteDealCommandHandlerTests : UnitTestBase
         
         // Verify the deal has navigation properties before deletion
         var dealBeforeDelete = await DbContext.Deals
-            .Include(d => d.ContactPersons)
             .Include(d => d.Events)
                 .ThenInclude(e => e.Notes)
             .Include(d => d.Tags)
             .FirstOrDefaultAsync(d => d.Id == dealId);
 
         dealBeforeDelete.Should().NotBeNull();
-        dealBeforeDelete!.ContactPersons.Should().HaveCount(2);
         dealBeforeDelete.Events.Should().HaveCount(2);
         dealBeforeDelete.Tags.Should().HaveCount(3);
         
-        var contactPersonIds = dealBeforeDelete.ContactPersons.Select(cp => cp.Id).ToList();
         var eventIds = dealBeforeDelete.Events.Select(e => e.Id).ToList();
         var eventNoteIds = dealBeforeDelete.Events.SelectMany(e => e.Notes).Select(n => n.Id).ToList();
         var tagIds = dealBeforeDelete.Tags.Select(t => t.Id).ToList();
@@ -90,13 +87,6 @@ public class DeleteDealCommandHandlerTests : UnitTestBase
         // Verify cascade delete worked - all related entities should be deleted
         var deletedDeal = await DbContext.Deals.FirstOrDefaultAsync(d => d.Id == dealId);
         deletedDeal.Should().BeNull();
-
-        // Verify all related entities were cascade deleted
-        foreach (var cpId in contactPersonIds)
-        {
-            var cp = await DbContext.ContactPersons.FirstOrDefaultAsync(c => c.Id == cpId);
-            cp.Should().BeNull("ContactPersons should be cascade deleted");
-        }
 
         foreach (var eventId in eventIds)
         {
@@ -157,30 +147,6 @@ public class DeleteDealCommandHandlerTests : UnitTestBase
             StateId = 1,
             CreatedAt = now,
             UpdatedAt = now,
-            // Navigation properties
-            ContactPersons = new List<ContactPerson>
-            {
-                new ContactPerson
-                {
-                    Name = "John Doe",
-                    Position = "CEO",
-                    Phone = "+1-555-0101",
-                    Email = "john.doe@example.com",
-                    Description = "Primary contact person",
-                    CreatedAt = now,
-                    UpdatedAt = now
-                },
-                new ContactPerson
-                {
-                    Name = "Jane Smith",
-                    Position = "CTO",
-                    Phone = "+1-555-0102",
-                    Email = "jane.smith@example.com",
-                    Description = "Technical decision maker",
-                    CreatedAt = now,
-                    UpdatedAt = now
-                }
-            },
             Events = new List<Event>
             {
                 new Event

@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Application.Entities.ContactPersons.Dto;
 using Sai.DealAssistant.Application.Entities.ContactPersons.Queries;
 using Sai.DealAssistant.Domain.Entities;
-using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Unit;
@@ -25,20 +24,16 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
             // Seed test data
             using (var db = CreateNewDbContext())
             {
-                var state = db.DealStates.Add(new DealState { State = "Open" });
-                var type = db.DealTypes.Add(new DealType { Type = "Standard" });
-                var amountType = db.AmountTypes.Add(new AmountType { Type = "Per Month" });
-                db.SaveChanges();
-                var deal1 = new Deal { Name = "Deal A", StateId = state.Entity.Id, TypeId = type.Entity.Id, AmountTypeId = amountType.Entity.Id };
-                var deal2 = new Deal { Name = "Deal B", StateId = state.Entity.Id, TypeId = type.Entity.Id, AmountTypeId = amountType.Entity.Id };
-                db.AddRange(deal1, deal2);
+                var firm1 = new Firm { Name = "Firm A", Country = "USA" };
+                var firm2 = new Firm { Name = "Firm B", Country = "UK" };
+                db.Firms.AddRange(firm1, firm2);
                 db.SaveChanges();
 
                 var reps = new[]
                 {
-                    new ContactPerson { Name = "Zoe", Email = "z@example.com", DealId = deal1.Id },
-                    new ContactPerson { Name = "Alice", Email = "a@example.com", DealId = deal1.Id },
-                    new ContactPerson { Name = "Bob", Email = "b@example.com", DealId = deal2.Id }
+                    new ContactPerson { Name = "Zoe",   Email = "z@example.com", FirmId = firm1.Id },
+                    new ContactPerson { Name = "Alice",  Email = "a@example.com", FirmId = firm1.Id },
+                    new ContactPerson { Name = "Bob",    Email = "b@example.com", FirmId = firm2.Id }
                 };
 
                 db.ContactPersons.AddRange(reps);
@@ -47,20 +42,20 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         }
 
         [Fact]
-        public async Task Handler_ReturnsOnlyRepsForGivenDeal_OrderedByName()
+        public async Task Handler_ReturnsOnlyRepsForGivenFirm_OrderedByName()
         {
             // Arrange
-            var handler = new GetDealContactPersonsQuery.Handler(_repo);
+            var handler = new GetFirmContactPersonsQuery.Handler(_repo);
 
-            var deal = DbContext.Deals.Include(d => d.ContactPersons).First();
-            var query = new GetDealContactPersonsQuery { DealId = deal.Id };
+            var firm = DbContext.Firms.Include(f => f.ContactPersons).First();
+            var query = new GetFirmContactPersonsQuery { FirmId = firm.Id };
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert - expected built from DbContext
             var expected = DbContext.ContactPersons
-                .Where(p => p.DealId == deal.Id)
+                .Where(p => p.FirmId == firm.Id)
                 .OrderBy(p => p.Name)
                 .Select(p => new ContactPersonListItemDto
                 {
