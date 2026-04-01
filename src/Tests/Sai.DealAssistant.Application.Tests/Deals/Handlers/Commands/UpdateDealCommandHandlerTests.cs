@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -16,12 +17,14 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
 {
     private readonly CrudRepository<Infrastructure.Persistence.AppDbContext, Deal> _repository;
     private readonly UpdateDealCommand.Handler _handler;
+    private readonly int _testFirmId;
 
     public UpdateDealCommandHandlerTests()
         : base(seedTestData: true)
     {
         _repository = new CrudRepository<Infrastructure.Persistence.AppDbContext, Deal>(DbContext);
         _handler = new UpdateDealCommand.Handler(_repository, Mapper);
+        _testFirmId = DbContext.Firms.Select(f => f.Id).FirstOrDefault();
     }
 
     [Fact]
@@ -37,13 +40,13 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         {
             Id = dealId,
             StartDate = new DateOnly(2024, 1, 1),
-            Company = "test company",
             Name = "Updated Deal Name",
             Description = "Updated description",
             TypeId = 1,
             StateId = 1,
             Industry = "Updated Industry",
-            Status = "Updated Status"
+            Status = "Updated Status",
+            FirmId = _testFirmId,
         };
 
         // Act
@@ -75,11 +78,11 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         var command = new UpdateDealCommand
         {
             StartDate = new DateOnly(2024, 1, 1),
-            Company = "test company",
             Id = nonExistentDealId,
             Name = "DoesNotExist",
             TypeId = 1,
-            StateId = 1
+            StateId = 1,
+            FirmId = _testFirmId,
         };
 
         // Act & Assert
@@ -100,13 +103,13 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         {
             Id = dealId,
             StartDate = new DateOnly(2024, 1, 1),
-            Company = "test company",
             Name = "New Name",
             Description = "Original Description", // Keep original
             TypeId = 1,
             StateId = 1,
             Industry = "New Industry",
-            Status = "Active"
+            Status = "Active",
+            FirmId = _testFirmId,
         };
 
         // Act
@@ -139,11 +142,11 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         {
             Id = dealId,
             StartDate = new DateOnly(2024, 1, 1),
-            Company = "test company",
             Name = "Deal with URL",
             Url = "https://example.com/updated-deal",
             TypeId = 1,
-            StateId = 1
+            StateId = 1,
+            FirmId = _testFirmId,
         };
 
         // Act
@@ -172,7 +175,6 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         {
             Id = dealId,
             StartDate = new DateOnly(2024, 1, 1),
-            Company = "Updated Test Company",
             Name = "Fully Updated Deal",
             Description = "Fully updated description",
             Url = "https://example.com/fully-updated",
@@ -181,7 +183,8 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
             Industry = "Healthcare",
             Status = "Completed",
             TypeId = 1,
-            StateId = 1
+            StateId = 1,
+            FirmId = _testFirmId,
         };
 
         // Act
@@ -222,13 +225,13 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
         {
             Id = dealId,
             StartDate = new DateOnly(2024, 1, 1),
-            Company ="test company",
             Name = "Deal Name",
             Description = null, // Clear description
             Industry = null,    // Clear industry
             Status = null,      // Clear status
             TypeId = 1,
-            StateId = 1
+            StateId = 1,
+            FirmId = _testFirmId,
         };
 
         // Act
@@ -264,6 +267,7 @@ public class UpdateDealCommandHandlerTests : UnitTestBase
             Status = "Active",
             TypeId = 1,
             StateId = 1,
+            FirmId = _testFirmId,
             CreatedAt = now,
             UpdatedAt = now
         };

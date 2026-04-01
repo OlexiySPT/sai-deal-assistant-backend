@@ -2,7 +2,7 @@
 using AutoMapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
-using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
+using Sai.DealAssistant.Application.Entities.Deals.Dtos;
 using Sai.DealAssistant.Application.System.Seeding;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories;

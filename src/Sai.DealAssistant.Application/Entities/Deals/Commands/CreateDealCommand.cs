@@ -2,7 +2,7 @@
 using FluentValidation;
 using MediatR;
 using Sai.DealAssistant.Application.Common.Exceptions;
-using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
+using Sai.DealAssistant.Application.Entities.Deals.Dtos;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Domain.Repositories.Generic;
@@ -30,9 +30,9 @@ namespace Sai.DealAssistant.Application.Entities.Deals.Commands;
                 .NotEmpty()
                 .NotNull();
 
-            RuleFor(c => c.Company)
-                .NotEmpty()
-                .NotNull();
+            RuleFor(c => c.FirmId)
+                .GreaterThan(0)
+                .WithMessage("FirmId must be provided.");
 
             RuleFor(c => c.StateId)
                 .MustAsync(async (cmd, stateId, cToken) => (await _dealStateCache.GetAllAsync()).Any(p => p.Id == stateId))
@@ -40,7 +40,7 @@ namespace Sai.DealAssistant.Application.Entities.Deals.Commands;
 
             RuleFor(c => c.Url)
                 .Must(url => string.IsNullOrWhiteSpace(url)
-                    || (Uri.TryCreate(url, UriKind.Absolute, out var u) && (u.Scheme == Uri.UriSchemeHttp || u.Scheme == Uri.UriSchemeHttps)))
+                    || Uri.TryCreate(url, UriKind.Absolute, out var u) && (u.Scheme == Uri.UriSchemeHttp || u.Scheme == Uri.UriSchemeHttps))
                 .WithMessage("Url must be empty or a valid absolute http(s) URL.");
         }
 		}

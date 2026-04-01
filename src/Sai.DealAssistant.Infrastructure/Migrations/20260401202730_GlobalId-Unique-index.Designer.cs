@@ -12,8 +12,8 @@ using Sai.DealAssistant.Infrastructure.Persistence;
 namespace Sai.DealAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260330015610_Topic_FieldAddedFor_Event")]
-    partial class Topic_FieldAddedFor_Event
+    [Migration("20260401202730_GlobalId-Unique-index")]
+    partial class GlobalIdUniqueindex
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,15 +40,19 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("integer");
 
-                    b.Property<int>("DealId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
                         .HasMaxLength(150)
                         .HasColumnType("varchar");
+
+                    b.Property<int>("FirmId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("GlobalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -78,7 +82,10 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DealId");
+                    b.HasIndex("FirmId");
+
+                    b.HasIndex("GlobalId")
+                        .IsUnique();
 
                     b.ToTable("ContactPersons");
                 });
@@ -101,11 +108,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.Property<int?>("AmountTypeId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Company")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("varchar");
-
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -125,9 +127,19 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.Property<decimal?>("ExchangeRateToEur")
                         .HasColumnType("numeric(18,6)");
 
+                    b.Property<int>("FirmId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("GlobalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Industry")
                         .HasMaxLength(100)
                         .HasColumnType("varchar");
+
+                    b.Property<string>("InitialLetter")
+                        .HasColumnType("text");
 
                     b.Property<decimal?>("MaxClientAmount")
                         .HasColumnType("numeric(18,2)");
@@ -176,6 +188,11 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AmountTypeId");
+
+                    b.HasIndex("FirmId");
+
+                    b.HasIndex("GlobalId")
+                        .IsUnique();
 
                     b.HasIndex("Industry")
                         .HasDatabaseName("IX_Deals_Lower90_Industry")
@@ -245,6 +262,10 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.Property<int>("DealId")
                         .HasColumnType("integer");
 
+                    b.Property<Guid>("GlobalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
                     b.Property<int>("Pos")
                         .HasColumnType("integer");
 
@@ -281,6 +302,9 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasIndex("DealId");
 
+                    b.HasIndex("GlobalId")
+                        .IsUnique();
+
                     b.HasIndex("StateId");
 
                     b.HasIndex("TypeId");
@@ -311,6 +335,58 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.HasIndex("EventId");
 
                     b.ToTable("EventNotes");
+                });
+
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Firm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("GlobalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("integer");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasDefaultValue(0u)
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GlobalId")
+                        .IsUnique();
+
+                    b.ToTable("Firms");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.AmountType", b =>
@@ -417,6 +493,10 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("integer");
 
+                    b.Property<Guid>("GlobalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -447,18 +527,21 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GlobalId")
+                        .IsUnique();
+
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ContactPerson", b =>
                 {
-                    b.HasOne("Sai.DealAssistant.Domain.Entities.Deal", "Deal")
+                    b.HasOne("Sai.DealAssistant.Domain.Entities.Firm", "Firm")
                         .WithMany("ContactPersons")
-                        .HasForeignKey("DealId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("FirmId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Deal");
+                    b.Navigation("Firm");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Deal", b =>
@@ -467,6 +550,12 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .WithMany("Deals")
                         .HasForeignKey("AmountTypeId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Sai.DealAssistant.Domain.Entities.Firm", "Firm")
+                        .WithMany("Deals")
+                        .HasForeignKey("FirmId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.DealState", "State")
                         .WithMany("Deals")
@@ -481,6 +570,8 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("AmountType");
+
+                    b.Navigation("Firm");
 
                     b.Navigation("State");
 
@@ -544,8 +635,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Deal", b =>
                 {
-                    b.Navigation("ContactPersons");
-
                     b.Navigation("Events");
 
                     b.Navigation("Tags");
@@ -554,6 +643,13 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Event", b =>
                 {
                     b.Navigation("Notes");
+                });
+
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Firm", b =>
+                {
+                    b.Navigation("ContactPersons");
+
+                    b.Navigation("Deals");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.AmountType", b =>

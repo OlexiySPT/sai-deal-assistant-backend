@@ -1,12 +1,11 @@
 ﻿using MediatR;
 using Sai.DealAssistant.Application.Common.Expressions;
-using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
+using Sai.DealAssistant.Application.Entities.Deals.Dtos;
 using Sai.DealAssistant.Common.Enums;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Repositories.Generic;
-using System.Linq.Expressions;
 
-namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
+namespace Sai.DealAssistant.Application.Entities.Deals.Queries;
 
 public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 {
@@ -18,6 +17,7 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 	public string? Description { get; set; }
 	public string? Industry { get; set; }
     public string? Status { get; set; }
+	public int? FirmId { get; set; }
     public int[]? StateIds { get; set; }
     public int[]? TypeIds { get; set; }
 
@@ -45,8 +45,9 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 			if (!string.IsNullOrWhiteSpace(request.Industry))
 			{
 				qry = qry.Where(StringSearchExpressions.CaseInsensitiveContains<Deal>(x => x.Industry!, request.Industry));
-			}
-			if (request.StateIds is not null && request.StateIds.Any())
+            }
+
+            if (request.StateIds is not null && request.StateIds.Any())
 			{
 				qry = qry.Where(x => request.StateIds.Contains(x.StateId));
 			}
@@ -59,6 +60,11 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
                 qry = qry.Where(x => request.Status.StartsWith(x.Status!));
             }
 
+            if (request.FirmId.HasValue)
+            {
+                qry = qry.Where(x => x.FirmId == request.FirmId.Value);
+            }
+
             var totalItems = await _repository.CountAsync(qry);
 
 			var result = await _repository.SelectPageAsync(
@@ -67,7 +73,6 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 				{
 					Id = p.Id,
 					Name = p.Name,
-					Company = p.Company,
 					State = p.State.State,
 					Status = p.Status
                 },

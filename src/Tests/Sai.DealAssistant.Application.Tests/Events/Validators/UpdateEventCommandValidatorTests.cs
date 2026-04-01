@@ -245,7 +245,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
             var (_, _, _, _, deal, validator) = BuildValidator(cpExistsInFirm: false);
 
             deal.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Deal, bool>>>()))
-                .ReturnsAsync(new Deal { Id = ExistingDealId, FirmId = null });
+                .ReturnsAsync(new Deal { Id = ExistingDealId, FirmId = 0 });
 
             var cmd = new UpdateEventCommand
             {

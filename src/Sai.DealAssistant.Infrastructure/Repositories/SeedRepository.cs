@@ -120,7 +120,7 @@ public class SeedRepository : ISeedRepository
 
                 // Assign firm at creation time if a delegate was provided
                 if (assignFirmId is not null)
-                    d.FirmId = assignFirmId(d, seededFirms);
+                    d.FirmId = assignFirmId(d, seededFirms) ?? 0;
 
                 _appDbContext.Deals.Add(d);
             }

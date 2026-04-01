@@ -16,6 +16,19 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 .Annotation("Npgsql:PostgresExtension:citext", ",,");
 
             migrationBuilder.CreateTable(
+                name: "AmountTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Type = table.Column<string>(type: "varchar", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AmountTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DealStates",
                 columns: table => new
                 {
@@ -68,6 +81,27 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Firms",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "varchar", maxLength: 100, nullable: false),
+                    Country = table.Column<string>(type: "varchar", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false, defaultValue: 0u),
+                    GlobalId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    CreatedBy = table.Column<int>(type: "integer", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    UpdatedBy = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Firms", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -77,6 +111,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     PasswordHash = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     Role = table.Column<string>(type: "varchar", maxLength: 50, nullable: false),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false, defaultValue: 0u),
+                    GlobalId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<int>(type: "integer", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
@@ -85,44 +120,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Deals",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "varchar", maxLength: 255, nullable: false),
-                    Description = table.Column<string>(type: "citext", nullable: true),
-                    Url = table.Column<string>(type: "varchar", maxLength: 4095, nullable: true),
-                    AiSearchInfo = table.Column<string>(type: "varchar", maxLength: 4095, nullable: true),
-                    AiBriefDescription = table.Column<string>(type: "text", nullable: true),
-                    Industry = table.Column<string>(type: "varchar", maxLength: 100, nullable: true),
-                    Status = table.Column<string>(type: "varchar", maxLength: 50, nullable: true),
-                    TypeId = table.Column<int>(type: "integer", nullable: false),
-                    StateId = table.Column<int>(type: "integer", nullable: false),
-                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false, defaultValue: 0u),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<int>(type: "integer", nullable: false),
-                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Deals", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Deals_DealStates_StateId",
-                        column: x => x.StateId,
-                        principalTable: "DealStates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Deals_DealTypes_TypeId",
-                        column: x => x.TypeId,
-                        principalTable: "DealTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -136,8 +133,9 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     Phone = table.Column<string>(type: "varchar", maxLength: 50, nullable: true),
                     Email = table.Column<string>(type: "varchar", maxLength: 150, nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    DealId = table.Column<int>(type: "integer", nullable: false),
+                    FirmId = table.Column<int>(type: "integer", nullable: false),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false, defaultValue: 0u),
+                    GlobalId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<int>(type: "integer", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
@@ -147,11 +145,72 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_ContactPersons", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ContactPersons_Deals_DealId",
-                        column: x => x.DealId,
-                        principalTable: "Deals",
+                        name: "FK_ContactPersons_Firms_FirmId",
+                        column: x => x.FirmId,
+                        principalTable: "Firms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Deals",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Name = table.Column<string>(type: "varchar", maxLength: 255, nullable: false),
+                    Description = table.Column<string>(type: "citext", nullable: true),
+                    InitialLetter = table.Column<string>(type: "text", nullable: true),
+                    Url = table.Column<string>(type: "varchar", maxLength: 4095, nullable: true),
+                    AiSearchInfo = table.Column<string>(type: "varchar", maxLength: 4095, nullable: true),
+                    AiBriefDescription = table.Column<string>(type: "text", nullable: true),
+                    Industry = table.Column<string>(type: "varchar", maxLength: 100, nullable: true),
+                    Status = table.Column<string>(type: "varchar", maxLength: 50, nullable: true),
+                    FirmId = table.Column<int>(type: "integer", nullable: false),
+                    TypeId = table.Column<int>(type: "integer", nullable: false),
+                    StateId = table.Column<int>(type: "integer", nullable: false),
+                    ProposalAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    MinClientAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    MaxClientAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    CurrencyCode = table.Column<string>(type: "varchar", maxLength: 10, nullable: true),
+                    ExchangeRateToEur = table.Column<decimal>(type: "numeric(18,6)", nullable: true),
+                    AmountTypeId = table.Column<int>(type: "integer", nullable: true),
+                    DenormLastActionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false, defaultValue: 0u),
+                    GlobalId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    CreatedBy = table.Column<int>(type: "integer", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    UpdatedBy = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Deals", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Deals_AmountTypes_AmountTypeId",
+                        column: x => x.AmountTypeId,
+                        principalTable: "AmountTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Deals_DealStates_StateId",
+                        column: x => x.StateId,
+                        principalTable: "DealStates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Deals_DealTypes_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "DealTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Deals_Firms_FirmId",
+                        column: x => x.FirmId,
+                        principalTable: "Firms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -181,6 +240,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Date = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
+                    Topic = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Pos = table.Column<int>(type: "integer", nullable: false),
                     Agenda = table.Column<string>(type: "text", nullable: true),
                     Result = table.Column<string>(type: "text", nullable: true),
@@ -189,6 +249,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     StateId = table.Column<int>(type: "integer", nullable: false),
                     ContactPersonId = table.Column<int>(type: "integer", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false, defaultValue: 0u),
+                    GlobalId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<int>(type: "integer", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
@@ -244,9 +305,19 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContactPersons_DealId",
+                name: "IX_ContactPersons_FirmId",
                 table: "ContactPersons",
-                column: "DealId");
+                column: "FirmId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Deals_AmountTypeId",
+                table: "Deals",
+                column: "AmountTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Deals_FirmId",
+                table: "Deals",
+                column: "FirmId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Deals_Lower90_Industry",
@@ -323,19 +394,25 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                 name: "ContactPersons");
 
             migrationBuilder.DropTable(
+                name: "Deals");
+
+            migrationBuilder.DropTable(
                 name: "EventStates");
 
             migrationBuilder.DropTable(
                 name: "EventTypes");
 
             migrationBuilder.DropTable(
-                name: "Deals");
+                name: "AmountTypes");
 
             migrationBuilder.DropTable(
                 name: "DealStates");
 
             migrationBuilder.DropTable(
                 name: "DealTypes");
+
+            migrationBuilder.DropTable(
+                name: "Firms");
         }
     }
 }

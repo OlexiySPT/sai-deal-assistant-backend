@@ -30,9 +30,10 @@ namespace Tests.Sai.DealAssistant.Application.Tests.EventNotes.Handlers
                 var at1 = db.AmountTypes.Add(new AmountType { Type = "Per Month" });
                 var eventtype = db.EventTypes.Add(new EventType { Name = "Meeting" });
                 var eventstate = db.EventStates.Add(new EventState { State = "Scheduled" });
+                var firm = db.Firms.Add(new Firm { Name = "Test Firm", Country = "USA" });
                 db.SaveChanges();
 
-                var deal = new Deal { Name = "Deal A", StateId = state.Entity.Id, TypeId = type.Entity.Id, AmountTypeId= at1.Entity.Id };
+                var deal = new Deal { Name = "Deal A", StateId = state.Entity.Id, TypeId = type.Entity.Id, AmountTypeId= at1.Entity.Id, FirmId = firm.Entity.Id };
                 db.Add(deal);
                 db.SaveChanges();
 

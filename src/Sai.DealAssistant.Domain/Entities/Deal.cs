@@ -7,15 +7,16 @@ public class Deal : BaseEntity
 {
     public DateOnly StartDate { get; set; }
     public string Name { get; set; } = string.Empty;
-    public string Company { get; set; } = string.Empty;
     public string? Description { get; set; } = string.Empty;
+    public string? InitialLetter { get; set; } = string.Empty;
+
     public string? Url { get; set; } = string.Empty;
     public string? AiSearchInfo { get; set; } = string.Empty;
     public string? AiBriefDescription { get; set; } = string.Empty;
     public string? Industry { get; set; } = string.Empty;
     public string? Status { get; set; } = string.Empty;
 
-    public int? FirmId { get; set; }
+    public int FirmId { get; set; }
     public int TypeId { get; set; } = 1;
     public int StateId { get; set; } = 1;
 

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Domain.Entities.Samples;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
-using SAI.DealAssistant.TestUtils.Common;
 using SAI.DealAssistant.TestUtils.Unit;
 using SAI.DealAssistant.TestUtils.Unit.GenericRepositoryTests.Persistance;
 

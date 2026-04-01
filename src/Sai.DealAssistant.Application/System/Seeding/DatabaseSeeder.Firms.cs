@@ -25,10 +25,8 @@ public partial class DatabaseSeeder
     {
         if (seededFirms.Count == 0) return null;
 
-        // Deterministically assign a firm to ~70% of deals; leave 30% without a firm.
+        // Deterministically assign a firm to every deal.
         var seed = GetDeterministicSeed($"firm-{deal.Name}");
-        if (seed % 10 < 3) return null;
-
         return seededFirms[seed % seededFirms.Count].Id;
     }
 }

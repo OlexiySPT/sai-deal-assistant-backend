@@ -45,6 +45,23 @@ public class FirmsController : BaseController
 	}
 
 	/// <summary>
+	/// Get Firm including its contact persons.
+	/// </summary>
+	/// <param name="id">FirmId.</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <response code="200">Returns Firm with its contact persons.</response>
+	/// <response code="404">Firm was not found.</response>
+	[HttpGet("{id}/with-dependents")]
+	[Produces(MediaTypeNames.Application.Json)]
+	[ProducesResponseType(typeof(FirmWithDependenciesDto), 200)]
+	[ProducesResponseType(404)]
+	public async Task<ActionResult<FirmWithDependenciesDto>> GetFirmWithDependents(int id, CancellationToken cancellationToken)
+	{
+		var result = await Mediator.Send(new GetFirmWithDependentsQuery(id), cancellationToken);
+		return Ok(result);
+	}
+
+	/// <summary>
 	/// Create Firm.
 	/// </summary>
 	/// <param name="command">Create Firm Request.</param>

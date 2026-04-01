@@ -18,12 +18,15 @@ public class DeleteDealCommandHandlerTests : UnitTestBase
 {
     private readonly CrudRepository<Infrastructure.Persistence.AppDbContext, Deal> _repository;
     private readonly DeleteDealCommand.Handler _handler;
+    private readonly int _testFirmId;
 
     public DeleteDealCommandHandlerTests()
         : base(seedTestData: true)
     {
         _repository = new CrudRepository<Infrastructure.Persistence.AppDbContext, Deal>(DbContext);
         _handler = new DeleteDealCommand.Handler(_repository, Mapper);
+        _testFirmId = DbContext.Firms.Select(f => f.Id).FirstOrDefault();
+
     }
 
     [Fact]
@@ -120,7 +123,8 @@ public class DeleteDealCommandHandlerTests : UnitTestBase
             TypeId = 1,
             StateId = 1,
             CreatedAt = now,
-            UpdatedAt = now
+            UpdatedAt = now,
+            FirmId = _testFirmId,
         };
 
         DbContext.Deals.Add(deal);
@@ -145,6 +149,7 @@ public class DeleteDealCommandHandlerTests : UnitTestBase
             Status = "Active",
             TypeId = 1,
             StateId = 1,
+            FirmId = _testFirmId,
             CreatedAt = now,
             UpdatedAt = now,
             Events = new List<Event>

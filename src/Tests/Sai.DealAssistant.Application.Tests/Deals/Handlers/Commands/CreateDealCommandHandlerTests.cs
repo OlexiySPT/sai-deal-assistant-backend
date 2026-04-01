@@ -5,6 +5,7 @@ using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Unit;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -15,12 +16,14 @@ public class CreateDealCommandHandlerTests : UnitTestBase
 {
     private readonly CrudRepository<Infrastructure.Persistence.AppDbContext, Deal> _repository;
     private readonly CreateDealCommand.Handler _handler;
+    private readonly int _fidmId;
 
     public CreateDealCommandHandlerTests()
         : base(seedTestData: true)
     {
         _repository = new CrudRepository<Infrastructure.Persistence.AppDbContext, Deal>(DbContext);
         _handler = new CreateDealCommand.Handler(_repository, Mapper);
+        _fidmId = DbContext.Firms.Select(f => f.Id).FirstOrDefault();
     }
 
     [Fact]
@@ -31,10 +34,10 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         {
             StartDate = new DateOnly(2024, 1, 1),
             Name = "Test Deal " + Guid.NewGuid().ToString(),
-            Company = "Test Company", // <-- Add this line
             Description = "Test deal description",
             TypeId = 1,
             StateId = 1,
+            FirmId = _fidmId, 
             Industry = "Technology",
             Status = "Active"
         };
@@ -46,7 +49,6 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         result.Should().NotBeNull();
         result.Id.Should().BeGreaterThan(0);
         result.Name.Should().Be(command.Name);
-        result.Company.Should().Be(command.Company); // <-- Add this assertion
         result.Description.Should().Be(command.Description);
         result.TypeId.Should().Be(command.TypeId);
         result.StateId.Should().Be(command.StateId);
@@ -57,7 +59,6 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         var createdDeal = await DbContext.Deals.FirstOrDefaultAsync(d => d.Id == result.Id);
         createdDeal.Should().NotBeNull();
         createdDeal!.Name.Should().Be(command.Name);
-        createdDeal.Company.Should().Be(command.Company); // <-- Add this assertion
         createdDeal.Description.Should().Be(command.Description);
     }
 
@@ -69,11 +70,11 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         {
             StartDate = new DateOnly(2024, 1, 1),
             Name = "Test Deal with URL " + Guid.NewGuid().ToString(),
-            Company = "Test Company", // <-- Add this line
             Description = "Test deal with URL",
             Url = "https://example.com/deal",
             TypeId = 1,
-            StateId = 1
+            StateId = 1,
+            FirmId  = _fidmId,
         };
 
         // Act
@@ -98,7 +99,6 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         {
             StartDate = new DateOnly(2024, 1, 1),
             Name = "Comprehensive Test Deal " + Guid.NewGuid().ToString(),
-            Company = "Comprehensive Test Company",
             Description = "Comprehensive test deal",
             Url = "https://example.com/comprehensive-deal",
             AiSearchInfo = "AI search information",
@@ -106,7 +106,8 @@ public class CreateDealCommandHandlerTests : UnitTestBase
             Industry = "Finance",
             Status = "In Progress",
             TypeId = 1,
-            StateId = 1
+            StateId = 1, 
+            FirmId = _fidmId,
         };
 
         // Act
@@ -140,9 +141,9 @@ public class CreateDealCommandHandlerTests : UnitTestBase
         {
             StartDate = new DateOnly(2024, 1, 1),
             Name = "Minimal Deal " + Guid.NewGuid().ToString(),
-            Company = "Minimal Test Company",
             TypeId = 1,
-            StateId = 1
+            StateId = 1,
+            FirmId = _fidmId,
         };
 
         // Act

@@ -237,7 +237,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Validators
         {
             // Deal has FirmId = null → validator short-circuits to false before calling ExistsAsync
             var (_, _, _, _, validator) = BuildValidator(
-                dealResult: new Deal { Id = 10, FirmId = null },
+                dealResult: new Deal { Id = 10, FirmId = 0 },
                 cpExistsInFirm: false);
 
             var cmd = new CreateEventCommand

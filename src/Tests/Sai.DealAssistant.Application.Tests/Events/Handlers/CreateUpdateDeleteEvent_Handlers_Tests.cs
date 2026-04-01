@@ -394,10 +394,11 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
         return firm.Id;
     }
 
-    /// <summary>Creates a deal with no firm assigned.</summary>
+    /// <summary>Creates a deal assigned to the first available seeded firm.</summary>
     private int CreateTestDeal()
     {
         var now = DateTime.UtcNow;
+        var firmId = DbContext.Firms.Select(f => f.Id).First();
 
         var deal = new Deal
         {
@@ -405,6 +406,7 @@ public class CreateUpdateDeleteEvent_Handlers_Tests : UnitTestBase
             Description = "Test deal for event tests",
             TypeId = 1,
             StateId = 1,
+            FirmId = firmId,
             CreatedAt = now,
             UpdatedAt = now
         };

@@ -266,6 +266,7 @@ public class CreateUpdateDeleteContactPerson_Handlers_Tests : UnitTestBase
     {
         var now = DateTime.UtcNow;
         var dealGuid = Guid.NewGuid().ToString();
+        var firmId = DbContext.Firms.Select(f => f.Id).First();
 
         var deal = new Deal
         {
@@ -273,6 +274,7 @@ public class CreateUpdateDeleteContactPerson_Handlers_Tests : UnitTestBase
             Description = "Test deal for contact person tests",
             TypeId = 1,
             StateId = 1,
+            FirmId = firmId,
             CreatedAt = now,
             UpdatedAt = now
         };

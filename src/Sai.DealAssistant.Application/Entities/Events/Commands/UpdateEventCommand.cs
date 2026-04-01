@@ -60,7 +60,7 @@ public class UpdateEventCommand : EventDto, IRequest<EventDto>
 
                     // Validate that the Deal and the ContactPerson belong to the same Firm.
                     var deal = await _dealRepository.FirstOrDefaultAsync(d => d.Id == dealId);
-                    if (deal?.FirmId is null)
+                    if (deal == null || deal.FirmId == 0)
                     {
                         return false;
                     }

@@ -34,11 +34,12 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
 			// seed event and required type/state
 			using (var db = CreateNewDbContext())
 			{
-				var dt = db.DealTypes.Add(new DealType { Type = "Standard" });
-				var ds = db.DealStates.Add(new DealState { State = "Open" });
+                var dt = db.DealTypes.Add(new DealType { Type = "Standard" });
+                var ds = db.DealStates.Add(new DealState { State = "Open" });
                 var at = db.AmountTypes.Add(new AmountType { Type = "Per Month" });
+                var firm = db.Firms.Add(new Firm { Name = "Test Firm", Country = "USA" });
                 db.SaveChanges();
-                var deal = new Deal { Name = "Test Deal", TypeId = dt.Entity.Id, StateId = ds.Entity.Id, AmountTypeId = at.Entity.Id };
+                var deal = new Deal { Name = "Test Deal", TypeId = dt.Entity.Id, StateId = ds.Entity.Id, AmountTypeId = at.Entity.Id, FirmId = firm.Entity.Id };
 				db.Deals.Add(deal);
 				db.SaveChanges();
 
