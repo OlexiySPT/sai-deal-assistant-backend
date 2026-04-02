@@ -4,6 +4,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Helpers\**" />
+    <EmbeddedResource Remove="Helpers\**" />
+    <None Remove="Helpers\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="15.1.0" />
@@ -20,9 +25,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Sai.DealAssistant.Common\Sai.DealAssistant.Common.csproj" />
     <ProjectReference Include="..\Sai.DealAssistant.Domain\Sai.DealAssistant.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Helpers\" />
   </ItemGroup>
 </Project>

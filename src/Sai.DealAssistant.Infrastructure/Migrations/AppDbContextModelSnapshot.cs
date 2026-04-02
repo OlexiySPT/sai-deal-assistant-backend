@@ -48,7 +48,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid>("GlobalId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -80,9 +79,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("FirmId");
-
-                    b.HasIndex("GlobalId")
-                        .IsUnique();
 
                     b.ToTable("ContactPersons");
                 });
@@ -128,7 +124,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid>("GlobalId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Industry")
@@ -187,9 +182,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.HasIndex("AmountTypeId");
 
                     b.HasIndex("FirmId");
-
-                    b.HasIndex("GlobalId")
-                        .IsUnique();
 
                     b.HasIndex("Industry")
                         .HasDatabaseName("IX_Deals_Lower90_Industry")
@@ -260,7 +252,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid>("GlobalId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<int>("Pos")
@@ -298,9 +289,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.HasIndex("ContactPersonId");
 
                     b.HasIndex("DealId");
-
-                    b.HasIndex("GlobalId")
-                        .IsUnique();
 
                     b.HasIndex("StateId");
 
@@ -357,7 +345,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<Guid>("GlobalId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -379,9 +366,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnName("xmin");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GlobalId")
-                        .IsUnique();
 
                     b.ToTable("Firms");
                 });
@@ -491,7 +475,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid>("GlobalId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("PasswordHash")
@@ -523,9 +506,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnName("xmin");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GlobalId")
-                        .IsUnique();
 
                     b.ToTable("Users");
                 });

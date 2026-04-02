@@ -18,14 +18,7 @@ public abstract class BaseEntityConfiguration<TEntity> : BaseNonTrackedEntityCon
         //Shadow prop for optimistic concurrency implementation
         builder.Property<uint>("xmin").IsRowVersion().HasDefaultValue(0);
 
-        builder.Property(x => x.GlobalId)
-            .HasColumnType("uuid")
-            .ValueGeneratedOnAdd()
-            .HasValueGenerator<GuidValueGenerator>()
-            .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
-
-        builder.HasIndex(x => x.GlobalId).IsUnique();
-
+      
         // Uncomment this to use soft delete via shadow property
         // and do not forget to update universal and specific repos and migrations
         //builder.Property<DateTime>("IsDeleted");

@@ -12,7 +12,7 @@ using Sai.DealAssistant.Infrastructure.Persistence;
 namespace Sai.DealAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260401192530_Initial")]
+    [Migration("20260402001312_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -51,7 +51,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid>("GlobalId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -128,7 +127,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid>("GlobalId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Industry")
@@ -257,7 +255,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid>("GlobalId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<int>("Pos")
@@ -351,7 +348,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<Guid>("GlobalId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -482,7 +478,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid>("GlobalId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("PasswordHash")

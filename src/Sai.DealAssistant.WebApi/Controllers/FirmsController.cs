@@ -30,6 +30,19 @@ public class FirmsController : BaseController
 	}
 
 	/// <summary>
+	/// Get paginated list of Firms for dropdown (Id and Name only), filtered by name starting with.
+	/// </summary>
+	/// <param name="query">Query parameters.</param>
+	/// <response code="200">Returns paginated list of Firms for dropdown.</response>
+	[HttpGet("dropdown")]
+	[Produces(MediaTypeNames.Application.Json)]
+	[ProducesResponseType(typeof(QueryResult<FirmForDropdownDto>), 200)]
+	public async Task<IActionResult> GetFirmsForDropdown([FromQuery] GetFirmsForDropdownQuery query)
+	{
+		return Ok(await Mediator.Send(query));
+	}
+
+	/// <summary>
 	/// Get Firm by key.
 	/// </summary>
 	/// <param name="id">FirmId.</param>
