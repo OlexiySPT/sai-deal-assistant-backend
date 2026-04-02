@@ -68,7 +68,7 @@ namespace Sai.DealAssistant.Application.Entities.Deals.Commands;
 
 				return _mapper.Map<DealDto>(deal);
 			}
-    }
+	}
 	public class MappingProfile : Profile
 	{
 		public MappingProfile()

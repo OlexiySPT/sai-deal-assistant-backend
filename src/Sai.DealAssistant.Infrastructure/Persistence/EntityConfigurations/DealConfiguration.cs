@@ -64,6 +64,11 @@ public class DealConfiguration : BaseEntityConfiguration<Deal>
         builder.Property(c => c.ExchangeRateToEur)
             .HasColumnType("numeric(18,6)");
 
+        builder.Property(c => c.DenormFirmName)
+            .HasColumnType("varchar")
+            .HasMaxLength(255)
+            .IsRequired();
+
         builder.Property(c => c.AmountTypeId)
             .IsRequired(false);
 

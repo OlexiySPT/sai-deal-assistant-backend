@@ -24,16 +24,17 @@ public class CrudRepository<TDbContext, TEntity> : ReadRepository<TDbContext, TE
 
 	public async Task<TEntity?> UpdateAsync(TEntity entity)
 	{
-		if (!await Table.AnyAsync(c => c.Id == entity.Id))
+		var tracked = await Table.FirstOrDefaultAsync(c => c.Id == entity.Id);
+		if (tracked == null)
 		{
 			return null;
 		}
 
-		Table.Update(entity);
+		MyDbContext.Entry(tracked).CurrentValues.SetValues(entity);
 
 		await MyDbContext.SaveChangesAsync();
 
-		return await Table.FirstOrDefaultAsync(c => c.Id == entity.Id);
+		return tracked;
 	}
 
 	public async Task<TEntity?> DeleteAsync(int id)

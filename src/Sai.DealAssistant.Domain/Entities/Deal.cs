@@ -28,6 +28,7 @@ public class Deal : BaseEntity
     public int? AmountTypeId { get; set; } = 1;
 
     public DateTime? DenormLastActionDate { get; set; }
+    public string DenormFirmName { get; set; } = string.Empty;
 
     #region Navigation
     public DealType Type { get; set; } = default!;

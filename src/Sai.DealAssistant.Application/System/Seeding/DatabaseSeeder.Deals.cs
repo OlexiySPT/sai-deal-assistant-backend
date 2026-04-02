@@ -200,6 +200,9 @@ public partial class DatabaseSeeder
             new Deal { Name = "Cloud Migration Assessment", Description = "Assess and plan cloud migration efforts", Url = "https://cloudassess.example.com", AiSearchInfo = "cloud, assessment", AiBriefDescription = "Reduce migration risks", Industry = "IT Services", Status = "Open", TypeId = 1, StateId = 1 }
         };
 
+        foreach (var deal in result.Where(d => d.StartDate == default))
+            deal.StartDate = RandomStartDate();
+
         return result;
     }
 }

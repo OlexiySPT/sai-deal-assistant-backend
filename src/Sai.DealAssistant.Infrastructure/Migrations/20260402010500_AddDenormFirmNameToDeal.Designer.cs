@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Sai.DealAssistant.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using Sai.DealAssistant.Infrastructure.Persistence;
 namespace Sai.DealAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260402010500_AddDenormFirmNameToDeal")]
+    partial class AddDenormFirmNameToDeal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,7 +83,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasIndex("FirmId");
 
-                    b.ToTable("ContactPersons", (string)null);
+                    b.ToTable("ContactPersons");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Deal", b =>
@@ -200,7 +203,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Deals", (string)null);
+                    b.ToTable("Deals");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealTag", b =>
@@ -227,7 +230,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasDatabaseName("IX_DealTagss_Lower90_Tag")
                         .HasAnnotation("Npgsql:IndexExpression", "lower(left(\"Tag\", 90))");
 
-                    b.ToTable("DealTags", (string)null);
+                    b.ToTable("DealTags");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Event", b =>
@@ -299,7 +302,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Events", (string)null);
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.EventNote", b =>
@@ -324,7 +327,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("EventNotes", (string)null);
+                    b.ToTable("EventNotes");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.Firm", b =>
@@ -372,7 +375,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Firms", (string)null);
+                    b.ToTable("Firms");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.AmountType", b =>
@@ -390,7 +393,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AmountTypes", (string)null);
+                    b.ToTable("AmountTypes");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.DealState", b =>
@@ -408,7 +411,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DealStates", (string)null);
+                    b.ToTable("DealStates");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.DealType", b =>
@@ -426,7 +429,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DealTypes", (string)null);
+                    b.ToTable("DealTypes");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.EventState", b =>
@@ -444,7 +447,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EventStates", (string)null);
+                    b.ToTable("EventStates");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ReadOnly.Enums.EventType", b =>
@@ -462,7 +465,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EventTypes", (string)null);
+                    b.ToTable("EventTypes");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.User", b =>
@@ -512,7 +515,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ContactPerson", b =>
