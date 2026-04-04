@@ -68,6 +68,10 @@ using (var scope = app.Services.CreateScope())
         if (myConfig.SeedTestData)
         {
             await seeder.SeedTestDataAsync();
+            if (myConfig.MultiplyDealsTargetRowCount > 0)
+            {
+                await seeder.MultiplyTestDataAsync(myConfig.MultiplyDealsTargetRowCount);
+            }
         }
     }
     catch (Exception ex)

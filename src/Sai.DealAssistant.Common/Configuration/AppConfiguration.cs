@@ -42,6 +42,10 @@ public class AppConfigurationFromConfigJson : IAppConfiguration
 
     bool IAppConfiguration.SeedTestData => GetBoolConfigValue("SeedTestData", false);
 
+    int IAppConfiguration.MultiplyDealsTargetRowCount => GetIntConfigValue("MultiplyDealsTargetRowCount", 0);
+
+    int IAppConfiguration.BulkSqlTimeoutSeconds => GetIntConfigValue("BulkSqlTimeoutSeconds", 900);
+
     private int GetIntConfigValue(string name, int defaultValue)
     {
         string str = _configuration[name] ?? "";

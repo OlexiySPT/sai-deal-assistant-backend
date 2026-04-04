@@ -122,4 +122,16 @@ public partial class DatabaseSeeder
 
         await _seedRepository.SeedEventNotesAsync(GetTestEventNotesForEvent);
     }
+
+    /// <summary>
+    /// Multiplies deals by cloning existing ones with randomised names/descriptions/URLs until
+    /// the Deals table contains at least <paramref name="targetRowCount"/> rows, then fills in
+    /// events, event-notes and deal-tags for every deal that does not have them yet.
+    /// </summary>
+    public async Task MultiplyTestDataAsync(int targetRowCount)
+    {
+        await _seedRepository.MultiplyFirmsAsync((int)(targetRowCount * 0.7));
+        await _seedRepository.MultiplyDealsAsync(targetRowCount);
+        await _seedRepository.MultiplyDealDependentsAsync((int)(targetRowCount * 0.7));
+    }
 }

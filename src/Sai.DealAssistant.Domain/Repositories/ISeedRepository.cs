@@ -38,4 +38,10 @@ public interface ISeedRepository
     Task SeedEventNotesAsync(Func<Event, IEnumerable<EventNote>> getNotesForEvent);
 
     Task<IReadOnlyList<Firm>> SeedFirmsAsync(Func<IEnumerable<Firm>> getFirms);
+
+    Task MultiplyFirmsAsync(int targetRowCount);
+
+    Task MultiplyDealsAsync(int targetRowCount);
+
+    Task MultiplyDealDependentsAsync(int targetRowCount);
 }

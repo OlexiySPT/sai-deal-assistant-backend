@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
+using Sai.DealAssistant.Common.Configuration;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Domain.Repositories;
@@ -11,13 +13,16 @@ public class SeedRepository : ISeedRepository
 {
     private readonly ILogger<SeedRepository> _logger;
     private readonly AppDbContext _appDbContext;
+    private readonly int _bulkSqlTimeoutSeconds;
 
     public SeedRepository(
         ILogger<SeedRepository> logger,
-        AppDbContext appDbContext)
+        AppDbContext appDbContext,
+        IAppConfiguration configuration)
     {
         _logger = logger is not null ? logger : throw new ArgumentNullException(nameof(logger));
         _appDbContext = appDbContext is not null ? appDbContext : throw new ArgumentNullException(nameof(appDbContext));
+        _bulkSqlTimeoutSeconds = configuration is not null ? configuration.BulkSqlTimeoutSeconds : throw new ArgumentNullException(nameof(configuration));
     }
 
     public async Task SeedEventTypesAsync(Func<IEnumerable<EventType>> getEventTypes)
@@ -338,4 +343,116 @@ public class SeedRepository : ISeedRepository
 
         return await _appDbContext.Firms.AsNoTracking().ToListAsync();
     }
+    #region multoplication methods for test data
+    private static readonly Lazy<string> _multiplyFirmsSql          = new(() => SeedSqlResource.Load("MultiplyFirms.sql"));
+    private static readonly Lazy<string> _multiplyDealsSql          = new(() => SeedSqlResource.Load("MultiplyDeals.sql"));
+    private static readonly Lazy<string> _multiplyContactPersonsSql = new(() => SeedSqlResource.Load("MultiplyContactPersons.sql"));
+    private static readonly Lazy<string> _multiplyEventsSql         = new(() => SeedSqlResource.Load("MultiplyEvents.sql"));
+    private static readonly Lazy<string> _multiplyEventNotesSql     = new(() => SeedSqlResource.Load("MultiplyEventNotes.sql"));
+    private static readonly Lazy<string> _multiplyDealTagsSql       = new(() => SeedSqlResource.Load("MultiplyDealTags.sql"));
+    private static readonly Lazy<string> _updateDenormFirmNameSql       = new(() => SeedSqlResource.Load("UpdateDenormFirmName.sql"));
+    private static readonly Lazy<string> _updateDenormLastActionDateSql = new(() => SeedSqlResource.Load("UpdateDenormLastActionDate.sql"));
+
+    private async Task UpdateDenormFirmNameAsync()
+        => await ExecuteBulkSqlAsync(_updateDenormFirmNameSql.Value);
+
+    private async Task UpdateDenormLastActionDateAsync()
+        => await ExecuteBulkSqlAsync(_updateDenormLastActionDateSql.Value);
+
+    private async Task ExecuteBulkSqlAsync(string sql)
+    {
+        var connection = (NpgsqlConnection)_appDbContext.Database.GetDbConnection();
+        if (connection.State != System.Data.ConnectionState.Open)
+            await connection.OpenAsync();
+
+        await using var cmd = new NpgsqlCommand(sql, connection)
+        {
+            CommandTimeout = _bulkSqlTimeoutSeconds
+        };
+        await cmd.ExecuteNonQueryAsync();
+    }
+
+    public async Task MultiplyFirmsAsync(int targetRowCount)
+    {
+        while (true)
+        {
+            var currentCount = await _appDbContext.Firms.CountAsync();
+            if (currentCount >= targetRowCount)
+            {
+                break;
+            }
+            await ExecuteBulkSqlAsync(_multiplyFirmsSql.Value);
+            await ExecuteBulkSqlAsync("analyze public.\"Firms\"");
+        }
+         _logger.LogInformation("Firms multiplied to reach target row count.");
+    }
+
+    /// <inheritdoc/>
+    public async Task MultiplyDealsAsync(int targetRowCount)
+    {
+        while (true)
+        {
+            var currentCount = await _appDbContext.Deals.CountAsync();
+            if (currentCount >= targetRowCount)
+            {
+                break;
+            }
+            await ExecuteBulkSqlAsync(_multiplyDealsSql.Value);
+            await ExecuteBulkSqlAsync("analyze public.\"Deals\"");
+        }
+        await UpdateDenormFirmNameAsync();
+    }
+
+    /// <inheritdoc/>
+    public async Task MultiplyDealDependentsAsync(int targetRowCount)
+    {
+        while (true)
+        {
+            var currentCount = await _appDbContext.ContactPersons.CountAsync();
+            if (currentCount >= targetRowCount)
+                break;
+            await ExecuteBulkSqlAsync(_multiplyContactPersonsSql.Value);
+        }
+        await ExecuteBulkSqlAsync("analyze public.\"ContactPersons\"");
+        _logger.LogInformation("ContactPersons multiplied to reach target row count.");
+
+        while (true)
+        {
+            var currentCount = await _appDbContext.Events.CountAsync();
+            if (currentCount >= targetRowCount)
+                break;
+            await ExecuteBulkSqlAsync(_multiplyEventsSql.Value);
+        }
+        await ExecuteBulkSqlAsync("analyze public.\"Events\"");
+        _logger.LogInformation("Events multiplied to reach target row count.");
+
+        while (true)
+        {
+            var currentCount = await _appDbContext.EventNotes.CountAsync();
+            if (currentCount >= targetRowCount)
+                break;
+            await ExecuteBulkSqlAsync(_multiplyEventNotesSql.Value);
+        }
+        await ExecuteBulkSqlAsync("analyze public.\"EventNotes\"");
+        _logger.LogInformation("EventNotes multiplied to reach target row count.");
+
+        while (true)
+        {
+            var currentCount = await _appDbContext.DealTags.CountAsync();
+            if (currentCount >= targetRowCount)
+                break;
+            await ExecuteBulkSqlAsync(_multiplyDealTagsSql.Value);
+        }
+        await ExecuteBulkSqlAsync("analyze public.\"DealTags\"");
+        _logger.LogInformation("DealTags multiplied to reach target row count.");
+
+        await UpdateDenormLastActionDateAsync();
+        _logger.LogInformation("DenormLastActionDate updated.");
+
+        await UpdateDenormFirmNameAsync();
+         _logger.LogInformation("DenormFirmName updated.");
+
+    }
+
+    #endregion
 }

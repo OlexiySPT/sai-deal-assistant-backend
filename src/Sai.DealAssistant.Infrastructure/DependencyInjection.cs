@@ -44,7 +44,11 @@ public static class DependencyInjection
         // Do not forget to add new specific repos here
         services.AddScoped<IFullDealRepository, FullDealRepository>();
         services.AddScoped<IFullFirmRepository, FullFirmRepository>();
-        services.AddScoped<ISeedRepository, SeedRepository>();
+        services.AddScoped<ISeedRepository, SeedRepository>(sp =>
+            new SeedRepository(
+                sp.GetRequiredService<ILogger<SeedRepository>>(),
+                sp.GetRequiredService<AppDbContext>(),
+                configuration));
         return services;
     }
 
