@@ -44,4 +44,5 @@ public interface ISeedRepository
     Task MultiplyDealsAsync(int targetRowCount);
 
     Task MultiplyDealDependentsAsync(int targetRowCount);
+    Task<bool> AnyTestDataExistsAsync();
 }

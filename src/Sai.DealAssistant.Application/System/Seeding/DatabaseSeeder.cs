@@ -1,4 +1,5 @@
-﻿using Sai.DealAssistant.Domain.Entities;
+﻿using Microsoft.Extensions.Logging;
+using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Domain.Repositories;
 
@@ -6,14 +7,14 @@ namespace Sai.DealAssistant.Application.System.Seeding;
 
 public partial class DatabaseSeeder
 {
-    //private readonly ILogger<DatabaseSeeder> _logger;
+    private readonly ILogger<DatabaseSeeder> _logger;
     private readonly ISeedRepository _seedRepository;
 
     public DatabaseSeeder(
-        //ILogger<DatabaseSeeder> logger,
+        ILogger<DatabaseSeeder> logger,
         ISeedRepository seedRepository)
     {
-        //_logger = logger;
+        _logger = logger;
         _seedRepository = seedRepository;
     }
 
@@ -106,6 +107,11 @@ public partial class DatabaseSeeder
 
     public async Task SeedTestDataAsync()
     {
+        if(await _seedRepository.AnyTestDataExistsAsync())
+        {
+            _logger.LogInformation("Test data already exists in the database. Skipping seeding of test data.");
+            return;
+        }
         // Seed firms first so their IDs are available for deal and contact person assignment
         await _seedRepository.SeedFirmsAsync(GetTestFirms);
 

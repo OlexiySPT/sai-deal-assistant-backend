@@ -454,5 +454,10 @@ public class SeedRepository : ISeedRepository
 
     }
 
+    public async Task<bool> AnyTestDataExistsAsync()
+    {
+        return await _appDbContext.Firms.AnyAsync();
+    }
+
     #endregion
 }
