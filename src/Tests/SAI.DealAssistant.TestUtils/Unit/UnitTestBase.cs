@@ -89,13 +89,13 @@ namespace SAI.DealAssistant.TestUtils.Unit
 			using (var seedDbContext = AppDbContextUtil_SQLiteDb.CreateAppDbContext(SqliteDbConnection))
 			{
 				var seedRepo = new SeedRepository(LoggerFactory.CreateLogger<SeedRepository>(), seedDbContext, new TestAppConfiguration());
-				var databaseSeeder = new DatabaseSeeder(seedRepo);
-                await databaseSeeder.SeedAsync();
+				var databaseSeeder = new DatabaseSeeder(LoggerFactory.CreateLogger<DatabaseSeeder>(), seedRepo);
+				await databaseSeeder.SeedAsync();
 				if(seedTestData)
 				{
 					await databaseSeeder.SeedTestDataAsync();
 				}
-                seedDbContext.SaveChanges();
+				seedDbContext.SaveChanges();
 			}
 		}
 

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Sai.DealAssistant.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using Sai.DealAssistant.Infrastructure.Persistence;
 namespace Sai.DealAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260405191247_GlobalId_removed_and_SourceId_Added")]
+    partial class GlobalId_removed_and_SourceId_Added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -371,8 +374,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnName("xmin");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name");
 
                     b.ToTable("Firms");
                 });

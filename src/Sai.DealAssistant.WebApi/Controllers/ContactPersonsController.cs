@@ -43,7 +43,7 @@ public class ContactPersonsController : BaseController
     public async Task<IActionResult> CreateFirmContactPerson([FromBody] CreateContactPersonCommand command)
     {
         ContactPersonDto result = await Mediator.Send(command);
-        return CreatedAtAction("GetDealContactRep", new { id = $"{result.Id}" }, result);
+        return CreatedAtAction("GetFirmContactPerson", new { id = $"{result.Id}" }, result);
     }
 
     [HttpPut("{id}")]
