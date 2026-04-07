@@ -13,11 +13,11 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 		: base()
 	{
 	}
+	public string? FirmName { get; set; }
 	public string? Name { get; set; }
 	public string? Description { get; set; }
 	public string? Industry { get; set; }
     public string? Status { get; set; }
-	public int? FirmId { get; set; }
     public int[]? StateIds { get; set; }
     public int[]? TypeIds { get; set; }
 
@@ -34,7 +34,12 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 			GetDealListQuery request, CancellationToken cancellationToken)
 		{
 			var qry = _repository.GetAll();
-			if (!string.IsNullOrWhiteSpace(request.Name))
+
+            if (!string.IsNullOrWhiteSpace(request.FirmName))
+            {
+                qry = qry.Where(StringSearchExpressions.CaseInsensitiveContains<Deal>(x => x.DenormFirmName!, request.FirmName));
+            }
+            if (!string.IsNullOrWhiteSpace(request.Name))
             {
                 qry = qry.Where(StringSearchExpressions.CaseInsensitiveContains<Deal>(x => x.Name!, request.Name));
             }
@@ -60,11 +65,6 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
                 qry = qry.Where(x => request.Status.StartsWith(x.Status!));
             }
 
-            if (request.FirmId.HasValue)
-            {
-                qry = qry.Where(x => x.FirmId == request.FirmId.Value);
-            }
-
             var totalItems = await _repository.CountAsync(qry);
 
 			var result = await _repository.SelectPageAsync(
@@ -73,6 +73,8 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 				{
 					Id = p.Id,
 					Name = p.Name,
+					FirmName = p.DenormFirmName,
+					LastActionDate = p.DenormLastActionDate,
 					State = p.State.State,
 					Status = p.Status
                 },

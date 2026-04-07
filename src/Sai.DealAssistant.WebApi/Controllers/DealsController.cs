@@ -42,7 +42,22 @@ namespace Sai.DealAssistant.WebApi.Controllers
 		public async Task<IActionResult> GetDeal(int id)
 		{
 			return Ok(await Mediator.Send(new GetDealQuery(id)));
-        }
+		}
+
+		/// <summary>
+		/// Get Deal list item by key.
+		/// </summary>
+		/// <param name="id">DealId.</param>
+		/// <response code="200">Returns Deal list item.</response>
+		/// <response code="404">Deal was not found.</response>
+		[HttpGet("{id}/list-item")]
+		[Produces(MediaTypeNames.Application.Json)]
+		[ProducesResponseType(typeof(DealListItemDto), 200)]
+		[ProducesResponseType(404)]
+		public async Task<IActionResult> GetDealListItem(int id)
+		{
+			return Ok(await Mediator.Send(new GetDealListItemQuery(id)));
+		}
 
         /// <summary>
         /// Get a deal including its dependent entities (type, state, contact persons, events, notes, tags).

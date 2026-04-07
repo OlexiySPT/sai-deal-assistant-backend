@@ -83,6 +83,10 @@ public class DealConfiguration : BaseEntityConfiguration<Deal>
             .OnDelete(DeleteBehavior.Restrict);
 
         // Indexes
+        builder.HasIndex(b => b.DenormFirmName)
+            .HasDatabaseName("IX_Deals_Lower90_DenormFirmName")
+            .HasAnnotation("Npgsql:IndexExpression", "lower(left(\"DenormFirmName\", 90))");
+
         builder.HasIndex(b => b.Name)
             .HasDatabaseName("IX_Deals_Lower90_Name")
             .HasAnnotation("Npgsql:IndexExpression", "lower(left(\"Name\", 90))");
