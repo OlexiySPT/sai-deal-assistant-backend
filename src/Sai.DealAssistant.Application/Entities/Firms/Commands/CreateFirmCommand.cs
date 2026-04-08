@@ -12,13 +12,20 @@ public class CreateFirmCommand : FirmDto, IRequest<FirmDto>
 {
     public class Validator : AbstractValidator<CreateFirmCommand>
     {
-        public Validator()
+        private readonly IReadRepository<Firm> _firmRepository;
+
+        public Validator(IReadRepository<Firm> firmRepository)
         {
+            _firmRepository = firmRepository;
+
             RuleFor(c => c.Name)
                 .NotEmpty()
                 .WithMessage("Name must be provided.")
                 .MaximumLength(100)
-                .WithMessage("Name must not exceed 100 characters.");
+                .WithMessage("Name must not exceed 100 characters.")
+                .MustAsync(async (cmd, name, cToken) =>
+                    !await _firmRepository.ExistsAsync(f => f.Name.ToLower() == name.ToLower()))
+                .WithMessage(cmd => $"Firm with name '{cmd.Name}' already exists.");
 
             RuleFor(c => c.Country)
                 .NotEmpty()

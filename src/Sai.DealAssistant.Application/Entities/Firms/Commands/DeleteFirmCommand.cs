@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Sai.DealAssistant.Application.Common.Exceptions;
 using Sai.DealAssistant.Application.Entities.Firms.Dtos;
@@ -15,6 +16,21 @@ public class DeleteFirmCommand : IRequest<FirmDto>
     }
 
     public int Id { get; set; }
+
+    public class Validator : AbstractValidator<DeleteFirmCommand>
+    {
+        private readonly IReadRepository<Deal> _dealRepository;
+
+        public Validator(IReadRepository<Deal> dealRepository)
+        {
+            _dealRepository = dealRepository;
+
+            RuleFor(c => c.Id)
+                .MustAsync(async (id, cToken) =>
+                    !await _dealRepository.ExistsAsync(d => d.FirmId == id))
+                .WithMessage(cmd => $"Firm with Id {cmd.Id} cannot be deleted because it has associated Deals.");
+        }
+    }
 
     public class Handler : IRequestHandler<DeleteFirmCommand, FirmDto>
     {
