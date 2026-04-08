@@ -15,7 +15,10 @@ public class FirmConfiguration : BaseEntityConfiguration<Firm>
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.HasIndex(f => f.Name);
+        builder.HasIndex(f => f.Name)
+            .IsUnique()
+            .HasDatabaseName("IX_Firms_Unique_Lower_Name")
+            .HasAnnotation("Npgsql:IndexExpression", "lower(\"Name\")");
 
         builder.Property(f => f.Country)
             .HasColumnType("varchar")

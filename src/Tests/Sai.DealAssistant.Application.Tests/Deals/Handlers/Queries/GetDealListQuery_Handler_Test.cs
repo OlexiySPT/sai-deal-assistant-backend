@@ -70,12 +70,14 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				.Include(d => d.State)
 				.Where(d => d.Name != null && d.Name.Contains(nameFragment))
 				.Select(p => new DealListItemDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    State = p.State.State,
+				{
+					Id = p.Id,
+					Name = p.Name,
+					FirmName = p.DenormFirmName,
+					LastActionDate = p.DenormLastActionDate,
+					State = p.State.State,
 					Status = p.Status,
-                })
+				})
 				.Take(pageSize)
 				.ToList();
 
@@ -101,14 +103,16 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				.Include(d => d.State)
 				.Where(d => d.Description != null && d.Description.Contains(descFragment))
 				.Select(p => new DealListItemDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    State = p.State.State,
+				{
+					Id = p.Id,
+					Name = p.Name,
+					FirmName = p.DenormFirmName,
+					LastActionDate = p.DenormLastActionDate,
+					State = p.State.State,
 					Status = p.Status,
-                })
+				})
 				.Take(pageSize)
-                .ToList();
+				.ToList();
 
 			Assert.Equal(expected.Count, result.TotalItems);
 			Assert.Equal(expected.Count, result.Items.Count);
@@ -132,12 +136,14 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				.Include(d => d.State)
 				.Where(d => d.Industry != null && d.Industry.Contains(industry))
 				.Select(p => new DealListItemDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    State = p.State.State,
+				{
+					Id = p.Id,
+					Name = p.Name,
+					FirmName = p.DenormFirmName,
+					LastActionDate = p.DenormLastActionDate,
+					State = p.State.State,
 					Status =p.Status,
-                })
+				})
 				.ToList();
 
 			Assert.Equal(expected.Count, result.TotalItems);
@@ -271,14 +277,16 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				.Include(d => d.State)
 				.Where(d => states.Contains(d.StateId))
 				.Select(p => new DealListItemDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    State = p.State.State,
-                    Status = p.Status,
-                })
+				{
+					Id = p.Id,
+					Name = p.Name,
+					FirmName = p.DenormFirmName,
+					LastActionDate = p.DenormLastActionDate,
+					State = p.State.State,
+					Status = p.Status,
+				})
 				.Take(pageSize)
-                .ToList();
+				.ToList();
 
 			Assert.Equal(expected.Count, result.TotalItems);
 			Assert.Equal(expected.Count, result.Items.Count);
