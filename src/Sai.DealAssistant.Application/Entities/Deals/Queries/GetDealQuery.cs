@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
 using Sai.DealAssistant.Application.Common.Exceptions;
-using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
+using Sai.DealAssistant.Application.Entities.Deals.Dtos;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Repositories.Generic;
 
-namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
+namespace Sai.DealAssistant.Application.Entities.Deals.Queries;
 
 public class GetDealQuery : IRequest<DealDto>
 {

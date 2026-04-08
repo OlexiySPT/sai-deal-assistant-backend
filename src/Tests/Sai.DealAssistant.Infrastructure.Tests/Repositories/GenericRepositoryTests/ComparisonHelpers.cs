@@ -1,7 +1,7 @@
 ﻿using Sai.DealAssistant.Domain.Entities.Samples;
 using Xunit;
 
-namespace SAI.DealAssistant.TestUtils.Common
+namespace Sai.DealAssistant.Infrastructure.Tests.Repositories.GenericRepositoryTests
 {
 	public static class ComparisonHelpers
 	{

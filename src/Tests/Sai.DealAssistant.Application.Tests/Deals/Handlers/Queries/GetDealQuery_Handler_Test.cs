@@ -1,9 +1,9 @@
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Sai.DealAssistant.Application.Common.Exceptions;
+using Sai.DealAssistant.Application.Entities.Deals.Dtos;
+using Sai.DealAssistant.Application.Entities.Deals.Queries;
 using Sai.DealAssistant.Application.Entities.EventNotes.Queries;
-using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
-using Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Infrastructure.Persistence;
@@ -34,7 +34,8 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				var s = new DealState { State = "New" };
 				var t = new DealType { Type = "Standard" };
                 var at = new AmountType { Type = "Per Month" };
-                db.AddRange(s, t, at);
+                var firm = new Firm { Name = "Test Firm", Country = "USA" };
+                db.AddRange(s, t, at, firm);
 				db.SaveChanges();
 
 				var deals = Enumerable.Range(1, 3).Select(i => new Deal
@@ -44,7 +45,8 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 					Industry = i % 2 == 0 ? "Software" : "Finance",
 					StateId = s.Id,
 					TypeId = t.Id,
-					AmountTypeId = at.Id
+					AmountTypeId = at.Id,
+FirmId = firm.Id
                 }).ToArray();
 
 				db.Deals.AddRange(deals);

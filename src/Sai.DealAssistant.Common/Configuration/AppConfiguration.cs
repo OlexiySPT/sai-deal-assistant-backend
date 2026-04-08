@@ -21,8 +21,6 @@ public class AppConfigurationFromConfigJson : IAppConfiguration
         }
         
         _configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables()
             .Build();
     }
@@ -42,10 +40,25 @@ public class AppConfigurationFromConfigJson : IAppConfiguration
 
     string IAppConfiguration.AllowedCorsOrigins => _configuration["AllowedCorsOrigins"] ?? string.Empty;
 
+    bool IAppConfiguration.SeedTestData => GetBoolConfigValue("SeedTestData", false);
+
+    int IAppConfiguration.MultiplyDealsTargetRowCount => GetIntConfigValue("MultiplyDealsTargetRowCount", 0);
+
+    int IAppConfiguration.BulkSqlTimeoutSeconds => GetIntConfigValue("BulkSqlTimeoutSeconds", 900);
+
     private int GetIntConfigValue(string name, int defaultValue)
     {
         string str = _configuration[name] ?? "";
         if (int.TryParse(str, out int result))
+        {
+            return result;
+        }
+        return defaultValue;
+    }
+    private bool GetBoolConfigValue(string name, bool defaultValue)
+    {
+        string str = _configuration[name] ?? "";
+        if (bool.TryParse(str, out bool result))
         {
             return result;
         }

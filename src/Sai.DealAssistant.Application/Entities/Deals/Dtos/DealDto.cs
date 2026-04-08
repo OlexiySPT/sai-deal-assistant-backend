@@ -1,16 +1,15 @@
 ﻿using AutoMapper;
 using Sai.DealAssistant.Domain.Entities;
-using Sai.DealAssistant.Domain.Entities.ReadOnly;
-using System.Collections.ObjectModel;
 
-namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
+namespace Sai.DealAssistant.Application.Entities.Deals.Dtos;
 
 public class DealDto
 {
+    public DateOnly? StartDate { get; set; }
     public int Id { get; set; }
     public string Name { get; set; } = null!;
-    public string Company { get; set; } = null!;
     public string? Description { get; set; }
+    public string? InitialLetter { get; set; }
     public string? Url { get; set; }
     public string? AiSearchInfo { get; set; }
     public string? AiBriefDescription { get; set; }
@@ -18,6 +17,7 @@ public class DealDto
     public string? Status { get; set; }
     public int TypeId { get; set; }
     public int StateId { get; set; }
+    public int FirmId { get; set; }
     public decimal? ProposalAmount { get; set; }
     public decimal? MinClientAmount { get; set; }
     public decimal? MaxClientAmount { get; set; }
@@ -31,7 +31,6 @@ public class DealDto
 		public MappingProfile()
 		{
 			CreateMap<Deal, DealDto>()
-                .ForMember(dest => dest.Company, opt => opt.MapFrom(src => src.Company))
                 .ForMember(dest => dest.AmountTypeId, opt => opt.MapFrom(src => src.AmountTypeId))
                 .ReverseMap();
 		}

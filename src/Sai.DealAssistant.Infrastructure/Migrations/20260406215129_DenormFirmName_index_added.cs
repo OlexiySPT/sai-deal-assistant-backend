@@ -5,24 +5,22 @@
 namespace Sai.DealAssistant.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Deal_Company_field_added : Migration
+    public partial class DenormFirmName_index_added : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Company",
+            migrationBuilder.CreateIndex(
+                name: "IX_Deals_Lower90_DenormFirmName",
                 table: "Deals",
-                type: "varchar",
-                maxLength: 64,
-                nullable: false);
+                column: "DenormFirmName");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Company",
+            migrationBuilder.DropIndex(
+                name: "IX_Deals_Lower90_DenormFirmName",
                 table: "Deals");
         }
     }

@@ -8,6 +8,6 @@ public class ContactPerson : BaseEntity
     public string? Email { get; set; } = string.Empty;
     public string? Description { get; set; } = string.Empty;
 
-    public int DealId { get; set; }
-    public Deal Deal { get; set; } = default!;
+    public int FirmId { get; set; }
+    public Firm Firm { get; set; } = default!;
 }

@@ -1,12 +1,11 @@
 ﻿using MediatR;
 using Sai.DealAssistant.Application.Common.Expressions;
-using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
+using Sai.DealAssistant.Application.Entities.Deals.Dtos;
 using Sai.DealAssistant.Common.Enums;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Repositories.Generic;
-using System.Linq.Expressions;
 
-namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
+namespace Sai.DealAssistant.Application.Entities.Deals.Queries;
 
 public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 {
@@ -14,6 +13,7 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 		: base()
 	{
 	}
+	public string? FirmName { get; set; }
 	public string? Name { get; set; }
 	public string? Description { get; set; }
 	public string? Industry { get; set; }
@@ -34,7 +34,12 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 			GetDealListQuery request, CancellationToken cancellationToken)
 		{
 			var qry = _repository.GetAll();
-			if (!string.IsNullOrWhiteSpace(request.Name))
+
+            if (!string.IsNullOrWhiteSpace(request.FirmName))
+            {
+                qry = qry.Where(StringSearchExpressions.CaseInsensitiveContains<Deal>(x => x.DenormFirmName!, request.FirmName));
+            }
+            if (!string.IsNullOrWhiteSpace(request.Name))
             {
                 qry = qry.Where(StringSearchExpressions.CaseInsensitiveContains<Deal>(x => x.Name!, request.Name));
             }
@@ -45,8 +50,9 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 			if (!string.IsNullOrWhiteSpace(request.Industry))
 			{
 				qry = qry.Where(StringSearchExpressions.CaseInsensitiveContains<Deal>(x => x.Industry!, request.Industry));
-			}
-			if (request.StateIds is not null && request.StateIds.Any())
+            }
+
+            if (request.StateIds is not null && request.StateIds.Any())
 			{
 				qry = qry.Where(x => request.StateIds.Contains(x.StateId));
 			}
@@ -67,11 +73,10 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 				{
 					Id = p.Id,
 					Name = p.Name,
-					Description = p.Description,
-					Industry = p.Industry,
+					FirmName = p.DenormFirmName,
+					LastActionDate = p.DenormLastActionDate,
 					State = p.State.State,
-					Type = p.Type.Type,
-					CreatedAt = p.CreatedAt,
+					Status = p.Status
                 },
 				request.Page,
 				request.PageSize,

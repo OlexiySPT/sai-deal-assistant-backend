@@ -14,6 +14,10 @@ public class EventConfiguration : BaseEntityConfiguration<Event>
         builder.Property(e => e.Date)
             .HasColumnType("timestamptz");
 
+        builder.Property(e => e.Topic)
+            
+            .HasMaxLength(200);
+
         builder.Property(e => e.Agenda)
             .HasColumnType("text");
 

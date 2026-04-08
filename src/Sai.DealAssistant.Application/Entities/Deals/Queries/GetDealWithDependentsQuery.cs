@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
 using Sai.DealAssistant.Application.Common.Exceptions;
-using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
+using Sai.DealAssistant.Application.Entities.Deals.Dtos;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Repositories;
 
-namespace Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
+namespace Sai.DealAssistant.Application.Entities.Deals.Queries;
 
 public class GetDealWithDependentsQuery : IRequest<DealWithDependentsDto>
 {
@@ -37,6 +37,7 @@ public class GetDealWithDependentsQuery : IRequest<DealWithDependentsDto>
                 throw new NotFoundExceptionOverride(nameof(Deal), request.Id);
             }
             entity.Tags = [.. entity.Tags.OrderBy(p => p.Id)];
+            entity.Events = [.. entity.Events.OrderByDescending(p => p.Date)];
 
             return _mapper.Map<DealWithDependentsDto>(entity);
         }

@@ -1,7 +1,6 @@
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
-using Sai.DealAssistant.Application.Entities.SampleCustomers.Queries;
+using Sai.DealAssistant.Application.Entities.Deals.Dtos;
+using Sai.DealAssistant.Application.Entities.Deals.Queries;
 using Sai.DealAssistant.Common.Enums;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
@@ -18,7 +17,6 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 	public class GetDealListQuery_Handler_Test : UnitTestBase
 	{
 		private readonly ReadRepository<AppDbContext, Deal> _dealRepository;
-		private readonly IMapper _mapper;
 
 		public GetDealListQuery_Handler_Test()
 			: base(seedTestData: false)
@@ -34,7 +32,9 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				var t2 = new DealType { Type = "Premium" };
                 var at1 = new AmountType { Type = "Per Month" };
                 var at2 = new AmountType { Type = "Per Day" };
-                db.AddRange(s1, s2, t1, t2, at1, at2);
+                var f1 = new Firm { Name = "Firm A", Country = "US" };
+                var f2 = new Firm { Name = "Firm B", Country = "UK" };
+                db.AddRange(s1, s2, t1, t2, at1, at2, f1, f2);
 				db.SaveChanges();
 
 				var deals = Enumerable.Range(1, 30).Select(i => new Deal
@@ -44,7 +44,8 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 					Industry = i % 2 == 0 ? "Software" : "Finance",
 					StateId = i % 2 == 0 ? s1.Id : s2.Id,
 					TypeId = i % 3 == 0 ? t2.Id : t1.Id,
-					AmountTypeId = i % 2 == 0 ? at1.Id : at2.Id
+					AmountTypeId = i % 2 == 0 ? at1.Id : at2.Id,
+					FirmId = i % 2 == 0 ? f1.Id : f2.Id
 				}).ToArray();
 
 				db.Deals.AddRange(deals);
@@ -69,15 +70,14 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				.Include(d => d.State)
 				.Where(d => d.Name != null && d.Name.Contains(nameFragment))
 				.Select(p => new DealListItemDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
-                    State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
-                })
+				{
+					Id = p.Id,
+					Name = p.Name,
+					FirmName = p.DenormFirmName,
+					LastActionDate = p.DenormLastActionDate,
+					State = p.State.State,
+					Status = p.Status,
+				})
 				.Take(pageSize)
 				.ToList();
 
@@ -103,17 +103,16 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				.Include(d => d.State)
 				.Where(d => d.Description != null && d.Description.Contains(descFragment))
 				.Select(p => new DealListItemDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
-                    State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
-                })
+				{
+					Id = p.Id,
+					Name = p.Name,
+					FirmName = p.DenormFirmName,
+					LastActionDate = p.DenormLastActionDate,
+					State = p.State.State,
+					Status = p.Status,
+				})
 				.Take(pageSize)
-                .ToList();
+				.ToList();
 
 			Assert.Equal(expected.Count, result.TotalItems);
 			Assert.Equal(expected.Count, result.Items.Count);
@@ -137,15 +136,14 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				.Include(d => d.State)
 				.Where(d => d.Industry != null && d.Industry.Contains(industry))
 				.Select(p => new DealListItemDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
-                    State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
-                })
+				{
+					Id = p.Id,
+					Name = p.Name,
+					FirmName = p.DenormFirmName,
+					LastActionDate = p.DenormLastActionDate,
+					State = p.State.State,
+					Status =p.Status,
+				})
 				.ToList();
 
 			Assert.Equal(expected.Count, result.TotalItems);
@@ -171,11 +169,8 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
                     State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
+					Status = p.Status,
                 })
 				.ToList();
 
@@ -201,11 +196,8 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
                     State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
+					Status = p.Status,
                 })
 				.ToList();
 
@@ -231,11 +223,8 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
                     State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
+					Status = p.Status,
                 })
 				.ToList();
 
@@ -261,11 +250,8 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
                     State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
+					Status = p.Status,
                 })
 				.ToList();
 
@@ -291,17 +277,16 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				.Include(d => d.State)
 				.Where(d => states.Contains(d.StateId))
 				.Select(p => new DealListItemDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Industry = p.Industry,
-                    State = p.State.State,
-                    Type = p.Type.Type,
-                    CreatedAt = p.CreatedAt,
-                })
+				{
+					Id = p.Id,
+					Name = p.Name,
+					FirmName = p.DenormFirmName,
+					LastActionDate = p.DenormLastActionDate,
+					State = p.State.State,
+					Status = p.Status,
+				})
 				.Take(pageSize)
-                .ToList();
+				.ToList();
 
 			Assert.Equal(expected.Count, result.TotalItems);
 			Assert.Equal(expected.Count, result.Items.Count);

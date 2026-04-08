@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading;
-using AutoFixture;
 using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Application.Entities.Events.Dtos;
 using Sai.DealAssistant.Application.Entities.Events.Queries;
@@ -33,18 +32,27 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
                 var eventstate = db.EventStates.Add(new EventState { State = "Planned" });
                 db.SaveChanges();
 
-                var deal1 = new Deal { Name = "Deal A" , TypeId = dealtype.Entity.Id, StateId = dealstate.Entity.Id, AmountTypeId = at1.Entity.Id};
-                var deal2 = new Deal { Name = "Deal B", TypeId = dealtype.Entity.Id, StateId = dealstate.Entity.Id };
-                db.AddRange(deal1, deal2);
-                deal1.ContactPersons.Add(new ContactPerson { Name = "Kurt Tank" });
-                deal2.ContactPersons.Add(new ContactPerson { Name = "leroy Grumman" });
+                // Firms own the ContactPersons; Deals reference the Firm via FirmId
+                var firm1 = new Firm { Name = "Firm A", Country = "USA" };
+                var firm2 = new Firm { Name = "Firm B", Country = "UK" };
+                db.Firms.AddRange(firm1, firm2);
                 db.SaveChanges();
 
-                var events = new []
+                var cp1 = new ContactPerson { Name = "Kurt Tank", FirmId = firm1.Id };
+                var cp2 = new ContactPerson { Name = "Leroy Grumman", FirmId = firm2.Id };
+                db.ContactPersons.AddRange(cp1, cp2);
+                db.SaveChanges();
+
+                var deal1 = new Deal { Name = "Deal A", TypeId = dealtype.Entity.Id, StateId = dealstate.Entity.Id, AmountTypeId = at1.Entity.Id, FirmId = firm1.Id };
+                var deal2 = new Deal { Name = "Deal B", TypeId = dealtype.Entity.Id, StateId = dealstate.Entity.Id, AmountTypeId = at1.Entity.Id, FirmId = firm2.Id };
+                db.AddRange(deal1, deal2);
+                db.SaveChanges();
+
+                var events = new[]
                 {
-                    new Event { Date = DateTimeOffset.UtcNow.AddDays(-1), Agenda = "A1", DealId = deal1.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id, ContactPersonId = deal1.ContactPersons.First().Id },
-                    new Event { Date = DateTimeOffset.UtcNow.AddDays(-2), Agenda = "A2", DealId = deal1.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id, ContactPersonId = deal1.ContactPersons.First().Id },
-                    new Event { Date = DateTimeOffset.UtcNow, Agenda = "B1", DealId = deal2.Id , TypeId = eventtype.Entity.Id, StateId = dealstate.Entity.Id, ContactPersonId = deal2.ContactPersons.First().Id }
+                    new Event { Topic = "Event 1", Date = DateTimeOffset.UtcNow.AddDays(-1), Agenda = "A1", DealId = deal1.Id, TypeId = eventtype.Entity.Id, StateId = eventstate.Entity.Id, ContactPersonId = cp1.Id },
+                    new Event { Topic = "Event 2", Date = DateTimeOffset.UtcNow.AddDays(-2), Agenda = "A2", DealId = deal1.Id, TypeId = eventtype.Entity.Id, StateId = eventstate.Entity.Id, ContactPersonId = cp1.Id },
+                    new Event { Topic = "Event 3", Date = DateTimeOffset.UtcNow,             Agenda = "B1", DealId = deal2.Id, TypeId = eventtype.Entity.Id, StateId = eventstate.Entity.Id, ContactPersonId = cp2.Id }
                 };
 
                 db.Events.AddRange(events);
@@ -70,6 +78,7 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
                 .Select(p => new EventListItemDto
                 {
                     Id = p.Id,
+                    Topic = p.Topic,
                     Date = p.Date,
                     Pos = p.Pos,
                     Agenda = p.Agenda,
@@ -77,7 +86,6 @@ namespace Sai.DealAssistant.Application.Tests.Events.Handlers
                     State = p.State != null ? p.State.State : null!,
                     Type = p.Type != null ? p.Type.Name : null!,
                     ContactPerson = p.ContactPerson != null ? $"{p.ContactPerson.Name}, {p.ContactPerson.Position}" : null
-
                 })
                 .ToList();
 

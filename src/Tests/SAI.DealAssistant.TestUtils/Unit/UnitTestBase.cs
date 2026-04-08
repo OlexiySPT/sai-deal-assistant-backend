@@ -2,8 +2,9 @@
 using AutoMapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
-using Sai.DealAssistant.Application.Entities.SampleCustomers.Dtos;
+using Sai.DealAssistant.Application.Entities.Deals.Dtos;
 using Sai.DealAssistant.Application.System.Seeding;
+using Sai.DealAssistant.Common.Configuration;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories;
 
@@ -87,14 +88,14 @@ namespace SAI.DealAssistant.TestUtils.Unit
 		{
 			using (var seedDbContext = AppDbContextUtil_SQLiteDb.CreateAppDbContext(SqliteDbConnection))
 			{
-				var seedRepo = new SeedRepository(LoggerFactory.CreateLogger<SeedRepository>(), seedDbContext);
-				var databaseSeeder = new DatabaseSeeder(seedRepo);
-                await databaseSeeder.SeedAsync();
+				var seedRepo = new SeedRepository(LoggerFactory.CreateLogger<SeedRepository>(), seedDbContext, new TestAppConfiguration());
+				var databaseSeeder = new DatabaseSeeder(LoggerFactory.CreateLogger<DatabaseSeeder>(), seedRepo);
+				await databaseSeeder.SeedAsync();
 				if(seedTestData)
 				{
 					await databaseSeeder.SeedTestDataAsync();
 				}
-                seedDbContext.SaveChanges();
+				seedDbContext.SaveChanges();
 			}
 		}
 
@@ -111,5 +112,18 @@ namespace SAI.DealAssistant.TestUtils.Unit
 				_disposedValue = true;
 			}
 		}
+	}
+
+	/// <summary>Minimal IAppConfiguration for use in unit tests.</summary>
+	internal sealed class TestAppConfiguration : IAppConfiguration
+	{
+		public string AppConnectionString       => string.Empty;
+		public string MigrationConnectionString => string.Empty;
+		public string AllowedCorsOrigins        => string.Empty;
+		public int    EnumTablesCacheExpitrationMins => 10;
+		public int    DefaultResultPageSize     => 10;
+		public bool   SeedTestData              => false;
+		public int    MultiplyDealsTargetRowCount => 0;
+		public int    BulkSqlTimeoutSeconds     => 900;
 	}
 }

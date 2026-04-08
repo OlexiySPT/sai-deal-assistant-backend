@@ -6,7 +6,7 @@ using Sai.DealAssistant.Domain.Repositories.Generic;
 
 namespace Sai.DealAssistant.Application.Entities.General.Commands;
 
-public class UpdateDateFieldCommand : IRequest<DateTimeOffset?>
+public class UpdateDateTimeOffsetFieldCommand : IRequest<DateTimeOffset?>
 {
     public string Entity { get; set; } = string.Empty;
     public string Field { get; set; } = string.Empty;
@@ -14,7 +14,7 @@ public class UpdateDateFieldCommand : IRequest<DateTimeOffset?>
     public DateTimeOffset? Value { get; set; }
     public bool NotNull { get; set; } = false;
 
-    public class Validator : AbstractValidator<UpdateDateFieldCommand>
+    public class Validator : AbstractValidator<UpdateDateTimeOffsetFieldCommand>
     {
         public Validator()
         {
@@ -31,7 +31,7 @@ public class UpdateDateFieldCommand : IRequest<DateTimeOffset?>
         }
     }
 
-    public class Handler : IRequestHandler<UpdateDateFieldCommand, DateTimeOffset?>
+    public class Handler : IRequestHandler<UpdateDateTimeOffsetFieldCommand, DateTimeOffset?>
     {
         private readonly IFieldUpdateRepository<DateTimeOffset?> _repository;
 
@@ -40,7 +40,7 @@ public class UpdateDateFieldCommand : IRequest<DateTimeOffset?>
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<DateTimeOffset?> Handle(UpdateDateFieldCommand request, CancellationToken cancellationToken)
+        public async Task<DateTimeOffset?> Handle(UpdateDateTimeOffsetFieldCommand request, CancellationToken cancellationToken)
         {
             try
             {

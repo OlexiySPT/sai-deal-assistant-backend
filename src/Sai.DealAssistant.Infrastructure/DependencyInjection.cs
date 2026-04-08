@@ -43,7 +43,12 @@ public static class DependencyInjection
     {
         // Do not forget to add new specific repos here
         services.AddScoped<IFullDealRepository, FullDealRepository>();
-        services.AddScoped<ISeedRepository, SeedRepository>();
+        services.AddScoped<IFullFirmRepository, FullFirmRepository>();
+        services.AddScoped<ISeedRepository, SeedRepository>(sp =>
+            new SeedRepository(
+                sp.GetRequiredService<ILogger<SeedRepository>>(),
+                sp.GetRequiredService<AppDbContext>(),
+                configuration));
         return services;
     }
 
@@ -80,6 +85,7 @@ public static class DependencyInjection
         services.AddScoped<IFieldUpdateRepository<string>>(sp => new FieldUpdateRepository<AppDbContext, string>(sp.GetRequiredService<AppDbContext>()));
         services.AddScoped<IFieldUpdateRepository<decimal?>>(sp => new FieldUpdateRepository<AppDbContext, decimal?>(sp.GetRequiredService<AppDbContext>()));
         services.AddScoped<IFieldUpdateRepository<DateTimeOffset?>>(sp => new FieldUpdateRepository<AppDbContext, DateTimeOffset?>(sp.GetRequiredService<AppDbContext>()));
+        services.AddScoped<IFieldUpdateRepository<DateOnly?>>(sp => new FieldUpdateRepository<AppDbContext, DateOnly?>(sp.GetRequiredService<AppDbContext>()));
         return services;
     }
 }
