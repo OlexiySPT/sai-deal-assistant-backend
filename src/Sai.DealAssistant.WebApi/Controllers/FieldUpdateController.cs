@@ -80,5 +80,21 @@ namespace Sai.DealAssistant.WebApi.Controllers
             var result = await _mediator.Send(command);
             return Ok(result);
         }
+
+        /// <summary>
+        /// Updates multiple fields of an entity in a single operation.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns>A dictionary of the updated field names and their new values.</returns>
+        [HttpPut("multi")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IReadOnlyDictionary<string, object?>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateMultipleFields([FromBody] UpdateMultipleFieldsCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
     }
 }

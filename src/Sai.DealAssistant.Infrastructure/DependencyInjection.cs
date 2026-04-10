@@ -86,6 +86,7 @@ public static class DependencyInjection
         services.AddScoped<IFieldUpdateRepository<decimal?>>(sp => new FieldUpdateRepository<AppDbContext, decimal?>(sp.GetRequiredService<AppDbContext>()));
         services.AddScoped<IFieldUpdateRepository<DateTimeOffset?>>(sp => new FieldUpdateRepository<AppDbContext, DateTimeOffset?>(sp.GetRequiredService<AppDbContext>()));
         services.AddScoped<IFieldUpdateRepository<DateOnly?>>(sp => new FieldUpdateRepository<AppDbContext, DateOnly?>(sp.GetRequiredService<AppDbContext>()));
+        services.AddScoped<IMultiFieldUpdateRepository>(sp => new MultiFieldUpdateRepository<AppDbContext>(sp.GetRequiredService<AppDbContext>()));
         return services;
     }
 }
