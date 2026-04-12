@@ -71,13 +71,25 @@ public class ReadRepository<TDbContext, TEntity> : IReadRepository<TEntity>
 		return await query.CountAsync();
 	}
 
-	public async Task<IReadOnlyCollection<TResult>> SelectAsync<TResult>(IQueryable<TEntity> query, Expression<Func<TEntity, TResult>> columns)
+	public async Task<IReadOnlyCollection<TResult>> SelectAsync<TResult>(
+		IQueryable<TEntity> query, 
+		Expression<Func<TEntity, TResult>> columns)
 	{
 		return await query.Select(columns).ToListAsync();
     }
-    public async Task<IReadOnlyCollection<TResult>> SelectDistinctAsync<TResult>(IQueryable<TEntity> query, Expression<Func<TEntity, TResult>> columns)
+    public async Task<IReadOnlyCollection<TResult>> SelectDistinctAsync<TResult>(
+		IQueryable<TEntity> query, 
+		Expression<Func<TEntity, TResult>> columns,
+        SortDirection? sortDirection = null)
     {
-        return await query.Select(columns).Distinct().ToListAsync();
+		var qry = query.Select(columns).Distinct();
+        if (sortDirection.HasValue)
+		{
+			qry = sortDirection.Value == SortDirection.Descending
+				? qry.OrderByDescending(e => e) 
+				: qry.OrderBy(e => e)            ;
+        }
+        return await qry.ToListAsync();
     }
 
     public async Task<IReadOnlyCollection<TResult>> SelectPageAsync<TResult>(
