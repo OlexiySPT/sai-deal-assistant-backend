@@ -13,9 +13,11 @@ public class GetCachedDealStatusesQuery : IRequest<IEnumerable<string>>
     {
         private static readonly MemoryCache s_cache = new(new MemoryCacheOptions());
         private static readonly SemaphoreSlim s_lock = new(1, 1);
-        private const string _cacheKey = "GetExistingDealStatusesQuery";
-        private readonly int _expirationMinutes = 10;
+        private const string _cacheKey = nameof(GetCachedDealStatusesQuery);
+        private readonly int _expirationMinutes;
         private readonly IReadRepository<Deal> _repository;
+
+        public SortDirection SortDirection { get; set; } = SortDirection.Ascending;
 
         public Handler(IReadRepository<Deal> repository, IAppConfiguration configuration)
         {
@@ -39,8 +41,8 @@ public class GetCachedDealStatusesQuery : IRequest<IEnumerable<string>>
                 }
 
                 var qry = _repository.GetAll();
-                var items = await _repository.SelectDistinctAsync(qry, p => p.Status);
-                var orderedItems = items.OrderBy(p => p).ToArray().AsReadOnly();
+                var items = await _repository.SelectDistinctAsync(qry, p => p.Status, SortDirection);
+                var orderedItems = items.ToArray().AsReadOnly();
 
                 var options = new MemoryCacheEntryOptions
                 {

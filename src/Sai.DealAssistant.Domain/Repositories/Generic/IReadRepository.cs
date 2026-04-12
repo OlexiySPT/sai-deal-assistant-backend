@@ -3,6 +3,12 @@ using System.Linq.Expressions;
 
 namespace Sai.DealAssistant.Domain.Repositories.Generic;
 
+public enum SortDirection
+{
+	Ascending,
+    Descending
+}
+
 /// <summary>
 /// Generic Repository for typical read operation from one Entity (Table in the DB)
 /// Call GetAll() into IQueriable_TEntity
@@ -55,7 +61,8 @@ public interface IReadRepository<TEntity>
     /// <returns>Matherialized already mapped dataset.</returns>
     Task<IReadOnlyCollection<TResult>> SelectDistinctAsync<TResult>(
         IQueryable<TEntity> query,
-        Expression<Func<TEntity, TResult>> columns);
+        Expression<Func<TEntity, TResult>> columns,
+		SortDirection? sortDirection = null);
 
     /// <summary>
     /// Returns matherialized and mapped according to columns paged query result.

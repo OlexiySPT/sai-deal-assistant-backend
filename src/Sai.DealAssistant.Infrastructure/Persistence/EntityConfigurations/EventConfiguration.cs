@@ -14,6 +14,7 @@ public class EventConfiguration : BaseEntityConfiguration<Event>
         builder.Property(e => e.Date)
             .HasColumnType("timestamptz");
 
+
         builder.Property(e => e.Topic)
             
             .HasMaxLength(200);
@@ -24,6 +25,10 @@ public class EventConfiguration : BaseEntityConfiguration<Event>
         builder.Property(e => e.Result)
             .HasColumnType("text");
 
+        // Indexes
+        builder.HasIndex(e => e.Date);
+
+        // FKs
         builder.HasOne(e => e.Deal)
             .WithMany(c => c.Events)
             .HasForeignKey(e => e.DealId);

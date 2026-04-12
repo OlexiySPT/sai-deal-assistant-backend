@@ -3,7 +3,9 @@ using Sai.DealAssistant.Application.Entities.Deals.Dtos;
 using Sai.DealAssistant.Application.Entities.Deals.Queries;
 using Sai.DealAssistant.Common.Enums;
 using Sai.DealAssistant.Domain.Entities;
+using EventEntity = Sai.DealAssistant.Domain.Entities.Event;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
+using Sai.DealAssistant.Domain.Helpers;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Unit;
@@ -16,12 +18,15 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 {
 	public class GetDealListQuery_Handler_Test : UnitTestBase
 	{
-		private readonly ReadRepository<AppDbContext, Deal> _dealRepository;
+        private readonly ReadRepository<AppDbContext, Deal> _dealRepository;
+		private readonly ReadRepository<AppDbContext, Event> _eventRepository;
+
 
 		public GetDealListQuery_Handler_Test()
-			: base(seedTestData: false)
+			: base(seedTestData: true)
 		{
 			_dealRepository = new ReadRepository<AppDbContext, Deal>(DbContext);
+			_eventRepository = new ReadRepository<AppDbContext, Event>(DbContext);
 
 			// Seed test data
 			using (var db = CreateNewDbContext())
@@ -57,7 +62,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 		public async void Handler_FiltersByName()
 		{
 			// Arrange
-			var handler = new GetDealListQuery.Handler(_dealRepository);
+            var handler = new GetDealListQuery.Handler(_dealRepository, _eventRepository);
 			var nameFragment = "Deal 1"; // should match Deal 1, Deal 10, Deal 11, etc.
 			int pageSize = 100;
 			var query = new GetDealListQuery { Name = nameFragment , Page = 1, PageSize = pageSize};
@@ -90,7 +95,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 		public async void Handler_FiltersByDescription()
 		{
 			// Arrange
-			var handler = new GetDealListQuery.Handler(_dealRepository);
+            var handler = new GetDealListQuery.Handler(_dealRepository, _eventRepository);
 			var descFragment = "Special desc";
             int pageSize = 100;
             var query = new GetDealListQuery { Description = descFragment , Page = 1, PageSize = pageSize};
@@ -123,7 +128,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 		public async void Handler_FiltersByIndustry()
 		{
 			// Arrange
-			var handler = new GetDealListQuery.Handler(_dealRepository);
+            var handler = new GetDealListQuery.Handler(_dealRepository, _eventRepository);
 			var industry = "Software";
             int pageSize = 100;
             var query = new GetDealListQuery { Industry = industry, Page = 1, PageSize = pageSize};
@@ -151,12 +156,14 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 			Assert.Equivalent(expected.OrderBy(x => x.Id), result.Items.OrderBy(x => x.Id));
 		}
 
-		[Fact]
+        [Fact]
 		public async void Handler_SortsByName_Ascending()
 		{
 			// Arrange
-			var handler = new GetDealListQuery.Handler(_dealRepository);
-			var query = new GetDealListQuery { SortBy = nameof(Deal.Name), SortDirection = SortDirections.Asc, Page = 1, PageSize = 100 };
+			var handler = new GetDealListQuery.Handler(_dealRepository, _eventRepository);
+			const int pageSize = 100;
+			const int page = 1;
+			var query = new GetDealListQuery { SortBy = nameof(Deal.Name), SortDirection = SortDirections.Asc, Page = page, PageSize = pageSize };
 
 			// Act
 			var result = await handler.Handle(query, CancellationToken.None);
@@ -166,24 +173,30 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				.Include(d => d.State)
 				.OrderBy(d => d.Name)
 				.Select(p => new DealListItemDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    State = p.State.State,
+				{
+					Id = p.Id,
+					Name = p.Name,
+					State = p.State.State,
 					Status = p.Status,
-                })
+				})
+				.Skip((page - 1) * pageSize)
+				.Take(pageSize)
 				.ToList();
 
-			Assert.Equal(expected.Count, result.TotalItems);
+			var total = DbContext.Deals.Count();
+
+			Assert.Equal(total, result.TotalItems);
 			Assert.Equal(expected.Select(x => x.Id), result.Items.Select(x => x.Id));
 		}
 
-		[Fact]
+        [Fact]
 		public async void Handler_SortsByName_Descending()
 		{
 			// Arrange
-			var handler = new GetDealListQuery.Handler(_dealRepository);
-			var query = new GetDealListQuery { SortBy = nameof(Deal.Name), SortDirection = SortDirections.Desc, Page = 1, PageSize = 100 };
+			var handler = new GetDealListQuery.Handler(_dealRepository, _eventRepository);
+			const int pageSize = 100;
+			const int page = 1;
+			var query = new GetDealListQuery { SortBy = nameof(Deal.Name), SortDirection = SortDirections.Desc, Page = page, PageSize = pageSize };
 
 			// Act
 			var result = await handler.Handle(query, CancellationToken.None);
@@ -193,24 +206,30 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				.Include(d => d.State)
 				.OrderByDescending(d => d.Name)
 				.Select(p => new DealListItemDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    State = p.State.State,
+				{
+					Id = p.Id,
+					Name = p.Name,
+					State = p.State.State,
 					Status = p.Status,
-                })
+				})
+				.Skip((page - 1) * pageSize)
+				.Take(pageSize)
 				.ToList();
 
-			Assert.Equal(expected.Count, result.TotalItems);
+			var total = DbContext.Deals.Count();
+
+			Assert.Equal(total, result.TotalItems);
 			Assert.Equal(expected.Select(x => x.Id), result.Items.Select(x => x.Id));
 		}
 
-		[Fact]
+        [Fact]
 		public async void Handler_SortsByIndustry_Ascending()
 		{
 			// Arrange
-			var handler = new GetDealListQuery.Handler(_dealRepository);
-			var query = new GetDealListQuery { SortBy = nameof(Deal.Industry), SortDirection = SortDirections.Asc, Page = 1, PageSize = 100 };
+			var handler = new GetDealListQuery.Handler(_dealRepository, _eventRepository);
+			const int pageSize = 100;
+			const int page = 1;
+			var query = new GetDealListQuery { SortBy = nameof(Deal.Industry), SortDirection = SortDirections.Asc, Page = page, PageSize = pageSize };
 
 			// Act
 			var result = await handler.Handle(query, CancellationToken.None);
@@ -220,24 +239,30 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				.Include(d => d.State)
 				.OrderBy(d => d.Industry)
 				.Select(p => new DealListItemDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    State = p.State.State,
+				{
+					Id = p.Id,
+					Name = p.Name,
+					State = p.State.State,
 					Status = p.Status,
-                })
+				})
+				.Skip((page - 1) * pageSize)
+				.Take(pageSize)
 				.ToList();
 
-			Assert.Equal(expected.Count, result.TotalItems);
+			var total = DbContext.Deals.Count();
+
+			Assert.Equal(total, result.TotalItems);
 			Assert.Equal(expected.Select(x => x.Id), result.Items.Select(x => x.Id));
 		}
 
-		[Fact]
+        [Fact]
 		public async void Handler_SortsByIndustry_Descending()
 		{
 			// Arrange
-			var handler = new GetDealListQuery.Handler(_dealRepository);
-			var query = new GetDealListQuery { SortBy = nameof(Deal.Industry), SortDirection = SortDirections.Desc, Page = 1, PageSize = 100 };
+			var handler = new GetDealListQuery.Handler(_dealRepository, _eventRepository);
+			const int pageSize = 100;
+			const int page = 1;
+			var query = new GetDealListQuery { SortBy = nameof(Deal.Industry), SortDirection = SortDirections.Desc, Page = page, PageSize = pageSize };
 
 			// Act
 			var result = await handler.Handle(query, CancellationToken.None);
@@ -247,15 +272,19 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 				.Include(d => d.State)
 				.OrderByDescending(d => d.Industry)
 				.Select(p => new DealListItemDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    State = p.State.State,
+				{
+					Id = p.Id,
+					Name = p.Name,
+					State = p.State.State,
 					Status = p.Status,
-                })
+				})
+				.Skip((page - 1) * pageSize)
+				.Take(pageSize)
 				.ToList();
 
-			Assert.Equal(expected.Count, result.TotalItems);
+			var total = DbContext.Deals.Count();
+
+			Assert.Equal(total, result.TotalItems);
 			Assert.Equal(expected.Select(x => x.Id), result.Items.Select(x => x.Id));
 		}
 
@@ -263,7 +292,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 		public async void Handler_FiltersByStateIds()
 		{
 			// Arrange
-			var handler = new GetDealListQuery.Handler(_dealRepository);
+            var handler = new GetDealListQuery.Handler(_dealRepository, _eventRepository);
 
             var states = DbContext.DealStates.Take(2).Select(p=>p.Id).ToArray();
             int pageSize = 100;
@@ -297,7 +326,7 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Queries
 		public async void Handler_PaginatesResults()
 		{
 			// Arrange
-			var handler = new GetDealListQuery.Handler(_dealRepository);
+            var handler = new GetDealListQuery.Handler(_dealRepository, _eventRepository);
 
 			const int pageSize = 5;
 			const int page = 2;

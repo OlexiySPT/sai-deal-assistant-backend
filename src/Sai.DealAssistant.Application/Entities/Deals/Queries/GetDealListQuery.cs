@@ -3,7 +3,9 @@ using Sai.DealAssistant.Application.Common.Expressions;
 using Sai.DealAssistant.Application.Entities.Deals.Dtos;
 using Sai.DealAssistant.Common.Enums;
 using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Domain.Helpers;
 using Sai.DealAssistant.Domain.Repositories.Generic;
+
 
 namespace Sai.DealAssistant.Application.Entities.Deals.Queries;
 
@@ -20,14 +22,17 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
     public string? Status { get; set; }
     public int[]? StateIds { get; set; }
     public int[]? TypeIds { get; set; }
+	public DateRange? HasEventInThisPeriod { get; set; }
 
     public class Handler : IRequestHandler<GetDealListQuery, QueryResult<DealListItemDto>>
 	{
 		private readonly IReadRepository<Deal> _repository;
+        private readonly IReadRepository<Event> _eventRepo;
 
-		public Handler(IReadRepository<Deal> repository)
-		{
+        public Handler(IReadRepository<Deal> repository, IReadRepository<Event> eventRepo)
+        {
 			_repository = repository;
+			_eventRepo = eventRepo;
 		}
 
 		public async Task<QueryResult<DealListItemDto>> Handle(
@@ -64,7 +69,23 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
             {
                 qry = qry.Where(x => request.Status.StartsWith(x.Status!));
             }
-
+			if (request.HasEventInThisPeriod is not null)
+			{
+				var start = request.HasEventInThisPeriod!.StartDate?.ToUniversalTime();
+				var end = request.HasEventInThisPeriod!.EndDate?.ToUniversalTime();
+				var eventQry = _eventRepo.GetAll();
+				if (start is not null)
+				{
+					eventQry = eventQry.Where(p => p.Date >= start);
+				}
+				if (end is not null)
+				{
+					eventQry = eventQry.Where(p => p.Date <= end);
+				}
+                // ATTENTION: This give a correct result in a real PostgreSQL database,
+				// but in an SQLite in-memory database it can't be translated to SQL
+                qry = qry.Where(deal => eventQry.Select(p=>p.DealId).Contains(deal.Id));
+			}
             var totalItems = await _repository.CountAsync(qry);
 
 			var result = await _repository.SelectPageAsync(
