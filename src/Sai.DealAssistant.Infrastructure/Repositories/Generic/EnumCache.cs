@@ -10,6 +10,7 @@ public class EnumCache<TEntity> : IEnumCache<TEntity>
     where TEntity : BaseNonTrackedEntity, IEnum, new()
 {
     private static readonly MemoryCache s_cache = new(new MemoryCacheOptions());
+    private static readonly SemaphoreSlim s_lock = new(1, 1);
     private readonly string _cacheKey = $"{typeof(TEntity).FullName ?? typeof(TEntity).Name}--EnumCache--50464213-40AF-45C8-A8F9-41C89D011950";
     private readonly int _expirationMinutes = 10;
     private readonly IReadRepository<TEntity> _repository;
@@ -28,17 +29,30 @@ public class EnumCache<TEntity> : IEnumCache<TEntity>
             return cached;
         }
 
-        // materialize asynchronously from IQueryable via EF Core
-        var array = await _repository.GetAll().OrderBy(p => p.Id).ToArrayAsync();
-        var items = Array.AsReadOnly(array);
-
-        var options = new MemoryCacheEntryOptions
+        await s_lock.WaitAsync();
+        try
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_expirationMinutes)
-        };
+            if (s_cache.TryGetValue(_cacheKey, out cached) && cached is not null)
+            {
+                return cached;
+            }
 
-        s_cache.Set(_cacheKey, items, options);
-        return items;
+            // materialize asynchronously from IQueryable via EF Core
+            var array = await _repository.GetAll().OrderBy(p => p.Id).ToArrayAsync();
+            var items = Array.AsReadOnly(array);
+
+            var options = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_expirationMinutes)
+            };
+
+            s_cache.Set(_cacheKey, items, options);
+            return items;
+        }
+        finally
+        {
+            s_lock.Release();
+        }
     }
 
 

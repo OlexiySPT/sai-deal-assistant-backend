@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sai.DealAssistant.Common.Configuration;
+using Sai.DealAssistant.Domain;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Domain.Repositories;
@@ -27,7 +28,13 @@ public static class DependencyInjection
             );
 
         services.AddGenericRepositories(configuration);
+        services.AddFieldUpdateRepositories(configuration);
         services.AddSpecificRepositories(configuration);
+        services.AddScoped<IUnitOfWork, UnitOfWork>(sp =>
+        {
+            var dbContext = sp.GetRequiredService<AppDbContext>();
+            return new UnitOfWork(dbContext);
+        });
 
         return services;
     }
@@ -36,7 +43,12 @@ public static class DependencyInjection
     {
         // Do not forget to add new specific repos here
         services.AddScoped<IFullDealRepository, FullDealRepository>();
-        services.AddScoped<ISeedRepository, SeedRepository>();
+        services.AddScoped<IFullFirmRepository, FullFirmRepository>();
+        services.AddScoped<ISeedRepository, SeedRepository>(sp =>
+            new SeedRepository(
+                sp.GetRequiredService<ILogger<SeedRepository>>(),
+                sp.GetRequiredService<AppDbContext>(),
+                configuration));
         return services;
     }
 
@@ -64,7 +76,17 @@ public static class DependencyInjection
                 );
             }
         }
+        
+        return services;
+    }
 
+    private static IServiceCollection AddFieldUpdateRepositories(this IServiceCollection services, IAppConfiguration configuration)
+    {
+        services.AddScoped<IFieldUpdateRepository<string>>(sp => new FieldUpdateRepository<AppDbContext, string>(sp.GetRequiredService<AppDbContext>()));
+        services.AddScoped<IFieldUpdateRepository<decimal?>>(sp => new FieldUpdateRepository<AppDbContext, decimal?>(sp.GetRequiredService<AppDbContext>()));
+        services.AddScoped<IFieldUpdateRepository<DateTimeOffset?>>(sp => new FieldUpdateRepository<AppDbContext, DateTimeOffset?>(sp.GetRequiredService<AppDbContext>()));
+        services.AddScoped<IFieldUpdateRepository<DateOnly?>>(sp => new FieldUpdateRepository<AppDbContext, DateOnly?>(sp.GetRequiredService<AppDbContext>()));
+        services.AddScoped<IMultiFieldUpdateRepository>(sp => new MultiFieldUpdateRepository<AppDbContext>(sp.GetRequiredService<AppDbContext>()));
         return services;
     }
 }

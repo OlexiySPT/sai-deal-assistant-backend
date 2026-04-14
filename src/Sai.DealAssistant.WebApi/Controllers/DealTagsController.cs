@@ -46,13 +46,14 @@ public class DealTagsController : BaseController
         return CreatedAtAction(nameof(GetDealTags), new { dealId = result.DealId }, result);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(DealTagDto), 200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> DeleteDealTag(int id)
+    public async Task<IActionResult> DeleteDealTag([FromQuery] DeleteDealTagCommand command)
     {
-        DealTagDto result = await Mediator.Send(new DeleteDealTagCommand(id));
+        DealTagDto result = await Mediator.Send(command);
         return Ok(result);
     }
 }

@@ -57,6 +57,9 @@ jobs:
             -e ConnectionStrings__AppConnection="Host=${{ vars.DB_HOST }};Database=${{ vars.DB_NAME }};Username=${{ vars.DB_USER }};Password=${{ secrets.DB_PASSWORD }}" \
             -e ConnectionStrings__MigrationConnection="Host=${{ vars.DB_HOST }};Database=${{ vars.DB_NAME }};Username=${{ vars.DB_MIGRATOR_USER }};Password=${{ secrets.DB_MIGRATOR_PASSWORD }}" \
             -e AllowedCorsOrigins="${{ vars.ALLOWED_CORS_ORIGINS }}" \
+            -e EnumTablesCacheExpitrationMins="${{ vars.ENUM_TABLES_CACHE_EXPIRATION_MINS }}" \
+            -e DefaultResultPageSize="${{ vars.DEFAULT_RESULT_PAGE_SIZE }}" \
+            -e SeedTestData="${{ vars.SEED_TEST_DATA }}" \
             -v /home/sai/aspnetapp.pfx:/https/aspnetapp.pfx:ro \
             sai-deal-assistant:dev
 

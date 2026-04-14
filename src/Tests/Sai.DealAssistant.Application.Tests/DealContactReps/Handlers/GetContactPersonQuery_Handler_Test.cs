@@ -24,24 +24,27 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         {
             _repo = new ReadRepository<AppDbContext, ContactPerson>(DbContext);
 
-            // Configure mapper for DealContactRep -> DealContactRepDto
+            // Configure mapper for ContactPerson -> ContactPersonDto
             var cfg = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<ContactPersonDto.MappingProfile>();
             }, LoggerFactory);
             _mapper = cfg.CreateMapper();
 
-            // Seed single rep
+            // Seed a single contact person under a firm
             using (var db = CreateNewDbContext())
             {
-                var state = db.DealStates.Add(new DealState { State = "Open" });
-                var type = db.DealTypes.Add(new DealType { Type = "Standard" });
-                db.SaveChanges();
-                var deal = new Deal { Name = "Test Deal223322", StateId = state.Entity.Id, TypeId = type.Entity.Id };
-                var added = db.Deals.Add(deal);
+                var firm = new Firm { Name = "Test Firm", Country = "USA" };
+                db.Firms.Add(firm);
                 db.SaveChanges();
 
-                db.ContactPersons.Add(new ContactPerson { Name = "John Doe", Email = "john@example.com", DealId = added.Entity.Id });
+                var contactPerson = new ContactPerson
+                {
+                    Name = "John Doe",
+                    Email = "john@example.com",
+                    FirmId = firm.Id,
+                };
+                db.ContactPersons.Add(contactPerson);
                 db.SaveChanges();
             }
         }
@@ -64,7 +67,8 @@ namespace Sai.DealAssistant.Application.Tests.DealContactReps.Handlers
         {
             var handler = new GetContactPersonQuery.Handler(_repo, _mapper);
 
-            await Assert.ThrowsAsync<NotFoundExceptionOverride>(() => handler.Handle(new GetContactPersonQuery(9999), CancellationToken.None));
+            await Assert.ThrowsAsync<NotFoundExceptionOverride>(() =>
+                handler.Handle(new GetContactPersonQuery(9999), CancellationToken.None));
         }
     }
 }

@@ -2,11 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.WebApi.Authorizations;
 using Sai.DealAssistant.Application;
-using Sai.DealAssistant.Application.System.Commands;
 using Sai.DealAssistant.Common.Configuration;
 using Sai.DealAssistant.Infrastructure;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.WebApi.Extensions;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using Sai.DealAssistant.Application.System.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,14 +32,21 @@ builder.Services.AddAutoMapper(cfg => { },
     typeof(ApplicationMappingProfile).Assembly,
     typeof(InfrastructureMappingProfile).Assembly
 );
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase; // optional, for camelCase
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(CorsPolicies.AllowFrontend, CorsPolicies.AllowFrontendCorsPolicy(myConfig.AllowedCorsOrigins));
-}); 
+});
+
+builder.Services.AddHealthChecks();
 #endregion
 
 var app = builder.Build();
@@ -54,8 +63,16 @@ using (var scope = app.Services.CreateScope())
         var db = services.GetRequiredService<AppDbContext>();
         db.Database.SetConnectionString(myConfig.MigrationConnectionString);
         db.Database.Migrate();
-        IMediator mediator = services.GetRequiredService<IMediator>();
-        mediator.Send(new SeedDatabaseCommand(app.Environment.IsDevelopment()), CancellationToken.None).Wait();
+        var seeder = services.GetRequiredService<DatabaseSeeder>();
+        await seeder.SeedAsync();
+        if (myConfig.SeedTestData)
+        {
+            await seeder.SeedTestDataAsync();
+            if (myConfig.MultiplyDealsTargetRowCount > 0)
+            {
+                await seeder.MultiplyTestDataAsync(myConfig.MultiplyDealsTargetRowCount);
+            }
+        }
     }
     catch (Exception ex)
     {
@@ -78,7 +95,8 @@ app.UseRouting();
 
 app.UseCors(CorsPolicies.AllowFrontend);
 
-app.MapControllers();
+app.MapControllers(); 
+app.MapHealthChecks("/health");
 #endregion
 
 app.Run();

@@ -21,7 +21,7 @@ public class ContactPersonsController : BaseController
     [HttpGet]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(QueryResult<ContactPersonListItemDto>), 200)]
-    public async Task<IActionResult> GetDealContactReps([FromQuery] GetDealContactPersonsQuery query)
+    public async Task<IActionResult> GetFirmContactPersons([FromQuery] GetFirmContactPersonsQuery query)
     {
         return Ok(await Mediator.Send(query));
     }
@@ -30,7 +30,7 @@ public class ContactPersonsController : BaseController
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(ContactPersonDto), 200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetDealContactRep(int id)
+    public async Task<IActionResult> GetFirmContactPerson(int id)
     {
         return Ok(await Mediator.Send(new GetContactPersonQuery(id)));
     }
@@ -40,10 +40,10 @@ public class ContactPersonsController : BaseController
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(typeof(ContactPersonDto), 201)]
     [ProducesResponseType(typeof(IDictionary<string, string>), 400)]
-    public async Task<IActionResult> CreateDealContactRep([FromBody] CreateContactPersonCommand command)
+    public async Task<IActionResult> CreateFirmContactPerson([FromBody] CreateContactPersonCommand command)
     {
         ContactPersonDto result = await Mediator.Send(command);
-        return CreatedAtAction("GetDealContactRep", new { id = $"{result.Id}" }, result);
+        return CreatedAtAction("GetFirmContactPerson", new { id = $"{result.Id}" }, result);
     }
 
     [HttpPut("{id}")]
@@ -52,7 +52,7 @@ public class ContactPersonsController : BaseController
     [ProducesResponseType(typeof(ContactPersonDto), 200)]
     [ProducesResponseType(typeof(IDictionary<string, string>), 400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> UpdateDealContactRep(int id, [FromBody] UpdateContactPersonCommand command)
+    public async Task<IActionResult> UpdateFirmContactPersom(int id, [FromBody] UpdateContactPersonCommand command)
     {
         command.Id = id;
         ContactPersonDto result = await Mediator.Send(command);
@@ -63,7 +63,7 @@ public class ContactPersonsController : BaseController
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> DeleteDealContactRep(int id)
+    public async Task<IActionResult> DeleteFirmContactPerson(int id)
     {
         ContactPersonDto result = await Mediator.Send(new DeleteContactPersonCommand(id));
         return Ok(result);

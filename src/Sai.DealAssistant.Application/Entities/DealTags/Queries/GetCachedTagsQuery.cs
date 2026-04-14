@@ -12,6 +12,7 @@ public class GetCachedTagsQuery : IRequest<IEnumerable<string>>
     public class Handler : IRequestHandler<GetCachedTagsQuery, IEnumerable<string>>
     {
         private static readonly MemoryCache s_cache = new(new MemoryCacheOptions());
+        private static readonly SemaphoreSlim s_lock = new(1, 1);
         private const string _cacheKey = "GetExistingTagsQuery";
         private readonly int _expirationMinutes = 10;
         private readonly IReadRepository<DealTag> _repository;
@@ -28,15 +29,30 @@ public class GetCachedTagsQuery : IRequest<IEnumerable<string>>
             {
                 return cached;
             }
-            var qry = _repository.GetAll();
-            var items = await _repository.SelectDistinctAsync(qry, p => p.Tag);
 
-            var options = new MemoryCacheEntryOptions
+            await s_lock.WaitAsync(cancellationToken);
+            try
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_expirationMinutes)
-            };
-            s_cache.Set(_cacheKey, items, options);
-            return items;
+                if (s_cache.TryGetValue(_cacheKey, out cached) && cached is not null)
+                {
+                    return cached;
+                }
+
+                var qry = _repository.GetAll();
+                var items = await _repository.SelectDistinctAsync(qry, p => p.Tag);
+                var sortedItems = items.OrderBy(p => p).ToArray().AsReadOnly();
+
+                var options = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_expirationMinutes)
+                };
+                s_cache.Set(_cacheKey, sortedItems, options);
+                return sortedItems;
+            }
+            finally
+            {
+                s_lock.Release();
+            }
         }
         public void InvalidateCache()
         {

@@ -6,6 +6,7 @@ namespace Sai.DealAssistant.Domain.Entities;
 public class Event : BaseEntity
 {
     public DateTimeOffset Date { get; set; }
+    public string Topic { get; set; }
     public int Pos { get; set; }
     public string? Agenda { get; set; }
     public string? Result { get; set; }

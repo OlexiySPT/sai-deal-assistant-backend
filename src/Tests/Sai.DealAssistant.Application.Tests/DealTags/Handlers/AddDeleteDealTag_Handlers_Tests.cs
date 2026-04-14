@@ -1,9 +1,9 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Application.Common.Exceptions;
+using Sai.DealAssistant.Application.Entities.ContactPersons.Commands;
 using Sai.DealAssistant.Application.Entities.DealTags.Commands;
 using Sai.DealAssistant.Application.Entities.DealTags.Dto;
-using Sai.DealAssistant.Application.Entities.ContactPersons.Commands;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
@@ -28,7 +28,6 @@ namespace Sai.DealAssistant.Application.Tests.DealTags.Handlers
 
             var cfg = new MapperConfiguration(cfg =>
             {
-                // mappings required by handlers/tests
                 cfg.CreateMap<AddDealTagIfNotExistsCommand, DealTag>();
                 cfg.CreateMap<DealTag, DealTagDto>();
             },
@@ -97,7 +96,11 @@ namespace Sai.DealAssistant.Application.Tests.DealTags.Handlers
             var handler = new DeleteDealTagCommand.Handler(_crudRepo, _mapper);
 
             // Act
-            var result = await handler.Handle(new DeleteDealTagCommand(existing.Id), CancellationToken.None);
+            var result = await handler.Handle(new DeleteDealTagCommand
+            {
+                DealId = existing.DealId,
+                Tag = existing.Tag
+            }, CancellationToken.None);
 
             // Assert
             Assert.NotNull(result);
@@ -108,15 +111,21 @@ namespace Sai.DealAssistant.Application.Tests.DealTags.Handlers
         }
 
         [Fact]
-        public async Task DeleteDealTagCommand_ThrowsNotFound_WhenIdDoesNotExist()
+        public async Task DeleteDealTagCommand_ThrowsNotFound_WhenTagDoesNotExist()
         {
             // Arrange
             var handler = new DeleteDealTagCommand.Handler(_crudRepo, _mapper);
-            var nonExistingId = -9999;
+
+            var nonExistingDealId = -9999;
+            var nonExistingTag = "nonexistent_tag";
 
             // Act & Assert
             await Assert.ThrowsAsync<NotFoundExceptionOverride>(() =>
-                handler.Handle(new DeleteDealTagCommand(nonExistingId), CancellationToken.None));
+                handler.Handle(new DeleteDealTagCommand
+                {
+                    DealId = nonExistingDealId,
+                    Tag = nonExistingTag
+                }, CancellationToken.None));
         }
     }
 }

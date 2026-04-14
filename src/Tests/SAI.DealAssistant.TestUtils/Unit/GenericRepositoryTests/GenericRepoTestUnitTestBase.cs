@@ -7,100 +7,100 @@ using SAI.DealAssistant.TestUtils.Unit.GenericRepositoryTests.Persistance;
 
 namespace SAI.DealAssistant.TestUtils.Unit
 {
-	/// <summary>
-	/// Base class for UnitTests.
-	/// Contains mapper and seeds data using SeedRepository.
-	/// </summary>
-	public class GenericRepoTestUnitTestBase : IDisposable
-	{
-		private bool _disposedValue;
+    /// <summary>
+    /// Base class for UnitTests.
+    /// Contains mapper and seeds data using SeedRepository.
+    /// </summary>
+    public class GenericRepoTestUnitTestBase : IDisposable
+    {
+        private bool _disposedValue;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="UnitTestBase"/> class.
-		/// Initializes DbContext, Fixture, Mapper and LoggerFactory.
-		/// </summary>
-		/// <param name="seedTestData">Flag if test data should be seeded.</param>
-		public GenericRepoTestUnitTestBase(bool seedTestData)
-		{
-			SqliteDbConnection = AppDbContextUtil_SQLiteDb.CreateSqliteConnection();
-			LoggerFactory = new LoggerFactory();
-			if (seedTestData)
-			{		
-				SeedData();
-			}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnitTestBase"/> class.
+        /// Initializes DbContext, Fixture, Mapper and LoggerFactory.
+        /// </summary>
+        /// <param name="seedTestData">Flag if test data should be seeded.</param>
+        public GenericRepoTestUnitTestBase(bool seedTestData)
+        {
+            SqliteDbConnection = AppDbContextUtil_SQLiteDb.CreateSqliteConnection();
+            LoggerFactory = new LoggerFactory();
+            if (seedTestData)
+            {
+                SeedData();
+            }
 
-			DbContext = CreateNewDbContext();
+            DbContext = CreateNewDbContext();
 
-			Fixture = new Fixture();
-			// Necessary for ommitting recursion behaviour - https://chsamii.medium.com/autofixture-throwingrecursionbehavior-22918cc7dae7
-			Fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
-				.ForEach(b => Fixture.Behaviors.Remove(b));
-			Fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            Fixture = new Fixture();
+            // Necessary for ommitting recursion behaviour - https://chsamii.medium.com/autofixture-throwingrecursionbehavior-22918cc7dae7
+            Fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
+                .ForEach(b => Fixture.Behaviors.Remove(b));
+            Fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
-			//Mapper = PersistenceMappingProfile.CreateInstance();
-			// TODO: Add IMediator ptop Init it properly
-		}
+            //Mapper = PersistenceMappingProfile.CreateInstance();
+            // TODO: Add IMediator ptop Init it properly
+        }
 
-		protected SqliteConnection SqliteDbConnection { get; }
+        protected SqliteConnection SqliteDbConnection { get; }
 
-		protected GenericRepoTestDbContext DbContext { get; }
+        protected GenericRepoTestDbContext DbContext { get; }
 
-		protected Fixture Fixture { get; }
+        protected Fixture Fixture { get; }
 
-		protected IMapper Mapper { get; }
+        protected IMapper Mapper { get; }
 
-		protected ILoggerFactory LoggerFactory { get; }
+        protected ILoggerFactory LoggerFactory { get; }
 
-		public void Dispose()
-		{
-			// Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-			Dispose(disposing: true);
-			GC.SuppressFinalize(this);
-		}
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
 
-		protected GenericRepoTestDbContext CreateNewDbContext()
-		{
-			return GenericRepoTestDbContextUtil_SQLiteDb.CreateDbContext(SqliteDbConnection);
-		}
+        protected GenericRepoTestDbContext CreateNewDbContext()
+        {
+            return GenericRepoTestDbContextUtil_SQLiteDb.CreateDbContext(SqliteDbConnection);
+        }
 
-		protected void SeedData()
-		{
-			using (var seedDbContext = GenericRepoTestDbContextUtil_SQLiteDb.CreateDbContext(SqliteDbConnection))
-			{
-				// Seed sample customers first so they get real Ids
-				var customers = GetCustomers().ToList();
-				seedDbContext.SampleCustomers.AddRange(customers);
-				seedDbContext.SaveChanges();
+        protected void SeedData()
+        {
+            using (var seedDbContext = GenericRepoTestDbContextUtil_SQLiteDb.CreateDbContext(SqliteDbConnection))
+            {
+                // Seed sample customers first so they get real Ids
+                var customers = GetCustomers().ToList();
+                seedDbContext.SampleCustomers.AddRange(customers);
+                seedDbContext.SaveChanges();
 
-				// Seed employees and assign them to customers round-robin
-				var employees = GetEmployees().ToList();
-				var savedCustomers = seedDbContext.SampleCustomers.ToList();
-				int custCount = savedCustomers.Count;
-				int i = 0;
-				foreach (var emp in employees)
-				{
-					var cust = savedCustomers[i++ % custCount];
-					emp.CustomerId = cust.Id;
-					seedDbContext.SampleEmployees.Add(emp);
-				}
+                // Seed employees and assign them to customers round-robin
+                var employees = GetEmployees().ToList();
+                var savedCustomers = seedDbContext.SampleCustomers.ToList();
+                int custCount = savedCustomers.Count;
+                int i = 0;
+                foreach (var emp in employees)
+                {
+                    var cust = savedCustomers[i++ % custCount];
+                    emp.CustomerId = cust.Id;
+                    seedDbContext.SampleEmployees.Add(emp);
+                }
 
-				seedDbContext.SaveChanges();
-			}
-		}
+                seedDbContext.SaveChanges();
+            }
+        }
 
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!_disposedValue)
-			{
-				if (disposing)
-				{
-					DbContext.Dispose();
-					SqliteDbConnection.Dispose();
-				}
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    DbContext.Dispose();
+                    SqliteDbConnection.Dispose();
+                }
 
-				_disposedValue = true;
-			}
-		}
+                _disposedValue = true;
+            }
+        }
         #region test data
 
         public static IEnumerable<SampleCustomer> GetCustomers()
@@ -125,19 +125,19 @@ namespace SAI.DealAssistant.TestUtils.Unit
             List<SampleEmployee> result = new List<SampleEmployee>
         {
 			// Please DO NOT CHANGE this data to not break existing tests, only add new or provide undefined fields
-			new SampleEmployee { Email = "Mechislaw.Medwecky@mail.dat", FirstName = "Mechislaw", LastName = "Medwecky" },
-            new SampleEmployee { Email = "ReginaldJ.Mitchell@mail.dat", FirstName = "ReginaldJ", LastName = "Mitchell" },
-            new SampleEmployee { Email = "Jimmy.Doolitle@mail.dat", FirstName = "Jimmy", LastName = "Doolitle" },
-            new SampleEmployee { Email = "Nikolay.Polikarpov@mail.dat", FirstName = "Nikolay", LastName = "Polikarpov" },
-            new SampleEmployee { Email = "Leroy.Grumman@mail.dat", FirstName = "Leroy", LastName = "Grumman" },
-            new SampleEmployee { Email = "Kurt.Tank@mail.dat", FirstName = "Kurt", LastName = "Tank" },
-            new SampleEmployee { Email = "Sydney.Camm@mail.dat", FirstName = "Sydney", LastName = "Camm" },
+			new SampleEmployee { Email = "Mechislaw.Medwecky@mail.dat", FirstName = "Mechislaw", LastName = "Medwecky", Salary= 1234 },
+            new SampleEmployee { Email = "ReginaldJ.Mitchell@mail.dat", FirstName = "ReginaldJ", LastName = "Mitchell", Salary= 9849 },
+            new SampleEmployee { Email = "Jimmy.Doolitle@mail.dat", FirstName = "Jimmy", LastName = "Doolitle" , Salary = 1234},
+            new SampleEmployee { Email = "Nikolay.Polikarpov@mail.dat", FirstName = "Nikolay", LastName = "Polikarpov", Salary= 9428 },
+            new SampleEmployee { Email = "Leroy.Grumman@mail.dat", FirstName = "Leroy", LastName = "Grumman" , Salary = 5928},
+            new SampleEmployee { Email = "Kurt.Tank@mail.dat", FirstName = "Kurt", LastName = "Tank", Salary= 3427  },
+            new SampleEmployee { Email = "Sydney.Camm@mail.dat", FirstName = "Sydney", LastName = "Camm" , Salary = 1234},
             new SampleEmployee { Email = "Valter.Novotny@mail.dat", FirstName = "Valter", LastName = "Novotny" },
             new SampleEmployee { Email = "Rudolph.Novotny@mail.dat", FirstName = "Rudolph", LastName = "Novotny" },
             new SampleEmployee { Email = "Kade.Cooper@mail.dat", FirstName = "Kade", LastName = "Cooper" },
             new SampleEmployee { Email = "Katerina.Larsen@mail.dat", FirstName = "Katerina", LastName = "Larsen" },
             new SampleEmployee { Email = "Scarlet.Pugh@mail.dat", FirstName = "Scarlet", LastName = "Pugh" },
-            new SampleEmployee { Email = "Louis.Welch@mail.dat", FirstName = "Louis", LastName = "Welch" },
+            new SampleEmployee { Email = "Louis.Welch@mail.dat", FirstName = "Louis", LastName = "Welch"    , Salary= 1234},
             new SampleEmployee { Email = "Rachel.Stephens@mail.dat", FirstName = "Rachel", LastName = "Stephens" },
             new SampleEmployee { Email = "Elysia.Sharpe@mail.dat", FirstName = "Elysia", LastName = "Sharpe" },
             new SampleEmployee { Email = "Harris.Stevens@mail.dat", FirstName = "Harris", LastName = "Stevens" },

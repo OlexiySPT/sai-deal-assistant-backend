@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Sai.DealAssistant.Domain.Entities;
 
 namespace Sai.DealAssistant.Infrastructure.Persistence.EntityConfigurations;
@@ -15,6 +18,7 @@ public abstract class BaseEntityConfiguration<TEntity> : BaseNonTrackedEntityCon
         //Shadow prop for optimistic concurrency implementation
         builder.Property<uint>("xmin").IsRowVersion().HasDefaultValue(0);
 
+      
         // Uncomment this to use soft delete via shadow property
         // and do not forget to update universal and specific repos and migrations
         //builder.Property<DateTime>("IsDeleted");

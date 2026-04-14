@@ -15,19 +15,22 @@ public class UpdateEventCommand : EventDto, IRequest<EventDto>
     {
         private readonly IEnumCache<EventState> _eventStateCache;
         private readonly IEnumCache<EventType> _eventTypeCache;
-        private readonly ICrudRepository<ContactPerson> _contactPersonRepository;
-        private readonly ICrudRepository<Event> _eventRepository;
+        private readonly IReadRepository<ContactPerson> _contactPersonRepository;
+        private readonly IReadRepository<Event> _eventRepository;
+        private readonly IReadRepository<Deal> _dealRepository;
 
         public Validator(
             IEnumCache<EventState> eventStateCache,
             IEnumCache<EventType> eventTypeCache,
-            ICrudRepository<ContactPerson> contactPersonRepository,
-            ICrudRepository<Event> eventRepository)
+            IReadRepository<ContactPerson> contactPersonRepository,
+            IReadRepository<Event> eventRepository,
+            IReadRepository<Deal> dealRepository)
         {
             _eventStateCache = eventStateCache;
             _eventTypeCache = eventTypeCache;
             _contactPersonRepository = contactPersonRepository;
             _eventRepository = eventRepository;
+            _dealRepository = dealRepository;
 
             RuleFor(c => c.Id)
                 .GreaterThan(0)
@@ -48,15 +51,32 @@ public class UpdateEventCommand : EventDto, IRequest<EventDto>
                     {
                         return true;
                     }
-                    var dealId = _eventRepository.GetAll().Where(c => c.Id == cmd.Id).Select(p => p.DealId).FirstOrDefault();
-                    return await _contactPersonRepository.ExistsAsync(c => c.Id == contactPersonId && c.DealId == dealId);
-                })
-                .WithMessage(cmd => $"Contact Person with Id {cmd.ContactPersonId} was not found for this deal.");
 
+                    // Resolve the DealId from the existing event since UpdateEventCommand does not carry it.
+                    var dealId = _eventRepository.GetAll()
+                        .Where(e => e.Id == cmd.Id)
+                        .Select(e => e.DealId)
+                        .FirstOrDefault();
+
+                    // Validate that the Deal and the ContactPerson belong to the same Firm.
+                    var deal = await _dealRepository.FirstOrDefaultAsync(d => d.Id == dealId);
+                    if (deal == null || deal.FirmId == 0)
+                    {
+                        return false;
+                    }
+
+                    return await _contactPersonRepository.ExistsAsync(
+                        c => c.Id == contactPersonId && c.FirmId == deal.FirmId);
+                })
+                .WithMessage(cmd => $"Contact Person with Id {cmd.ContactPersonId} does not belong to the same Firm as the Deal of this Event.");
 
             RuleFor(c => c.Date)
                 .NotEmpty()
                 .WithMessage("Date must be provided.");
+
+            RuleFor(c => c.Topic)
+                .NotEmpty()
+                .WithMessage("Topic must be provided.");
         }
     }
 
@@ -88,7 +108,8 @@ public class UpdateEventCommand : EventDto, IRequest<EventDto>
         {
             public MappingProfile()
             {
-                CreateMap<UpdateEventCommand, Event>().ReverseMap();
+                CreateMap<UpdateEventCommand, Event>()
+                    .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date!.ToUniversalTime()));
             }
         }
     }
