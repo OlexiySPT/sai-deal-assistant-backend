@@ -14,6 +14,8 @@ public class AppDbContext : DbContext
     public virtual DbSet<DealTag> DealTags => Set<DealTag>();
     public virtual DbSet<Event> Events => Set<Event>();
     public virtual DbSet<EventNote> EventNotes => Set<EventNote>();
+    public virtual DbSet<AiResult> AiResults => Set<AiResult>();
+    public virtual DbSet<AiRequest> AIRequests => Set<AiRequest>();
 
     #region Read-only entities
     public virtual DbSet<EventType> EventTypes  => Set<EventType>();

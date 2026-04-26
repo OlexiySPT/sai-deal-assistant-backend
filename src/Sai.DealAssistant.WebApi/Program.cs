@@ -1,14 +1,16 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Sai.DealAssistant.WebApi.Authorizations;
+﻿using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Application;
+using Sai.DealAssistant.Application.DealAutomation;
+using Sai.DealAssistant.Application.System.Seeding;
 using Sai.DealAssistant.Common.Configuration;
+using Sai.DealAssistant.Common.JobQueue;
+using Sai.DealAssistant.Common.Queue;
 using Sai.DealAssistant.Infrastructure;
 using Sai.DealAssistant.Infrastructure.Persistence;
+using Sai.DealAssistant.WebApi.Authorizations;
 using Sai.DealAssistant.WebApi.Extensions;
-using System.Text.Json.Serialization;
 using System.Text.Json;
-using Sai.DealAssistant.Application.System.Seeding;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +49,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddHealthChecks();
+
 #endregion
 
 var app = builder.Build();

@@ -2,6 +2,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Application.Entities.Deals.Commands;
 using Sai.DealAssistant.Domain.Entities;
+using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
 using SAI.DealAssistant.TestUtils.Unit;
 using System;
@@ -14,16 +15,65 @@ namespace Sai.DealAssistant.Application.Tests.Deals.Handlers.Commands;
 
 public class CreateDealCommandHandlerTests : UnitTestBase
 {
-    private readonly CrudRepository<Infrastructure.Persistence.AppDbContext, Deal> _repository;
-    private readonly CreateDealCommand.Handler _handler;
+    private readonly CrudRepository<AppDbContext, Deal> _repository;
+    private readonly CrudRepository<AppDbContext, Firm> _firmRepository;
     private readonly int _fidmId;
+
+    private readonly CreateDealCommand.Handler _handler;
 
     public CreateDealCommandHandlerTests()
         : base(seedTestData: true)
     {
-        _repository = new CrudRepository<Infrastructure.Persistence.AppDbContext, Deal>(DbContext);
-        _handler = new CreateDealCommand.Handler(_repository, Mapper);
+        _repository = new CrudRepository<AppDbContext, Deal>(DbContext);
+        _firmRepository = new CrudRepository<AppDbContext, Firm>(DbContext);
         _fidmId = DbContext.Firms.Select(f => f.Id).FirstOrDefault();
+
+        // Use real repositories for handler
+        _handler = new CreateDealCommand.Handler(
+            _repository,
+            Mapper,
+            new Infrastructure.Repositories.FullFirmRepository(DbContext),
+            _firmRepository,
+            new Sai.DealAssistant.Infrastructure.UnitOfWork(DbContext)
+        );
+    }
+
+    [Fact]
+    public async Task Handle_WhenFirmIdIsLessThan1AndFirmNameProvided_CreatesFirmAndUsesItsId()
+    {
+        // Arrange
+        var firmName = "New Firm " + Guid.NewGuid();
+        var firmId = 0;
+
+        // Use real handler with real repositories (DbContext-backed)
+        var handler = _handler;
+
+        var command = new CreateDealCommand
+        {
+            StartDate = new DateOnly(2024, 1, 1),
+            Name = "Deal with new firm " + Guid.NewGuid(),
+            TypeId = 1,
+            StateId = 1,
+            FirmId = firmId,
+            FirmName = firmName
+        };
+
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+
+        // Verify firm was created in database
+        var createdFirm = await DbContext.Firms.FirstOrDefaultAsync(f => f.Name == firmName);
+        createdFirm.Should().NotBeNull();
+        createdFirm!.Country.Should().Be("Unknown");
+        result.FirmId.Should().Be(createdFirm.Id);
+
+        // Verify deal was created and linked to the firm
+        var createdDeal = await DbContext.Deals.FirstOrDefaultAsync(d => d.Id == result.Id);
+        createdDeal.Should().NotBeNull();
+        createdDeal!.FirmId.Should().Be(createdFirm.Id);
     }
 
     [Fact]

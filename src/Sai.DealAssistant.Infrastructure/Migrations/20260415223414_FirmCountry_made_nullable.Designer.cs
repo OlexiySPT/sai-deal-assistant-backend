@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Sai.DealAssistant.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using Sai.DealAssistant.Infrastructure.Persistence;
 namespace Sai.DealAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260415223414_FirmCountry_made_nullable")]
+    partial class FirmCountry_made_nullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,7 +26,7 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.AiRequest", b =>
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.AiResult", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,34 +48,15 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Result")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.ToTable("AIRequests");
-                });
-
-            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.AiResult", b =>
-                {
-                    b.Property<int>("RequestId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamptz");
-
-                    b.Property<double>("DurationSeconds")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("Result")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("Success")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("RequestId");
 
                     b.ToTable("AiResults");
                 });
@@ -146,9 +130,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AiBriefDescription")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AiFullStructuredInfo")
                         .HasColumnType("text");
 
                     b.Property<string>("AiSearchInfo")
@@ -580,15 +561,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.AiResult", b =>
-                {
-                    b.HasOne("Sai.DealAssistant.Domain.Entities.AiRequest", null)
-                        .WithMany()
-                        .HasForeignKey("RequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ContactPerson", b =>

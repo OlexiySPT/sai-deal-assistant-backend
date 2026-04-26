@@ -7,7 +7,6 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -28,7 +27,19 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Sai.DealAssistant.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+
+# Install Playwright dependencies and PowerShell
+RUN apt-get update && \
+    apt-get install -y wget gnupg ca-certificates \
+    libnss3 libatk-bridge2.0-0 libgtk-3-0 libxss1 libasound2 libgbm1 libxshmfence1 \
+    powershell && \
+    rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Install Playwright browsers
+RUN pwsh /app/bin/Release/net8.0/playwright.ps1 install
+
 ENTRYPOINT ["dotnet", "Sai.DealAssistant.WebApi.dll"]

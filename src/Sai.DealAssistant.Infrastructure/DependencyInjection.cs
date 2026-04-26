@@ -1,12 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Playwright;
 using Sai.DealAssistant.Common.Configuration;
 using Sai.DealAssistant.Domain;
+using Sai.DealAssistant.Domain.AI;
+using Sai.DealAssistant.Domain.AI.Repositories;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
+using Sai.DealAssistant.Domain.Http;
 using Sai.DealAssistant.Domain.Repositories;
 using Sai.DealAssistant.Domain.Repositories.Generic;
+using Sai.DealAssistant.Infrastructure.AI;
+using Sai.DealAssistant.Infrastructure.AI.Repositories;
+using Sai.DealAssistant.Infrastructure.Http;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.Infrastructure.Repositories;
 using Sai.DealAssistant.Infrastructure.Repositories.Generic;
@@ -36,6 +43,17 @@ public static class DependencyInjection
             return new UnitOfWork(dbContext);
         });
 
+        services.AddHttpClient();
+        // Register Playwright and Browser as singletons for reuse
+        services.AddSingleton<IPlaywright>(_ => Playwright.CreateAsync().GetAwaiter().GetResult());
+        services.AddSingleton<IBrowser>(sp =>
+        {
+            var playwright = sp.GetRequiredService<IPlaywright>();
+            return playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true }).GetAwaiter().GetResult();
+        });
+
+        // Register AiClient as IAiClient using HttpClientFactory
+        services.AddHttpClient<IAiClient, AiClient>();
         return services;
     }
 
@@ -49,6 +67,12 @@ public static class DependencyInjection
                 sp.GetRequiredService<ILogger<SeedRepository>>(),
                 sp.GetRequiredService<AppDbContext>(),
                 configuration));
+
+        // Register ExternalPageScrapper and ExternalPageReader
+        services.AddScoped<IExternalPageScrapper, ExternalPageScrapper>();
+        services.AddScoped<IExternalPageReader, ExternalPageReader>();
+        // Register AiResultRepository
+        services.AddScoped<IAiResultRepository, AiResultRepository>();
         return services;
     }
 

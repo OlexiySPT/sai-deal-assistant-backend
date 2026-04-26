@@ -4,7 +4,9 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Sai.DealAssistant.Application.Common.Behaviors;
 using Sai.DealAssistant.Application.Common.Caching;
+using Sai.DealAssistant.Application.DealAutomation;
 using Sai.DealAssistant.Application.System.Seeding;
+using Sai.DealAssistant.Common.Queue;
 
 namespace Sai.DealAssistant.Application;
 

@@ -125,5 +125,7 @@ namespace SAI.DealAssistant.TestUtils.Unit
 		public bool   SeedTestData              => false;
 		public int    MultiplyDealsTargetRowCount => 0;
 		public int    BulkSqlTimeoutSeconds     => 900;
-	}
+
+        public string AiApiBaseUrl => string.Empty;
+    }
 }
