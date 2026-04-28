@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sai.DealAssistant.Application.DealAutomation.Commands;
 using Sai.DealAssistant.Common.JobQueue;
 using Sai.DealAssistant.Common.Queue;
+using System.Net.Mime;
 
 namespace Sai.DealAssistant.WebApi.Controllers;
 
@@ -32,6 +33,25 @@ public class DealAutomationController : ControllerBase
     [ProducesResponseType(400)]
     public async Task<IActionResult> ReadPage([FromBody] ProcessPageCommand command)
     {
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Generate cover letter for the deal by id.
+    /// </summary>
+    /// <param name="id">Deal id</param>
+    /// <response code="200">Returns generated cover letter string.</response>
+    /// <response code="400">Returns when conditions are not met.</response>
+    /// <response code="404">Deal was not found.</response>
+    [HttpPost("{id}/generate-cover-letter")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(typeof(string), 200)]
+    [ProducesResponseType(typeof(IDictionary<string, string>), 400)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GenerateCoverLetter(int id)
+    {
+        var command = new GenerateCoverLetterCommand { DealId = id };
         var result = await _mediator.Send(command);
         return Ok(result);
     }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Sai.DealAssistant.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using Sai.DealAssistant.Infrastructure.Persistence;
 namespace Sai.DealAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260427135701_DealState_and_Status_audit_added")]
+    partial class DealState_and_Status_audit_added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,36 +25,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.AiPrompt", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Version")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Key", "Version")
-                        .IsUnique();
-
-                    b.ToTable("AiPrompts", (string)null);
-                });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.AiRequest", b =>
                 {
@@ -312,16 +285,13 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("PreviousText")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar");
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("PreviousValue")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DealId")
-                        .HasDatabaseName("IX_DealStateIdAudits_DealId");
 
                     b.ToTable("DealStateIdAudits");
                 });
@@ -344,13 +314,10 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("PreviousValue")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar");
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DealId")
-                        .HasDatabaseName("IX_DealStatusAudits_DealId");
 
                     b.ToTable("DealStatusAudits");
                 });
@@ -725,24 +692,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.Navigation("State");
 
                     b.Navigation("Type");
-                });
-
-            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealStateIdAudit", b =>
-                {
-                    b.HasOne("Sai.DealAssistant.Domain.Entities.Deal", null)
-                        .WithMany()
-                        .HasForeignKey("DealId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealStatusAudit", b =>
-                {
-                    b.HasOne("Sai.DealAssistant.Domain.Entities.Deal", null)
-                        .WithMany()
-                        .HasForeignKey("DealId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealTag", b =>

@@ -127,5 +127,10 @@ namespace SAI.DealAssistant.TestUtils.Unit
 		public int    BulkSqlTimeoutSeconds     => 900;
 
         public string AiApiBaseUrl => string.Empty;
+        public string AiApiUrl => string.Empty;
+		public string AiApiKey => string.Empty;
+		public string AiApiFastModelName => string.Empty;
+		public string AiApiBalancedModelName => string.Empty;
+		public string AiApiComplexModelName => string.Empty;
     }
 }

@@ -103,11 +103,12 @@ public partial class DatabaseSeeder
         await _seedRepository.SeedDealTypesAsync(GetDealTypes);
         await _seedRepository.SeedAmountTypesAsync(GetAmountTypes);
         await _seedRepository.SeedUsersAsync(GetUsers);
+        await _seedRepository.SeedAiPromptsAsync(GetAiPrompts);
     }
 
     public async Task SeedTestDataAsync()
     {
-        if(await _seedRepository.AnyTestDataExistsAsync())
+        if (await _seedRepository.AnyTestDataExistsAsync())
         {
             _logger.LogInformation("Test data already exists in the database. Skipping seeding of test data.");
             return;
@@ -140,4 +141,74 @@ public partial class DatabaseSeeder
         await _seedRepository.MultiplyDealsAsync(targetRowCount);
         await _seedRepository.MultiplyDealDependentsAsync((int)(targetRowCount * 0.7));
     }
+    #region AI Stuff seeding
+
+    public static IEnumerable<AiPrompt> GetAiPrompts()
+    {
+        return new List<AiPrompt>
+        {
+            ProcessPagePrompt_V1_0
+        };
+    }
+
+    public static readonly AiPrompt ProcessPagePrompt_V1_0 = new AiPrompt
+    {
+        Key = "process_page",
+        Version = "1.0",
+        Text =
+@"SYSTEM:
+You are an information extraction engine.
+Your task is to extract structured job vacancy data from noisy webpage text.
+
+Rules:
+- Focus only on the actual job vacancy content
+- Do not invent information
+- If something is missing, return null
+- Be concise but complete
+- The 'text' field MUST contain the FULL cleaned job posting content
+
+To extract requirements and nice-to-haves for sections like:
+- 'Requirements'
+- 'What we are looking for'
+- 'Nice to have'
+- 'Will be a plus'
+- 'Qualifications'
+
+To extract responsibilities for sections like:
+- 'responsibilities'
+- 'What you will do'
+- 'You will be involved into'
+
+Description:
+- Extract only the introductory part describing the role/company
+- STOP when structured sections begin (requirements/responsibilities/etc.)
+
+CRITICAL FORMATTING REQUIREMENTS:
+- The 'text' and 'description' fields must preserve line breaks exactly
+- Each logical line or bullet point must remain on its own line
+- Never convert multi-line text into a single paragraph
+- Output must contain '\n' characters where line breaks exist
+
+USER:
+Extract job information from the text below.
+
+CONTEXT:
+{{RAW_PAGE_TEXT}}
+
+OUTPUT:
+Return ONLY valid JSON with this exact structure:
+
+{
+  'text': string | null,
+  'title': string | null,
+  'company': string | null,
+  'location': string | null,
+  'description': string,
+  'responsibilities': string[],
+  'requirements': string[],
+  'nice_to_have': string[],
+  'perks': string[]
+}"
+    };
+    #endregion
 }

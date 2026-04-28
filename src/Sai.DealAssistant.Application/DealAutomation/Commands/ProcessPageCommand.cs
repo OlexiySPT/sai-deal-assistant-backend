@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
-using Sai.DealAssistant.Application.DealAutomation.Dto;
 using Sai.DealAssistant.Common.JobQueue;
 using Sai.DealAssistant.Domain.AI;
+using Sai.DealAssistant.Domain.AI.Repositories;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Http;
 using Sai.DealAssistant.Domain.Repositories.Generic;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
@@ -38,23 +37,27 @@ public class ProcessPageCommand : IRequest<string>, IJobQueueCommand
         private readonly IExternalPageScrapper _scrapper;
         private readonly IAiClient _aiClient;
         private readonly ICrudRepository<Deal> _dealRepository;
+        IAiPromptRepository _aiPromptRepository;
 
         public Handler(
             IExternalPageScrapper scrapper,
             IAiClient aiClient,
-            ICrudRepository<Deal> dealRepository)
+            ICrudRepository<Deal> dealRepository,
+            IAiPromptRepository aiPromptRepository)
         {
             _scrapper = scrapper;
             _aiClient = aiClient;
             _dealRepository = dealRepository;
+            _aiPromptRepository = aiPromptRepository;
         }
 
         public async Task<string> Handle(ProcessPageCommand request, CancellationToken cancellationToken)
         {
             var scrappedPage = await _scrapper.ReadPageContent(request.Url);
+            var promptFromDb = await _aiPromptRepository.GetTextAsync("process_page");
             var aiResponseText = await _aiClient.Chat(
                 AiTaskTypesEnum.Fast,
-                PROMPT.Replace("{{RAW_PAGE_TEXT}}", scrappedPage),
+                (promptFromDb ?? PROMPT).Replace("{{RAW_PAGE_TEXT}}", scrappedPage),
                 request.DealId,
                 TimeSpan.FromSeconds(600)
             );

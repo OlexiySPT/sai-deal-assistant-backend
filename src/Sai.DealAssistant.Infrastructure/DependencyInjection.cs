@@ -73,6 +73,7 @@ public static class DependencyInjection
         services.AddScoped<IExternalPageReader, ExternalPageReader>();
         // Register AiResultRepository
         services.AddScoped<IAiResultRepository, AiResultRepository>();
+        services.AddScoped<IAiPromptRepository, AiPromptRepository>();
         return services;
     }
 
