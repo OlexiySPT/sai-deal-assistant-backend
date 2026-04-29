@@ -45,7 +45,12 @@ RUN apt-get update && \
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# Install Playwright browsers
-RUN pwsh /app/bin/Release/net8.0/playwright.ps1 install
+# Install Playwright browsers if the Playwright script exists in the published output
+# Guard the step so image build won't fail when project doesn't use Playwright
+RUN if [ -f "/app/bin/Release/net8.0/playwright.ps1" ]; then \
+      pwsh "/app/bin/Release/net8.0/playwright.ps1" install; \
+    else \
+      echo "No Playwright install script found, skipping browser install"; \
+    fi
 
 ENTRYPOINT ["dotnet", "Sai.DealAssistant.WebApi.dll"]
