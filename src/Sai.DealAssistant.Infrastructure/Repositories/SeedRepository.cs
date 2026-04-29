@@ -5,6 +5,7 @@ using Sai.DealAssistant.Common.Configuration;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Entities.ReadOnly.Enums;
 using Sai.DealAssistant.Domain.Repositories;
+using Sai.DealAssistant.Domain.AI;
 using Sai.DealAssistant.Infrastructure.Persistence;
 
 namespace Sai.DealAssistant.Infrastructure.Repositories;
@@ -23,6 +24,24 @@ public class SeedRepository : ISeedRepository
         _logger = logger is not null ? logger : throw new ArgumentNullException(nameof(logger));
         _appDbContext = appDbContext is not null ? appDbContext : throw new ArgumentNullException(nameof(appDbContext));
         _bulkSqlTimeoutSeconds = configuration is not null ? configuration.BulkSqlTimeoutSeconds : throw new ArgumentNullException(nameof(configuration));
+    }
+
+    public async Task SeedAiPromptsAsync(Func<IEnumerable<AiPrompt>> getPrompts)
+    {
+        var existing = await _appDbContext.Set<AiPrompt>().ToListAsync();
+
+        foreach (var p in getPrompts())
+        {
+            if (!existing.Exists(e => string.Equals(e.Key, p.Key, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(e.Version, p.Version, StringComparison.OrdinalIgnoreCase)))
+            {
+                _appDbContext.Set<AiPrompt>().Add(p);
+            }
+        }
+
+        await _appDbContext.SaveChangesAsync();
+
+        _logger.LogInformation("AiPrompts table filled.");
     }
 
     public async Task SeedEventTypesAsync(Func<IEnumerable<EventType>> getEventTypes)

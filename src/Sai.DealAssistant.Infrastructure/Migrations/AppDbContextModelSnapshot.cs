@@ -23,6 +23,125 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.AiMetadata", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Type", "Key", "Version")
+                        .IsUnique();
+
+                    b.ToTable("AiMetadata", (string)null);
+                });
+
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.AiPrompt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Key", "Version")
+                        .IsUnique();
+
+                    b.ToTable("AiPrompts");
+                });
+
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.AiRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamptz");
+
+                    b.Property<int?>("DealId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Prompt")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AIRequests");
+                });
+
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.AiResult", b =>
+                {
+                    b.Property<int>("RequestId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamptz");
+
+                    b.Property<double>("DurationSeconds")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Result")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("RequestId");
+
+                    b.ToTable("AiResults");
+                });
+
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ContactPerson", b =>
                 {
                     b.Property<int>("Id")
@@ -92,6 +211,9 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AiBriefDescription")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AiFullStructuredInfo")
                         .HasColumnType("text");
 
                     b.Property<string>("AiSearchInfo")
@@ -205,6 +327,67 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.HasIndex("TypeId");
 
                     b.ToTable("Deals");
+                });
+
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealStateIdAudit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("ChangeDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ChangeUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DealId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PreviousText")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar");
+
+                    b.Property<int>("PreviousValue")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DealId")
+                        .HasDatabaseName("IX_DealStateIdAudits_DealId");
+
+                    b.ToTable("DealStateIdAudits");
+                });
+
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealStatusAudit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("ChangeDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ChangeUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DealId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PreviousValue")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DealId")
+                        .HasDatabaseName("IX_DealStatusAudits_DealId");
+
+                    b.ToTable("DealStatusAudits");
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealTag", b =>
@@ -342,7 +525,6 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar");
 
@@ -526,6 +708,15 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.AiResult", b =>
+                {
+                    b.HasOne("Sai.DealAssistant.Domain.Entities.AiRequest", null)
+                        .WithMany()
+                        .HasForeignKey("RequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.ContactPerson", b =>
                 {
                     b.HasOne("Sai.DealAssistant.Domain.Entities.Firm", "Firm")
@@ -569,6 +760,24 @@ namespace Sai.DealAssistant.Infrastructure.Migrations
                     b.Navigation("State");
 
                     b.Navigation("Type");
+                });
+
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealStateIdAudit", b =>
+                {
+                    b.HasOne("Sai.DealAssistant.Domain.Entities.Deal", null)
+                        .WithMany()
+                        .HasForeignKey("DealId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealStatusAudit", b =>
+                {
+                    b.HasOne("Sai.DealAssistant.Domain.Entities.Deal", null)
+                        .WithMany()
+                        .HasForeignKey("DealId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Sai.DealAssistant.Domain.Entities.DealTag", b =>

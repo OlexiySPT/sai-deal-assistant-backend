@@ -14,6 +14,12 @@ public class AppDbContext : DbContext
     public virtual DbSet<DealTag> DealTags => Set<DealTag>();
     public virtual DbSet<Event> Events => Set<Event>();
     public virtual DbSet<EventNote> EventNotes => Set<EventNote>();
+    public virtual DbSet<AiResult> AiResults => Set<AiResult>();
+    public virtual DbSet<AiRequest> AIRequests => Set<AiRequest>();
+    public virtual DbSet<AiPrompt> AiPrompts => Set<AiPrompt>();
+    public virtual DbSet<DealStatusAudit> DealStatusAudits => Set<DealStatusAudit>();
+    public virtual DbSet<DealStateIdAudit> DealStateIdAudits => Set<DealStateIdAudit>();
+    public virtual DbSet<AiMetadata> DealFieldAudits => Set<AiMetadata>();
 
     #region Read-only entities
     public virtual DbSet<EventType> EventTypes  => Set<EventType>();
@@ -33,6 +39,64 @@ public class AppDbContext : DbContext
     {
         UpdateDenormFirmName();
         UpdateDenormLastActionDate();
+        UpdateDealFieldAudits();
+    }
+
+    private void UpdateDealFieldAudits()
+    {
+        // For each modified Deal, if Status or StateId changed - save previous values to audit tables
+        foreach (var entry in ChangeTracker.Entries<Deal>().Where(e => e.State == EntityState.Modified))
+        {
+            var dealId = (int)(entry.Property(d => d.Id).CurrentValue!);
+
+            // Determine user who made the change (fallback to 0)
+            int changeUserId = 0;
+            try
+            {
+                changeUserId = (int)entry.Property(d => d.UpdatedBy).CurrentValue!;
+            }
+            catch
+            {
+                // ignore - leave as 0 if property missing
+            }
+
+            var changeDate = DateTime.UtcNow;
+
+            if (entry.Property(d => d.Status).IsModified)
+            {
+                var previousStatus = (string?)entry.OriginalValues[nameof(Deal.Status)] ?? string.Empty;
+                // add audit entry
+                Set<DealStatusAudit>().Add(new DealStatusAudit
+                {
+                    DealId = dealId,
+                    PreviousValue = previousStatus,
+                    ChangeDate = changeDate,
+                    ChangeUserId = changeUserId
+                });
+            }
+
+            if (entry.Property(d => d.StateId).IsModified)
+            {
+                var previousStateId = (int?)entry.OriginalValues[nameof(Deal.StateId)];
+                var previousText = string.Empty;
+                if (previousStateId.HasValue && previousStateId.Value > 0)
+                {
+                    var state = DealStates.Local.FirstOrDefault(s => s.Id == previousStateId.Value)
+                                ?? DealStates.Find(previousStateId.Value);
+                    if (state is not null)
+                        previousText = state.State;
+                }
+
+                Set<DealStateIdAudit>().Add(new DealStateIdAudit
+                {
+                    DealId = dealId,
+                    PreviousValue = previousStateId ?? 0,
+                    PreviousText = previousText,
+                    ChangeDate = changeDate,
+                    ChangeUserId = changeUserId
+                });
+            }
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

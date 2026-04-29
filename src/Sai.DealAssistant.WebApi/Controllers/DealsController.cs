@@ -5,6 +5,7 @@ using Sai.DealAssistant.Application;
 using Sai.DealAssistant.Application.Entities.Deals.Commands;
 using Sai.DealAssistant.Application.Entities.Deals.Dtos;
 using Sai.DealAssistant.Application.Entities.Deals.Queries;
+using Sai.DealAssistant.Application.DealAutomation.Commands;
 using System.Net.Mime;
 
 namespace Sai.DealAssistant.WebApi.Controllers
