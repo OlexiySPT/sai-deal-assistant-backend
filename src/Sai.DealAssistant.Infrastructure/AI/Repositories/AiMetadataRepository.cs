@@ -3,46 +3,44 @@ using Sai.DealAssistant.Domain;
 using Sai.DealAssistant.Domain.AI.Repositories;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Infrastructure.Persistence;
-using System;
-using System.Text.RegularExpressions;
 
 namespace Sai.DealAssistant.Infrastructure.AI.Repositories;
 
-public class AiPromptRepository : IAiPromptRepository
+public class AiMetadataRepository : IAiMetadataRepository
 {
     private readonly AppDbContext _dbContext;
 
-    public AiPromptRepository(AppDbContext dbContext)
+    public AiMetadataRepository(AppDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<int> CreateAsync(AiPrompt prompt)
+    public async Task<int> CreateAsync(AiMetadata metadata)
     {
-        if (!Regex.IsMatch(prompt.Version, @"^[0-9]+(\.[0-9]+)*$"))
-            throw new ArgumentException("Version must contain only numbers and dots.", nameof(prompt.Version));
+        if (!VersionUtil.IsValidVersion(metadata.Version))
+            throw new ArgumentException("Version must contain only numbers and dots.", nameof(metadata.Version));
 
-        await _dbContext.Set<AiPrompt>().AddAsync(prompt);
+        await _dbContext.Set<AiMetadata>().AddAsync(metadata);
         await _dbContext.SaveChangesAsync();
-        return prompt.Id;
+        return metadata.Id;
     }
 
-    public async Task<int> UpdateAsync(AiPrompt prompt)
+    public async Task<int> UpdateAsync(AiMetadata metadata)
     {
-        if (!VersionUtil.IsValidVersion(prompt.Version))
-            throw new ArgumentException("Version must contain only numbers and dots.", nameof(prompt.Version));
+        if (!VersionUtil.IsValidVersion(metadata.Version))
+            throw new ArgumentException("Version must contain only numbers and dots.", nameof(metadata.Version));
 
-        _dbContext.Set<AiPrompt>().Update(prompt);
+        _dbContext.Set<AiMetadata>().Update(metadata);
         await _dbContext.SaveChangesAsync();
-        return prompt.Id;
+        return metadata.Id;
     }
 
-    public async Task<string?> GetTextAsync(string key, string? version)
+    public async Task<string?> GetTextAsync(string type, string key, string? version)
     {
         if (string.IsNullOrWhiteSpace(key))
             return null;
 
-        var query = _dbContext.Set<AiPrompt>().Where(p => p.Key == key);
+        var query = _dbContext.Set<AiMetadata>().Where(p => p.Type == type && p.Key == key);
 
         if (version != null)
         {
@@ -59,6 +57,6 @@ public class AiPromptRepository : IAiPromptRepository
 
         var max = all.Aggregate((a, b) => VersionUtil.CompareVersion(a.Version, b.Version) >= 0 ? a : b);
         return max.Text;
+    
     }
-
 }

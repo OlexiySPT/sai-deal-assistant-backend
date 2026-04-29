@@ -2,11 +2,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sai.DealAssistant.Domain.Entities;
 
-public class AiPromptConfiguration : IEntityTypeConfiguration<AiPrompt>
+public class AiMetadataConfiguration : IEntityTypeConfiguration<AiMetadata>
 {
-    public void Configure(EntityTypeBuilder<AiPrompt> builder)
+    public void Configure(EntityTypeBuilder<AiMetadata> builder)
     {
+        builder.ToTable("AiMetadata");
         builder.HasKey(e => e.Id);
+
+        builder.Property(e => e.Type)
+            .HasColumnType("varchar")
+            .HasMaxLength(255)
+            .IsRequired();
 
         builder.Property(e => e.Key)
             .HasColumnType("varchar")
@@ -22,7 +28,7 @@ public class AiPromptConfiguration : IEntityTypeConfiguration<AiPrompt>
             .HasColumnType("text")
             .IsRequired();
 
-        builder.HasIndex(e => new { e.Key, e.Version })
+        builder.HasIndex(e => new {e.Type, e.Key, e.Version })
             .IsUnique();
 
         // Ensure version contains only numbers and dots (e.g. 1, 1.0, 2.1.3)

@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sai.DealAssistant.Application;
-using Sai.DealAssistant.Application.DealAutomation;
 using Sai.DealAssistant.Application.System.Seeding;
 using Sai.DealAssistant.Common.Configuration;
-using Sai.DealAssistant.Common.JobQueue;
-using Sai.DealAssistant.Common.Queue;
 using Sai.DealAssistant.Infrastructure;
 using Sai.DealAssistant.Infrastructure.Persistence;
 using Sai.DealAssistant.WebApi.Authorizations;

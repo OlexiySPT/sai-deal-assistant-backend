@@ -19,6 +19,7 @@ public class AppDbContext : DbContext
     public virtual DbSet<AiPrompt> AiPrompts => Set<AiPrompt>();
     public virtual DbSet<DealStatusAudit> DealStatusAudits => Set<DealStatusAudit>();
     public virtual DbSet<DealStateIdAudit> DealStateIdAudits => Set<DealStateIdAudit>();
+    public virtual DbSet<AiMetadata> DealFieldAudits => Set<AiMetadata>();
 
     #region Read-only entities
     public virtual DbSet<EventType> EventTypes  => Set<EventType>();

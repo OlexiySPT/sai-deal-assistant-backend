@@ -15,17 +15,11 @@ public class AiClient : IAiClient
     private readonly IAiResultRepository _aiResultRepository;
     private readonly IAiPromptRepository _aiPromptRepository;
 
-    public AiClient(HttpClient httpClient, IAppConfiguration config, IAiResultRepository aiResultRepository)
+    public AiClient(HttpClient httpClient, IAppConfiguration config, IAiResultRepository aiResultRepository, IAiPromptRepository aiPromptRepository)
     {
         _httpClient = httpClient;
         _config = config;
         _aiResultRepository = aiResultRepository;
-    }
-
-    // Added overload with prompt repository injection
-    public AiClient(HttpClient httpClient, IAppConfiguration config, IAiResultRepository aiResultRepository, IAiPromptRepository aiPromptRepository)
-        : this(httpClient, config, aiResultRepository)
-    {
         _aiPromptRepository = aiPromptRepository;
     }
 

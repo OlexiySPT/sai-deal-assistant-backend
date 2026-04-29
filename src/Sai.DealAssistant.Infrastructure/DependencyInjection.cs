@@ -68,11 +68,10 @@ public static class DependencyInjection
                 sp.GetRequiredService<AppDbContext>(),
                 configuration));
 
-        // Register ExternalPageScrapper and ExternalPageReader
         services.AddScoped<IExternalPageScrapper, ExternalPageScrapper>();
         services.AddScoped<IExternalPageReader, ExternalPageReader>();
-        // Register AiResultRepository
         services.AddScoped<IAiResultRepository, AiResultRepository>();
+        services.AddScoped<IAiMetadataRepository, AiMetadataRepository>();
         services.AddScoped<IAiPromptRepository, AiPromptRepository>();
         return services;
     }
