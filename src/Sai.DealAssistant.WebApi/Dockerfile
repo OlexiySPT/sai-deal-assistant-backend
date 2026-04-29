@@ -42,15 +42,24 @@ RUN apt-get update && \
       powershell && \
     rm -rf /var/lib/apt/lists/*
 
+# Install Playwright CLI as a .NET global tool and install browsers
+# This ensures browsers are available at runtime in the final image.
+RUN dotnet tool install --global Microsoft.Playwright.CLI || true && \
+    export PATH="$PATH:/root/.dotnet/tools" && \
+    # Install browsers with OS dependencies
+    /root/.dotnet/tools/playwright install --with-deps || true
+
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# Install Playwright browsers if the Playwright script exists in the published output
-# Guard the step so image build won't fail when project doesn't use Playwright
-RUN if [ -f "/app/bin/Release/net8.0/playwright.ps1" ]; then \
+# The Playwright browsers should already be installed by the global CLI step above.
+# Keep a fallback to run the generated PowerShell installer if it exists in the publish output.
+RUN if [ -f "/app/playwright.ps1" ]; then \
+      pwsh "/app/playwright.ps1" install; \
+    elif [ -f "/app/bin/Release/net8.0/playwright.ps1" ]; then \
       pwsh "/app/bin/Release/net8.0/playwright.ps1" install; \
     else \
-      echo "No Playwright install script found, skipping browser install"; \
+      echo "No Playwright install script found in publish output, skipping fallback install"; \
     fi
 
 ENTRYPOINT ["dotnet", "Sai.DealAssistant.WebApi.dll"]
