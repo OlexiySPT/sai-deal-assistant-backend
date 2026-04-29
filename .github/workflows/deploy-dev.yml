@@ -60,6 +60,12 @@ jobs:
             -e EnumTablesCacheExpitrationMins="${{ vars.ENUM_TABLES_CACHE_EXPIRATION_MINS }}" \
             -e DefaultResultPageSize="${{ vars.DEFAULT_RESULT_PAGE_SIZE }}" \
             -e SeedTestData="${{ vars.SEED_TEST_DATA }}" \
+            -e AiApiBaseUrl="${{ vars.AI_API_BASE_URL }}" \
+            -e AiApiUrl="${{ vars.AI_API_URL }}" \
+            -e AiApiKey="${{ secrets.AI_API_KEY }}" \
+            -e AiApiFastModelName="${{ vars.AI_API_FAST_MODEL_NAME }}" \
+            -e AiApiBalancedModelName="${{ vars.AI_API_BALANCED_MODEL_NAME }}" \
+            -e AiApiComplexModelName="${{ vars.AI_API_COMPLEX_MODEL_NAME }}" \
             -v /home/sai/aspnetapp.pfx:/https/aspnetapp.pfx:ro \
             sai-deal-assistant:dev
 
