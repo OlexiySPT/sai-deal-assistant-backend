@@ -5,6 +5,7 @@ using Sai.DealAssistant.Common.Enums;
 using Sai.DealAssistant.Domain.Entities;
 using Sai.DealAssistant.Domain.Helpers;
 using Sai.DealAssistant.Domain.Repositories.Generic;
+using System.Linq;
 
 
 namespace Sai.DealAssistant.Application.Entities.Deals.Queries;
@@ -23,17 +24,21 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
     public int[]? StateIds { get; set; }
     public int[]? TypeIds { get; set; }
 	public DateRange? HasEventInThisPeriod { get; set; }
+	public string? ContactPersonName { get; set; }
 
     public class Handler : IRequestHandler<GetDealListQuery, QueryResult<DealListItemDto>>
 	{
 		private readonly IReadRepository<Deal> _repository;
         private readonly IReadRepository<Event> _eventRepo;
+		private readonly IReadRepository<ContactPerson> _contactPersonRepo;
 
-        public Handler(IReadRepository<Deal> repository, IReadRepository<Event> eventRepo)
+        public Handler(IReadRepository<Deal> repository, IReadRepository<Event> eventRepo, 
+			IReadRepository<ContactPerson> contactPersonRepo)
         {
 			_repository = repository;
 			_eventRepo = eventRepo;
-		}
+			_contactPersonRepo = contactPersonRepo;
+        }
 
 		public async Task<QueryResult<DealListItemDto>> Handle(
 			GetDealListQuery request, CancellationToken cancellationToken)
@@ -86,6 +91,14 @@ public class GetDealListQuery : PagedQueryRequest<QueryResult<DealListItemDto>>
 				// but in an SQLite in-memory database it can't be translated to SQL
                 qry = qry.Where(deal => eventQry.Select(p=>p.DealId).Contains(deal.Id));
 			}
+
+			if(!string.IsNullOrWhiteSpace(request.ContactPersonName))
+            {
+				var contactpersonQry = _contactPersonRepo.GetAll()
+						.Where(StringSearchExpressions.CaseInsensitiveContains<ContactPerson>(P => P.Name!, request.ContactPersonName));
+				qry = qry.Where(deal => contactpersonQry.Select(p => p.FirmId).Contains(deal.FirmId));
+            }
+
             var totalItems = await _repository.CountAsync(qry);
 
 			var result = await _repository.SelectPageAsync(
