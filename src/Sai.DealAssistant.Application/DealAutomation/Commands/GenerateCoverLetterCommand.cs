@@ -71,8 +71,7 @@ public class GenerateCoverLetterCommand : IRequest<string>, IJobQueueCommand
             var aiResponseText = await _aiClient.Chat(
                 AiTaskTypesEnum.Complex,
                 preparedPrompt,
-                request.DealId,
-                TimeSpan.FromSeconds(600)
+                request.DealId
             );
             var resultJson = JsonNode.Parse(aiResponseText);
             var resultContent = resultJson?["choices"]?[0]?["message"]?["content"]?.ToString();

@@ -5,6 +5,7 @@ using Sai.DealAssistant.Domain.Entities;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 
 namespace Sai.DealAssistant.Infrastructure.AI;
 
@@ -21,20 +22,21 @@ public class AiClient : IAiClient
         _config = config;
         _aiResultRepository = aiResultRepository;
         _aiPromptRepository = aiPromptRepository;
+        _httpClient.BaseAddress = new Uri(_config.AiApiBaseUrl); 
+        _httpClient.Timeout = TimeSpan.FromSeconds(600);
+
+        _httpClient.DefaultRequestHeaders.Authorization = null;
+        if (!string.IsNullOrWhiteSpace(_config.AiApiKey))
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _config.AiApiKey);
+        }
     }
 
     public async Task<string> Chat(
         AiTaskTypesEnum taskType,
         string prompt,
-        int? dealId = null,
-        TimeSpan? timeout = null)
+        int? dealId = null)
     {
-        // Base address from configuration
-        if (!string.IsNullOrWhiteSpace(_config.AiApiBaseUrl))
-        {
-            _httpClient.BaseAddress = new Uri(_config.AiApiBaseUrl);
-        }
-
         // Path/url for the API endpoint (e.g. "/api/chat" or full path)
         var address = _config.AiApiUrl;
         if (string.IsNullOrWhiteSpace(address))
@@ -71,13 +73,6 @@ public class AiClient : IAiClient
         };
 
         var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
-        _httpClient.Timeout = timeout ?? TimeSpan.FromSeconds(600);
-
-        _httpClient.DefaultRequestHeaders.Authorization = null;
-        if (!string.IsNullOrWhiteSpace(_config.AiApiKey))
-        {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _config.AiApiKey);
-        }
 
         // Log the request
         var aiRequest = new AiRequest

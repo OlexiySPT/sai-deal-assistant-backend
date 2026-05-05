@@ -38,6 +38,22 @@ public class DealAutomationController : ControllerBase
     }
 
     /// <summary>
+    /// Extracts cleaned job posting text from the specified page using automation.
+    /// </summary>
+    /// <param name="command">The command containing the URL and optional DealId.</param>
+    /// <response code="200">Returns the extracted text of the job posting.</response>
+    /// <response code="400">URL must be provided.</response>
+    [HttpPost("ExtractText")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(string), 200)]
+    [ProducesResponseType(400)]
+    public async Task<IActionResult> ExtractText([FromBody] ExtractTextCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    /// <summary>
     /// Generate cover letter for the deal by id.
     /// </summary>
     /// <param name="id">Deal id</param>
