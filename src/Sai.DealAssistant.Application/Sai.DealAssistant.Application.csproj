@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DealAutomation\Dto\" />
     <Folder Include="Entities\EventNotes\Commands\" />
     <Folder Include="Entities\EventNotes\Queries\" />
     <Folder Include="Entities\Events\Commands\" />

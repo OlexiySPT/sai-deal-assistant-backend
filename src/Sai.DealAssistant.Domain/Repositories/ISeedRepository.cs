@@ -17,6 +17,8 @@ public interface ISeedRepository
 
     Task SeedUsersAsync(Func<IEnumerable<User>> getUsers);
 
+    Task SeedAiPromptsAsync(Func<IEnumerable<AiPrompt>> getPrompts);
+
     /// <summary>
     /// Seeds deals and optionally assigns a firm to each new deal at creation time.
     /// </summary>

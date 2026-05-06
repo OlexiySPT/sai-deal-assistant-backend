@@ -22,8 +22,7 @@ public class FirmConfiguration : BaseEntityConfiguration<Firm>
 
         builder.Property(f => f.Country)
             .HasColumnType("varchar")
-            .HasMaxLength(100)
-            .IsRequired();
+            .HasMaxLength(100);
 
         builder.Property(f => f.Description)
             .HasColumnType("text");

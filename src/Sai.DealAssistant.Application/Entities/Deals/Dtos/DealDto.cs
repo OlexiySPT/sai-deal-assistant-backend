@@ -25,6 +25,7 @@ public class DealDto
     public decimal? ExchangeRate { get; set; }
     public int? AmountTypeId { get; set; }
     public string? AmountType { get; set; }
+    public string? AiFullStructuredInfo { get; set; }
 
     public class MappingProfile : Profile
 	{

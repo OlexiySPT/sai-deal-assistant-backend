@@ -18,5 +18,12 @@
         /// Defaults to 900 (15 minutes) when not configured.
         /// </summary>
         int BulkSqlTimeoutSeconds { get; }
+
+        string AiApiBaseUrl { get; }
+        string AiApiUrl { get; }
+        string AiApiKey { get; }
+        string AiApiFastModelName { get; }
+        string AiApiBalancedModelName { get; }
+        string AiApiComplexModelName { get; }
     }
 }

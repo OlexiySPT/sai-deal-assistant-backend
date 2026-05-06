@@ -46,6 +46,15 @@ public class AppConfigurationFromConfigJson : IAppConfiguration
 
     int IAppConfiguration.BulkSqlTimeoutSeconds => GetIntConfigValue("BulkSqlTimeoutSeconds", 900);
 
+    public string AiApiBaseUrl => _configuration["AiApiBaseUrl"] ?? string.Empty;
+
+    // New properties implemented
+    public string AiApiUrl => _configuration["AiApiUrl"] ?? string.Empty;
+    public string AiApiKey => _configuration["AiApiKey"] ?? string.Empty;
+    public string AiApiFastModelName => _configuration["AiApiFastModelName"] ?? string.Empty;
+    public string AiApiBalancedModelName => _configuration["AiApiBalancedModelName"] ?? string.Empty;
+    public string AiApiComplexModelName => _configuration["AiApiComplexModelName"] ?? string.Empty;
+
     private int GetIntConfigValue(string name, int defaultValue)
     {
         string str = _configuration[name] ?? "";

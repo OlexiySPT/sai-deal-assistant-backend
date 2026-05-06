@@ -39,6 +39,9 @@ public class DealConfiguration : BaseEntityConfiguration<Deal>
         builder.Property(c => c.AiBriefDescription)
             .HasColumnType("text");
 
+        builder.Property(c => c.AiFullStructuredInfo)
+            .HasColumnType("text");
+
         builder.Property(c => c.Industry)
             .HasColumnType("varchar")
             .HasMaxLength(100);

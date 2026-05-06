@@ -13,6 +13,7 @@ public class Deal : BaseEntity
     public string? Url { get; set; } = string.Empty;
     public string? AiSearchInfo { get; set; } = string.Empty;
     public string? AiBriefDescription { get; set; } = string.Empty;
+    public string? AiFullStructuredInfo { get; set; } = string.Empty;
     public string? Industry { get; set; } = string.Empty;
     public string? Status { get; set; } = string.Empty;
 
@@ -41,5 +42,6 @@ public class Deal : BaseEntity
 
     public ICollection<DealTag> Tags { get; set; }
         = new Collection<DealTag>();
+
     #endregion
 }

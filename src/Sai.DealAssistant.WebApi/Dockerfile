@@ -7,7 +7,6 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -28,7 +27,39 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Sai.DealAssistant.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+
+# Install Playwright dependencies and PowerShell
+# Register Microsoft package repository so the `powershell` package can be installed on Debian/Bookworm
+RUN apt-get update && \
+    apt-get install -y wget gnupg ca-certificates apt-transport-https && \
+    wget -q https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb && \
+    dpkg -i /tmp/packages-microsoft-prod.deb && \
+    rm -f /tmp/packages-microsoft-prod.deb && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+      libnss3 libatk-bridge2.0-0 libgtk-3-0 libxss1 libasound2 libgbm1 libxshmfence1 \
+      powershell && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Playwright CLI as a .NET global tool and install browsers
+# This ensures browsers are available at runtime in the final image.
+RUN dotnet tool install --global Microsoft.Playwright.CLI || true && \
+    export PATH="$PATH:/root/.dotnet/tools" && \
+    # Install browsers with OS dependencies
+    /root/.dotnet/tools/playwright install --with-deps || true
+
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# The Playwright browsers should already be installed by the global CLI step above.
+# Keep a fallback to run the generated PowerShell installer if it exists in the publish output.
+RUN if [ -f "/app/playwright.ps1" ]; then \
+      pwsh "/app/playwright.ps1" install; \
+    elif [ -f "/app/bin/Release/net8.0/playwright.ps1" ]; then \
+      pwsh "/app/bin/Release/net8.0/playwright.ps1" install; \
+    else \
+      echo "No Playwright install script found in publish output, skipping fallback install"; \
+    fi
+
 ENTRYPOINT ["dotnet", "Sai.DealAssistant.WebApi.dll"]
