@@ -63,11 +63,28 @@ public class GenerateCoverLetterCommand : IRequest<string>, IJobQueueCommand
             if(string.IsNullOrEmpty(deal.AiFullStructuredInfo)) throw new ArgumentException($"Deal with id {request.DealId} has empty AiFullStructuredInfo.");
             var aiFullStructuredInfo = deal?.AiFullStructuredInfo;
 
+            JsonArray combinedRequirements = [];
+            if (!string.IsNullOrWhiteSpace(aiFullStructuredInfo) && JsonNode.Parse(aiFullStructuredInfo) is JsonObject infoJson)
+            {
+                if (infoJson["requirements"] is JsonArray requirements)
+                {
+                    foreach (var item in requirements)
+                        combinedRequirements.Add(item?.DeepClone());
+                }
+
+                if (infoJson["nice_to_have"] is JsonArray niceToHave)
+                {
+                    foreach (var item in niceToHave)
+                        combinedRequirements.Add(item?.DeepClone());
+                }
+            }
+            var jobRequirements = combinedRequirements.ToJsonString();
+
             var promptFromDb = await _aiPromptRepository.GetTextAsync("generate_letter");
             var profileFromDb = await _aiMetadataRepository.GetTextAsync("Profile", "DotNet");
 
-            var preparedPrompt = promptFromDb!.Replace("{{CANDIDATE_PROFILE}}", profileFromDb);
-            preparedPrompt = preparedPrompt.Replace("{{AI_FULL_STRUCTURED_INFO}}", aiFullStructuredInfo ?? string.Empty);
+            var preparedPrompt = promptFromDb!.Replace("{{candidate_profile_json}}", profileFromDb);
+            preparedPrompt = preparedPrompt.Replace("{{job_requirements_json}}", jobRequirements);
             var aiResponseText = await _aiClient.Chat(
                 AiTaskTypesEnum.Complex,
                 preparedPrompt,
