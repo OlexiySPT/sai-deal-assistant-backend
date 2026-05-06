@@ -92,8 +92,6 @@ public class GenerateCoverLetterCommand : IRequest<string>, IJobQueueCommand
             );
             var resultJson = JsonNode.Parse(aiResponseText);
             var resultContent = resultJson?["choices"]?[0]?["message"]?["content"]?.ToString();
-            deal!.InitialLetter = resultContent;
-            await _dealRepository.UpdateAsync(deal);
 
             return resultContent!;
         }
