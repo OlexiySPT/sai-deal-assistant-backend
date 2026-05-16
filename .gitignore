@@ -8,6 +8,7 @@ bin/
 *.user
 *.bru
 /src/Tests/Postman/Sai.DealAssistant.Entities/bruno.json
+*.csproj.lscache
 # Environment variables
 .env
 .env.local
